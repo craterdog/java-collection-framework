@@ -44,4 +44,4 @@ To get started using these classes, include the following dependency in your mav
 The following flow chart provides a way to easily choose which collection type is right for your
 needs:
 
-TBD
+![Flow Chart](https://github.com/craterdog/java-collection-framework/blob/master/docs/images/FlowChart.png)
