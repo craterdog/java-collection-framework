@@ -1,0 +1,70 @@
+<!--
+ ************************************************************************
+ * Copyright (c) Crater Dog Technologies(TM).  All Rights Reserved.     *
+ ************************************************************************
+ * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.        *
+ *                                                                      *
+ * This code is free software; you can redistribute it and/or modify it *
+ * under the terms of The MIT License (MIT), as published by the Open   *
+ * Source Initiative. (See http://opensource.org/licenses/MIT)          *
+ ************************************************************************
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.craterdog.maven-parent-poms</groupId>
+        <artifactId>java-pojo</artifactId>
+        <version>3.6</version>
+    </parent>
+
+    <organization>
+        <name>Crater Dog Technologies(TM)</name>
+        <url>http://craterdog.com</url>
+    </organization>
+
+    <name>Crater Dog Java Collection Framework</name>
+    <description>A set of interfaces and classes that define a Java collection framework.</description>
+    <url>https://github.com/craterdog/java-collection-framework/wiki</url>
+
+    <groupId>com.craterdog</groupId>
+    <artifactId>java-collection-framework</artifactId>
+    <version>3.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <licenses>
+        <license>
+            <name>The MIT License</name>
+            <url>http://opensource.org/licenses/MIT</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Derk Norton</name>
+            <email>derk.norton@gmail.com</email>
+            <organization>Crater Dog Technologies(TM)</organization>
+            <organizationUrl>http://craterdog.com</organizationUrl>
+        </developer>
+    </developers>
+
+    <properties>
+        <core-interfaces-version>3.0</core-interfaces-version>
+    </properties>
+
+    <dependencies>
+    <dependency>
+        <groupId>com.craterdog</groupId>
+        <artifactId>java-core-interfaces</artifactId>
+        <version>3.0</version>
+    </dependency>
+    </dependencies>
+
+    <scm>
+        <connection>scm:git:git@github.com:craterdog/java-collection-framework.git</connection>
+        <developerConnection>scm:git:git@github.com:craterdog/java-collection-framework.git</developerConnection>
+        <url>git@github.com:craterdog/java-collection-framework.git</url>
+        <tag>HEAD</tag>
+    </scm>
+
+</project>
