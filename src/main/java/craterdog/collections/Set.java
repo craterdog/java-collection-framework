@@ -11,6 +11,8 @@ package craterdog.collections;
 
 import craterdog.collections.abstractions.*;
 import java.util.Comparator;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 
 
 /**
@@ -19,7 +21,10 @@ import java.util.Comparator;
  * @author Derk Norton
  * @param <E> The type of element managed by the collection.
  */
-public final class Set<E> extends OrderedCollection<E> {
+public class Set<E> extends OrderedCollection<E> {
+
+    static private final XLogger logger = XLoggerFactory.getXLogger(Set.class);
+
 
     /**
      * This constructor creates a new empty set with no comparator function.
@@ -69,8 +74,7 @@ public final class Set<E> extends OrderedCollection<E> {
      * @param comparator The comparator to be used to compare two elements during ordering.
      */
     public Set(E[] elements, Comparator<? super E> comparator) {
-        super(false, comparator);
-        addElements(elements);
+        super(elements, false, comparator);
     }
 
 
@@ -82,10 +86,7 @@ public final class Set<E> extends OrderedCollection<E> {
      * @param comparator The comparator to be used to compare two elements during ordering.
      */
     public Set(Iterable<? extends E> elements, Comparator<? super E> comparator) {
-        super(false, comparator);
-        for (E element : elements) {
-            addElement(element);
-        }
+        super(elements, false, comparator);
     }
 
 
@@ -99,10 +100,15 @@ public final class Set<E> extends OrderedCollection<E> {
      * @return The resulting set.
      */
     static public <E> Set<E> and(Set<E> set1, Set<E> set2) {
+        logger.entry(set1, set2);
         Set<E> result = new Set<>();
         for (E element : set1) {
-            if (set2.containsElement(element)) result.addElement(element);
+            if (set2.containsElement(element)) {
+                logger.debug("The following element is in both sets: {}", element);
+                result.addElement(element);
+            }
         }
+        logger.exit(result);
         return result;
     }
 
@@ -117,8 +123,10 @@ public final class Set<E> extends OrderedCollection<E> {
      * @return The resulting set.
      */
     static public <E> Set<E> sans(Set<E> set1, Set<E> set2) {
+        logger.entry(set1, set2);
         Set<E> result = new Set<>(set1);
         result.removeElements(set2);
+        logger.exit(result);
         return result;
     }
 
@@ -133,8 +141,10 @@ public final class Set<E> extends OrderedCollection<E> {
      * @return The resulting set.
      */
     static public <E> Set<E> or(Set<E> set1, Set<E> set2) {
+        logger.entry(set1, set2);
         Set<E> result = new Set<>(set1);
         result.addElements(set2);
+        logger.exit(result);
         return result;
     }
 
@@ -149,13 +159,21 @@ public final class Set<E> extends OrderedCollection<E> {
      * @return The resulting set.
      */
     static public <E> Set<E> xor(Set<E> set1, Set<E> set2) {
+        logger.entry(set1, set2);
         Set<E> result = new Set<>();
         for (E element : set1) {
-            if (!set2.containsElement(element)) result.addElement(element);
+            if (!set2.containsElement(element)) {
+                logger.debug("Adding the following element from set 1 to the results: {}", element);
+                result.addElement(element);
+            }
         }
         for (E element : set2) {
-            if (!set1.containsElement(element)) result.addElement(element);
+            if (!set1.containsElement(element)) {
+                logger.debug("Adding the following element from set 2 to the results: {}", element);
+                result.addElement(element);
+            }
         }
+        logger.exit(result);
         return result;
     }
 

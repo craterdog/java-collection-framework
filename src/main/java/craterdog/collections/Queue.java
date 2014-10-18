@@ -23,7 +23,7 @@ import org.slf4j.ext.XLoggerFactory;
  * @author Derk Norton
  * @param <E> The type of element managed by this collection.
  */
-public final class Queue<E> implements FIFO<E> {
+public class Queue<E> implements FIFO<E> {
 
     static private final XLogger logger = XLoggerFactory.getXLogger(Queue.class);
 
@@ -35,7 +35,9 @@ public final class Queue<E> implements FIFO<E> {
      * This constructor creates a new queue of unlimited capacity.
      */
     public Queue() {
+        logger.entry();
         this.capacity = Integer.MAX_VALUE;
+        logger.exit();
     }
 
 
@@ -53,35 +55,37 @@ public final class Queue<E> implements FIFO<E> {
 
 
     @Override
-    public synchronized boolean isEmpty() {
+    public final synchronized boolean isEmpty() {
         return list.isEmpty();
     }
 
 
     @Override
-    public synchronized int getNumberOfElements() {
+    public final synchronized int getNumberOfElements() {
         return list.getNumberOfElements();
     }
 
 
     @Override
-    public synchronized Iterator<E> createDefaultIterator() {
+    public final synchronized Iterator<E> createDefaultIterator() {
         return list.createDefaultIterator();
     }
 
 
     @Override
     public final void toArray(E[] array) {
+        logger.entry(array);
         int size = array.length;
         Iterator<E> iterator = createDefaultIterator();
         for (int index = 0; index < size && iterator.hasNextElement(); index++) {
             array[index] = iterator.getNextElement();
         }
+        logger.exit();
     }
 
 
     @Override
-    public synchronized void addTailElement(E element) throws InterruptedException {
+    public final synchronized void addTailElement(E element) throws InterruptedException {
         logger.entry();
         while (true) {  // do this in a loop in case there are spurious wakeups (see Object.wait() javadoc)
             int size = list.getNumberOfElements();
@@ -100,7 +104,7 @@ public final class Queue<E> implements FIFO<E> {
 
 
     @Override
-    public synchronized E removeHeadElement() throws InterruptedException {
+    public final synchronized E removeHeadElement() throws InterruptedException {
         logger.entry();
         E element = null;
         while (true) {  // do this in a loop in case there are spurious wakeups (see Object.wait() javadoc)
@@ -115,13 +119,13 @@ public final class Queue<E> implements FIFO<E> {
                 wait();  // for an addElement() call
             }
         }
-        logger.exit();
+        logger.exit(element);
         return element;
     }
 
 
     @Override
-    public synchronized void removeAllElements() {
+    public final synchronized void removeAllElements() {
         logger.entry();
         list.removeAllElements();
         logger.exit();
@@ -129,7 +133,7 @@ public final class Queue<E> implements FIFO<E> {
 
 
     @Override
-    public synchronized E getHeadElement() {
+    public final synchronized E getHeadElement() {
         logger.entry();
         E element = null;
         int size = list.getNumberOfElements();

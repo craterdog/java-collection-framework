@@ -9,7 +9,6 @@
  ************************************************************************/
 package craterdog.collections.abstractions;
 
-import craterdog.collections.interfaces.Iteratable;
 import craterdog.collections.interfaces.Accessible;
 import craterdog.core.Composite;
 
@@ -138,7 +137,7 @@ public abstract class Collection<E> implements Accessible<E> {
 
 
     @Override
-    public final boolean containsAnyElementsIn(Iteratable<? extends E> collection) {
+    public final boolean containsAnyElementsIn(Iterable<? extends E> collection) {
         boolean result = false;
         for (E element : collection) {
             result = containsElement(element);
@@ -149,7 +148,7 @@ public abstract class Collection<E> implements Accessible<E> {
 
 
     @Override
-    public final boolean containsAllElementsIn(Iteratable<? extends E> collection) {
+    public final boolean containsAllElementsIn(Iterable<? extends E> collection) {
         boolean result = false;
         for (E element : collection) {
             result = containsElement(element);
@@ -170,7 +169,7 @@ public abstract class Collection<E> implements Accessible<E> {
 
 
     @Override
-    public final int addElements(Iteratable<? extends E> elements) {
+    public final int addElements(Iterable<? extends E> elements) {
         int count = 0;
         for (E element : elements) {
             if (addElement(element)) count++;
@@ -192,7 +191,7 @@ public abstract class Collection<E> implements Accessible<E> {
 
 
     @Override
-    public final int removeElements(Iteratable<? extends E> elements) {
+    public final int removeElements(Iterable<? extends E> elements) {
         int counter = 0;
         for (E element : elements) {
             if (removeElement(element)) {

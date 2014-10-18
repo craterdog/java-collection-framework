@@ -13,6 +13,8 @@ import craterdog.collections.abstractions.*;
 import craterdog.collections.interfaces.Indexed;
 import craterdog.collections.interfaces.Iteratable;
 import java.util.Arrays;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 
 
 /**
@@ -47,7 +49,9 @@ import java.util.Arrays;
  * @author Derk Norton
  * @param <E> The type of element managed by the collection.
  */
-public final class List<E> extends SortableCollection<E> implements Indexed<E> {
+public class List<E> extends SortableCollection<E> implements Indexed<E> {
+
+    static private final XLogger logger = XLoggerFactory.getXLogger(List.class);
 
     // remaining requests before next reassessment
     static private final int TIMER_SET_POINT = 10;
@@ -71,9 +75,11 @@ public final class List<E> extends SortableCollection<E> implements Indexed<E> {
      * This constructor creates a new empty list.
      */
     public List() {
+        logger.entry();
         // high probability that the next requests will be a insertion of an elements so go with linked list
         acRatio = 10;  // guess that only 10 percent of the requests will likely be access requests
         type = ListType.EMPTY;
+        logger.exit();
     }
 
 
@@ -83,6 +89,7 @@ public final class List<E> extends SortableCollection<E> implements Indexed<E> {
      * @param elements The elements that should be used to seed the list.
      */
     public List(E[] elements) {
+        logger.entry(elements);
         int size = elements.length;
         if (size == 0) {
             // same as default constructor
@@ -95,6 +102,7 @@ public final class List<E> extends SortableCollection<E> implements Indexed<E> {
             type = ListType.ARRAY;
             list.addAll(Arrays.asList(elements));
         }
+        logger.exit();
     }
 
 
@@ -104,6 +112,7 @@ public final class List<E> extends SortableCollection<E> implements Indexed<E> {
      * @param elements The elements that should be used to seed the list.
      */
     public List(Iteratable<? extends E> elements) {
+        logger.entry(elements);
         int size = elements.getNumberOfElements();
         if (size == 0) {
             // same as default constructor
@@ -118,6 +127,7 @@ public final class List<E> extends SortableCollection<E> implements Indexed<E> {
                 list.add(element);
             }
         }
+        logger.exit();
     }
 
 
@@ -131,105 +141,130 @@ public final class List<E> extends SortableCollection<E> implements Indexed<E> {
      * @param elements The elements that should be used to seed the list.
      */
     public List(java.util.Collection<? extends E> elements) {
+        logger.entry(elements);
         int size = elements.size();
         if (size == 0) {
             // same as default constructor
             acRatio = 10;  // only 10 percent of the requests will likely be access requests
             type = ListType.EMPTY;
+            logger.debug("The list is empty.");
         } else {
             // high probability that the next requests will be indexed reads so go with array
             acRatio = 90;  // 90 percent of the requests will likely be access requests
             list = new java.util.ArrayList<>(size);
             type = ListType.ARRAY;
             list.addAll(elements);
+            logger.debug("Starting with a dynamic array based list.");
         }
+        logger.exit();
     }
 
 
     @Override
-    public int getNumberOfElements() {
+    public final int getNumberOfElements() {
+        logger.entry();
         int size = type == ListType.EMPTY ? 0 : list.size();
+        logger.exit(size);
         return size;
     }
 
 
     @Override
     public final boolean containsElement(E element) {
+        logger.entry(element);
         int index = getIndexOfElement(element);
         boolean result = index > 0;
+        logger.exit(result);
         return result;
     }
 
 
     @Override
     public Iterator<E> createDefaultIterator() {
+        logger.entry();
         if (type == ListType.EMPTY) {
             list = new java.util.LinkedList<>();
             type = ListType.LIST;
+            logger.debug("Changing to a linked list based list.");
         }
         Iterator<E> iterator = new ListManipulator();
+        logger.exit(iterator);
         return iterator;
     }
 
 
     @Override
-    public boolean addElement(E element) {
+    public final boolean addElement(E element) {
+        logger.entry(element);
         acRatio--;
         if (--timer == 0) reassessImplementation();
         if (type == ListType.EMPTY) {
             list = new java.util.LinkedList<>();
             type = ListType.LIST;
+            logger.debug("Changing to a linked list based list.");
         }
         boolean result = list.add(element);
+        logger.exit(result);
         return result;
     }
 
 
     @Override
-    public boolean removeElement(E element) {
+    public final boolean removeElement(E element) {
+        logger.entry(element);
         acRatio--;
         if (--timer == 0) reassessImplementation();
         boolean result = false;
         if (type != ListType.EMPTY) {
             result = list.remove(element);
         }
+        logger.exit(result);
         return result;
     }
 
 
     @Override
-    public void removeAllElements() {
+    public final void removeAllElements() {
+        logger.entry();
         if (--timer == 0) reassessImplementation();
         if (type != ListType.EMPTY) {
             list = null;
             type = ListType.EMPTY;
+            logger.debug("Changing to an empty list.");
         }
+        logger.exit();
     }
 
 
     @Override
-    public E getElementAtIndex(int index) {
+    public final E getElementAtIndex(int index) {
+        logger.entry(index);
         index = normalizedIndex(index);
         acRatio++;
         if (--timer == 0) reassessImplementation();
         E element = type == ListType.EMPTY ? null : list.get(index - 1);
+        logger.exit(element);
         return element;
     }
 
 
     @Override
-    public int getIndexOfElement(E element) {
+    public final int getIndexOfElement(E element) {
+        logger.entry(element);
         if (--timer == 0) reassessImplementation();
         if (type == ListType.EMPTY) {
+            logger.exit(0);
             return 0;
         }
         int index = list.indexOf(element);
+        logger.exit(index);
         return index;
     }
 
 
     @Override
     public final Indexed<? super E> getElementsInRange(int firstIndex, int lastIndex) {
+        logger.entry(firstIndex, lastIndex);
         firstIndex = normalizedIndex(firstIndex);
         lastIndex = normalizedIndex(lastIndex);
         List<E> result = new List<>();
@@ -238,25 +273,31 @@ public final class List<E> extends SortableCollection<E> implements Indexed<E> {
         int numberOfElements = lastIndex - firstIndex + 1;
         while (numberOfElements-- > 0) {
             E element = iterator.getNextElement();
+            logger.debug("Including element: {}", element);
             result.addElement(element);
         }
+        logger.exit(result);
         return result;
     }
 
 
     @Override
-    public final void insertElementsBeforeIndex(Iteratable<? extends E> elements, int index) {
+    public final void insertElementsBeforeIndex(Iterable<? extends E> elements, int index) {
+        logger.entry(elements, index);
         index = normalizedIndex(index);
         Manipulator<E> manipulator = createDefaultManipulator();
         manipulator.goToIndex(index);
         for (E element : elements) {
+            logger.debug("Inserting element: {}", element);
             manipulator.insertElement(element);
         }
+        logger.exit();
     }
 
 
     @Override
     public final Indexed<? super E> removeElementsInRange(int firstIndex, int lastIndex) {
+        logger.entry(firstIndex, lastIndex);
         firstIndex = normalizedIndex(firstIndex);
         lastIndex = normalizedIndex(lastIndex);
         List<E> result = new List<>();
@@ -265,63 +306,96 @@ public final class List<E> extends SortableCollection<E> implements Indexed<E> {
         int numberOfElements = lastIndex - firstIndex + 1;
         while (numberOfElements-- > 0) {
             E element = manipulator.removeNextElement();
+            logger.debug("Removing element: {}", element);
             result.addElement(element);
         }
+        logger.exit(result);
         return result;
     }
 
 
     @Override
     public Manipulator<E> createDefaultManipulator() {
+        logger.entry();
         if (type == ListType.EMPTY) {
             list = new java.util.LinkedList<>();
             type = ListType.LIST;
+            logger.debug("Changing to a linked list based list.");
         }
         Manipulator<E> manipulator = new ListManipulator();
+        logger.exit(manipulator);
         return manipulator;
     }
 
 
     @Override
     protected Sorter<E> sorter() {
+        logger.entry();
         if (type == ListType.EMPTY) {
             list = new java.util.LinkedList<>();
             type = ListType.LIST;
+            logger.debug("Changing to a linked list based list.");
         }
         Sorter<E> sorter = super.sorter();
+        logger.exit(sorter);
         return sorter;
     }
 
 
     @Override
-    public void insertElementBeforeIndex(E element, int index) {
+    public final void insertElementBeforeIndex(E element, int index) {
+        logger.entry(element, index);
         index = normalizedIndex(index);
         acRatio--;
         if (--timer == 0) reassessImplementation();
         if (type == ListType.EMPTY) {
             list = new java.util.LinkedList<>();
             type = ListType.LIST;
+            logger.debug("Changing to a linked list based list.");
         }
         list.add(index - 1, element);
+        logger.exit();
     }
 
 
     @Override
-    public E replaceElementAtIndex(E element, int index) {
+    public final E replaceElementAtIndex(E element, int index) {
+        logger.entry(element, index);
         index = normalizedIndex(index);
         acRatio++;
         if (--timer == 0) reassessImplementation();
         E result = list.set(index - 1, element);
+        logger.exit(result);
         return result;
     }
 
 
     @Override
-    public E removeElementAtIndex(int index) {
+    public final E removeElementAtIndex(int index) {
+        logger.entry(index);
         index = normalizedIndex(index);
         acRatio--;
         if (--timer == 0) reassessImplementation();
         E result = list.remove(index - 1);
+        logger.exit(result);
+        return result;
+    }
+
+
+    /**
+     * This function returns a new list that contains the all the elements from
+     * both the specified lists.
+     *
+     * @param <E> The type of element contained in the lists.
+     * @param list1 The first list whose elements are to be added.
+     * @param list2 The second list whose elements are to be added.
+     * @return The resulting list.
+     */
+    static public <E> List<E> concatenate(List<E> list1, List<E> list2) {
+        logger.entry(list1, list2);
+        List<E> result = new List<>(list1);
+        result.addElements(list2);
+        logger.exit(result);
         return result;
     }
 
@@ -331,12 +405,13 @@ public final class List<E> extends SortableCollection<E> implements Indexed<E> {
      * list implemenation choice and change it if a better one is available.
      *
      *    ACCESS TYPE           DYNAMIC ARRAY      LINKED LIST
-     *    Indexed Access             O(1)            O(N/2)
-     *    Change in Size             O(N)            O(1)
-     *    Scan/Search                O(N/2)          O(N/2)
+     *    Indexed Access            O(1)              O(N/2)
+     *    Change in Size            O(N)              O(1)
+     *    Scan/Search               O(N/2)            O(N/2)
      *
      */
     private void reassessImplementation() {
+        logger.entry();
         timer = TIMER_SET_POINT;
         int size = getNumberOfElements();
         if (size == 0) return;
@@ -351,14 +426,17 @@ public final class List<E> extends SortableCollection<E> implements Indexed<E> {
             if (type != ListType.ARRAY) {
                 list = new java.util.ArrayList<>(list);
                 type = ListType.ARRAY;
+                logger.debug("Changing to a dynamic array based list.");
             }
         } else {  // listCost <= arrayCost
             // list is best
             if (type != ListType.LIST) {
                 list = new java.util.LinkedList<>(list);
                 type = ListType.LIST;
+                logger.debug("Changing to a linked list based list.");
             }
         }
+        logger.exit();
     }
 
 
@@ -368,8 +446,10 @@ public final class List<E> extends SortableCollection<E> implements Indexed<E> {
      * requests.  Integers are used instead of actual probabilities to increase performance.
      */
     private void normalizeRatio() {
+        logger.entry();
         acRatio = Math.max(0, acRatio);
         acRatio = Math.min(acRatio, 100);
+        logger.exit();
     }
 
 
@@ -389,79 +469,103 @@ public final class List<E> extends SortableCollection<E> implements Indexed<E> {
 
         @Override
         public void goToStart() {
+            logger.entry();
             iterator = list.listIterator();
+            logger.exit();
         }
 
         @Override
         public void goToIndex(int index) {
+            logger.entry(index);
             index = normalizedIndex(index);
             iterator = list.listIterator(index - 1);
+            logger.exit();
         }
 
         @Override
         public void goToEnd() {
+            logger.entry();
             iterator = list.listIterator(list.size());
+            logger.exit();
         }
 
         @Override
         public boolean hasPreviousElement() {
-            return iterator.nextIndex() > 0;
+            logger.entry();
+            boolean result = iterator.nextIndex() > 0;
+            logger.exit(result);
+            return result;
         }
 
         @Override
         public boolean hasNextElement() {
-            return iterator.nextIndex() < list.size();
+            logger.entry();
+            boolean result = iterator.nextIndex() < list.size();
+            logger.exit(result);
+            return result;
         }
 
         @Override
         public E getNextElement() {
-            if (!hasNextElement()) throw new IllegalStateException("The iterator is at the end of the list.");
-            return iterator.next();
+            logger.entry();
+            if (!hasNextElement()) {
+                IllegalStateException exception = new IllegalStateException("The iterator is at the end of the list.");
+                logger.throwing(exception);
+                throw exception;
+            }
+            E result = iterator.next();
+            logger.exit(result);
+            return result;
         }
 
         @Override
         public E getPreviousElement() {
-            if (!hasPreviousElement()) throw new IllegalStateException("The iterator is at the beginning of the list.");
-            return iterator.previous();
+            logger.entry();
+            if (!hasPreviousElement()) {
+                IllegalStateException exception = new IllegalStateException("The iterator is at the beginning of the list.");
+                logger.throwing(exception);
+                throw exception;
+            }
+            E result = iterator.previous();
+            logger.exit(result);
+            return result;
         }
 
         @Override
         public void insertElement(E element) {
+            logger.entry(element);
             iterator.add(element);
+            logger.exit();
         }
 
         @Override
         public E removeNextElement() {
-            if (!hasNextElement()) throw new IllegalStateException("The iterator is at the end of the list.");
+            logger.entry();
+            if (!hasNextElement()) {
+                IllegalStateException exception = new IllegalStateException("The iterator is at the end of the list.");
+                logger.throwing(exception);
+                throw exception;
+            }
             E result = iterator.next();
             iterator.remove();
+            logger.exit(result);
             return result;
         }
 
         @Override
         public E removePreviousElement() {
-            if (!hasPreviousElement()) throw new IllegalStateException("The iterator is at the beginning of the list.");
+            logger.entry();
+            if (!hasPreviousElement()) {
+                IllegalStateException exception = new IllegalStateException("The iterator is at the beginning of the list.");
+                logger.throwing(exception);
+                throw exception;
+            }
             E result = iterator.previous();
             iterator.remove();
+            logger.exit(result);
             return result;
         }
 
-    }
-
-
-    /**
-     * This function returns a new list that contains the all the elements from
-     * both the specified lists.
-     *
-     * @param <E> The type of element contained in the lists.
-     * @param list1 The first list whose elements are to be added.
-     * @param list2 The second list whose elements are to be added.
-     * @return The resulting list.
-     */
-    static public <E> List<E> concatenate(List<E> list1, List<E> list2) {
-        List<E> result = new List<>(list1);
-        result.addElements(list2);
-        return result;
     }
 
 }

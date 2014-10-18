@@ -11,6 +11,8 @@ package craterdog.collections;
 
 import craterdog.collections.abstractions.*;
 import java.util.Comparator;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 
 
 /**
@@ -19,7 +21,10 @@ import java.util.Comparator;
  * @author Derk Norton
  * @param <E> The type of element managed by the collection.
  */
-public final class Bag<E> extends OrderedCollection<E> {
+public class Bag<E> extends OrderedCollection<E> {
+
+    static private final XLogger logger = XLoggerFactory.getXLogger(Bag.class);
+
 
     /**
      * This constructor creates a new empty bag with no comparator function.
@@ -69,8 +74,7 @@ public final class Bag<E> extends OrderedCollection<E> {
      * @param comparator The comparator to be used to compare two elements during ordering.
      */
     public Bag(E[] elements, Comparator<? super E> comparator) {
-        super(true, comparator);
-        addElements(elements);
+        super(elements, true, comparator);
     }
 
 
@@ -82,10 +86,7 @@ public final class Bag<E> extends OrderedCollection<E> {
      * @param comparator The comparator to be used to compare two elements during ordering.
      */
     public Bag(Iterable<? extends E> elements, Comparator<? super E> comparator) {
-        super(true, comparator);
-        for (E element : elements) {
-            addElement(element);
-        }
+        super(elements, true, comparator);
     }
 
 
@@ -99,8 +100,10 @@ public final class Bag<E> extends OrderedCollection<E> {
      * @return The resulting bag.
      */
     static public <E> Bag<E> merge(Bag<E> bag1, Bag<E> bag2) {
+        logger.entry(bag1, bag2);
         Bag<E> result = new Bag<>(bag1);
         result.addElements(bag2);
+        logger.exit(result);
         return result;
     }
 
@@ -115,8 +118,10 @@ public final class Bag<E> extends OrderedCollection<E> {
      * @return The resulting bag.
      */
     static public <E> Bag<E> difference(Bag<E> bag1, Bag<E> bag2) {
+        logger.entry(bag1, bag2);
         Bag<E> result = new Bag<>(bag1);
         result.removeElements(bag2);
+        logger.exit(result);
         return result;
     }
 

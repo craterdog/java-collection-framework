@@ -14,6 +14,8 @@ import craterdog.collections.abstractions.Manipulator;
 import craterdog.collections.abstractions.SortableCollection;
 import craterdog.collections.interfaces.Iteratable;
 import craterdog.collections.interfaces.Associative;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 
 
 /**
@@ -23,7 +25,9 @@ import craterdog.collections.interfaces.Associative;
  * @param <K> The type of the key in the association.
  * @param <V> The type of the value in the association.
  */
-public final class Map<K, V> extends SortableCollection<Association<K, V>> implements Associative<K, V> {
+public class Map<K, V> extends SortableCollection<Association<K, V>> implements Associative<K, V> {
+
+    static private final XLogger logger = XLoggerFactory.getXLogger(Map.class);
 
     private final java.util.Map<K, Integer> indexes = new java.util.TreeMap<>();
     private final List<Association<K, V>> associations = new List<>();
@@ -44,14 +48,17 @@ public final class Map<K, V> extends SortableCollection<Association<K, V>> imple
      * @param values The array of values that should be used to create the map.
      */
     public Map(K[] keys, V[] values) {
+        logger.entry(keys, values);
         int size = keys.length;
         if (values.length != size) throw new IllegalArgumentException("The number of keys is different than the number of values.");
         for (int i = 0; i < size; i++) {
             K key = keys[i];
             V value = values[i];
+            logger.debug("Associating key: {} with value: {}", key, value);
             Association<K, V> association = new Association<>(key, value);
             addElement(association);
         }
+        logger.exit();
     }
 
 
@@ -63,6 +70,7 @@ public final class Map<K, V> extends SortableCollection<Association<K, V>> imple
      * @param values The values that should be used to create the map.
      */
     public Map(Iteratable<K> keys, Iteratable<V> values) {
+        logger.entry(keys, values);
         int size = keys.getNumberOfElements();
         if (values.getNumberOfElements() != size) throw new IllegalArgumentException("The number of keys is different than the number of values.");
         Iterator<K> keyIterator = keys.createDefaultIterator();
@@ -70,9 +78,11 @@ public final class Map<K, V> extends SortableCollection<Association<K, V>> imple
         while (keyIterator.hasNextElement()) {
             K key = keyIterator.getNextElement();
             V value = valueIterator.getNextElement();
+            logger.debug("Associating key: {} with value: {}", key, value);
             Association<K, V> association = new Association<>(key, value);
             addElement(association);
         }
+        logger.exit();
     }
 
 
@@ -82,12 +92,15 @@ public final class Map<K, V> extends SortableCollection<Association<K, V>> imple
      * @param elements The map containing the key-value pairs to be mapped.
      */
     public Map(Map<K, V> elements) {
+        logger.entry(elements);
         Iteratable<Association<K, V>> entries = elements.getAssociations();
         for (Association<K, V> association : entries) {
             K key = association.key;
             V value = association.value;
+            logger.debug("Associating key: {} with value: {}", key, value);
             associations.addElement(new Association<>(key, value));
         }
+        logger.exit();
     }
 
 
@@ -97,31 +110,43 @@ public final class Map<K, V> extends SortableCollection<Association<K, V>> imple
      * @param elements The java map containing the key-value pairs to be mapped.
      */
     public Map(java.util.Map<K, V> elements) {
+        logger.entry(elements);
         java.util.Set<? extends java.util.Map.Entry<K, V>> entries = elements.entrySet();
         for (java.util.Map.Entry<K, V> entry : entries) {
             K key = entry.getKey();
             V value = entry.getValue();
+            logger.debug("Associating key: {} with value: {}", key, value);
             Association<K, V> association = new Association<>(key, value);
             addElement(association);
         }
+        logger.exit();
     }
 
 
     @Override
-    public int getNumberOfElements() {
-        return associations.getNumberOfElements();
+    public final int getNumberOfElements() {
+        logger.entry();
+        int result = associations.getNumberOfElements();
+        logger.exit(result);
+        return result;
     }
 
 
     @Override
     public final boolean containsElement(Association<K, V> element) {
-        return associations.containsElement(element);
+        logger.entry();
+        boolean result = associations.containsElement(element);
+        logger.exit(result);
+        return result;
     }
 
 
     @Override
     public Iterator<Association<K, V>> createDefaultIterator() {
-        return new MapManipulator();
+        logger.entry();
+        Iterator<Association<K, V>> result = new MapManipulator();
+        logger.exit(result);
+        return result;
     }
 
 
@@ -131,99 +156,126 @@ public final class Map<K, V> extends SortableCollection<Association<K, V>> imple
     it does nothing.
     */
     @Override
-    public boolean addElement(Association<K, V> element) {
+    public final boolean addElement(Association<K, V> element) {
+        logger.entry(element);
+        boolean result = false;
         if (!indexes.containsKey(element.key)) {
             associations.addElement(element);
             indexes.put(element.key, associations.getNumberOfElements());
-            return true;
+            result = true;
         }
-        return false;
+        logger.exit(result);
+        return result;
     }
 
 
     @Override
-    public boolean removeElement(Association<K, V> element) {
+    public final boolean removeElement(Association<K, V> element) {
+        logger.entry(element);
+        boolean result = false;
         Integer index = indexes.remove(element.key);
         if (index != null) {
             int size = associations.getNumberOfElements();
             associations.removeElementAtIndex(index);
             if (index < size) recalculateIndexes();  // optimized to not reindex if last element removed
-            return true;
+            result = true;
         }
-        return false;
+        logger.exit(result);
+        return result;
     }
 
 
     @Override
-    public void removeAllElements() {
+    public final void removeAllElements() {
+        logger.entry();
         indexes.clear();
         associations.removeAllElements();
+        logger.exit();
     }
 
 
     @Override
     public Manipulator<Association<K, V>> createDefaultManipulator() {
-        return new MapManipulator();
+        logger.entry();
+        Manipulator<Association<K, V>> result = new MapManipulator();
+        logger.exit(result);
+        return result;
     }
 
 
     @Override
-    public Iteratable<? super K> getKeys() {
+    public final Iteratable<? super K> getKeys() {
+        logger.entry();
         List<K> keys = new List<>();
         for (Association<K, V> association : associations) {
             K key = association.key;
+            logger.debug("Found key: {}", key);
             keys.addElement(key);
         }
+        logger.exit(keys);
         return keys;
     }
 
 
     @Override
-    public Iteratable<? super V> getValues() {
+    public final Iteratable<? super V> getValues() {
+        logger.entry();
         List<V> values = new List<>();
         for (Association<K, V> association : associations) {
             V value = association.value;
+            logger.debug("Found value: {}", value);
             values.addElement(value);
         }
+        logger.exit(values);
         return values;
     }
 
 
     @Override
-    public Iteratable<Association<K, V>> getAssociations() {
+    public final Iteratable<Association<K, V>> getAssociations() {
+        logger.entry();
         Iteratable<Association<K, V>> associationList = new List<>(this.associations);
+        logger.exit();
         return associationList;
     }
 
 
     @Override
-    public V getValueForKey(K key) {
+    public final V getValueForKey(K key) {
+        logger.entry(key);
         V value = null;
         Integer index = indexes.get(key);
         if (index != null) {
             Association<K, V> association = associations.getElementAtIndex(index);
             value = association.value;
+            logger.debug("Found value: {} at key: {}", value, key);
         }
+        logger.exit(value);
         return value;
     }
 
 
     @Override
-    public void associateKeyWithValue(K key, V value) {
+    public final void associateKeyWithValue(K key, V value) {
+        logger.entry(key, value);
         Integer index = indexes.get(key);
         if (index != null) {
             Association<K, V> association = associations.getElementAtIndex(index);
+            logger.debug("Replacing value: {} with value: {} for key: {}", association.value, value, key);
             association.value = value;
         } else {
             Association<K, V> association = new Association<>(key, value);
+            logger.debug("Associating value: {} with key: {}", value, key);
             associations.addElement(association);
             indexes.put(key, associations.getNumberOfElements());
         }
+        logger.exit();
     }
 
 
     @Override
-    public V removeValueForKey(K key) {
+    public final V removeValueForKey(K key) {
+        logger.entry(key);
         V value = null;
         Integer index = indexes.remove(key);
         if (index != null) {
@@ -231,7 +283,9 @@ public final class Map<K, V> extends SortableCollection<Association<K, V>> imple
             Association<K, V> association = associations.removeElementAtIndex(index);
             if (index < size) recalculateIndexes();
             value = association.value;
+            logger.debug("Removing value: {} associated with key: {}", value, key);
         }
+        logger.exit(value);
         return value;
     }
 
@@ -247,8 +301,10 @@ public final class Map<K, V> extends SortableCollection<Association<K, V>> imple
      * @return The resulting map.
      */
     static public <K, V> Map<K, V> concatenate(Map<K, V> map1, Map<K, V> map2) {
+        logger.entry(map1, map2);
         Map<K, V> result = new Map<>(map1);
         result.addElements(map2);
+        logger.exit(result);
         return result;
     }
 
@@ -264,6 +320,7 @@ public final class Map<K, V> extends SortableCollection<Association<K, V>> imple
      * @return The resulting map.
      */
     static public <K, V> Map<K, V> reduce(Map<K, V> map, Set<K> keys) {
+        logger.entry(map, keys);
         Map<K, V> result = new Map<>();
         for (K key : keys) {
             V value = map.getValueForKey(key);
@@ -272,16 +329,21 @@ public final class Map<K, V> extends SortableCollection<Association<K, V>> imple
                 result.addElement(association);
             }
         }
+        logger.exit(result);
         return result;
     }
 
 
     private void recalculateIndexes() {
+        logger.entry();
         indexes.clear();
         int index = 1;
         for (Association<K, V> association : associations) {
-            indexes.put(association.key, index++);
+            K key = association.key;
+            logger.debug("Adding index: {} for key: {}", index, key);
+            indexes.put(key, index++);
         }
+        logger.exit();
     }
 
 
@@ -298,61 +360,101 @@ public final class Map<K, V> extends SortableCollection<Association<K, V>> imple
 
         @Override
         public void goToStart() {
+            logger.entry();
             manipulator.goToStart();
+            logger.exit();
         }
 
         @Override
         public void goToIndex(int index) {
+            logger.entry(index);
             index = normalizedIndex(index);
             manipulator.goToIndex(index);
+            logger.exit();
         }
 
         @Override
         public void goToEnd() {
+            logger.entry();
             manipulator.goToEnd();
+            logger.exit();
         }
 
         @Override
         public boolean hasPreviousElement() {
-            return manipulator.hasPreviousElement();
+            logger.entry();
+            boolean result = manipulator.hasPreviousElement();
+            logger.exit(result);
+            return result;
         }
 
         @Override
         public boolean hasNextElement() {
-            return manipulator.hasNextElement();
+            logger.entry();
+            boolean result = manipulator.hasNextElement();
+            logger.exit(result);
+            return result;
         }
 
         @Override
         public Association<K, V> getNextElement() {
-            if (!hasNextElement()) throw new IllegalStateException("The iterator is at the end of the map.");
-            return manipulator.getNextElement();
+            logger.entry();
+            if (!hasNextElement()) {
+                IllegalStateException exception = new IllegalStateException("The iterator is at the end of the map.");
+                logger.throwing(exception);
+                throw exception;
+            }
+            Association<K, V> result = manipulator.getNextElement();
+            logger.exit(result);
+            return result;
         }
 
         @Override
         public Association<K, V> getPreviousElement() {
-            if (!hasPreviousElement()) throw new IllegalStateException("The iterator is at the beginning of the map.");
-            return manipulator.getPreviousElement();
+            logger.entry();
+            if (!hasPreviousElement()) {
+                IllegalStateException exception = new IllegalStateException("The iterator is at the beginning of the map.");
+                logger.throwing(exception);
+                throw exception;
+            }
+            Association<K, V> result = manipulator.getPreviousElement();
+            logger.exit(result);
+            return result;
         }
 
         @Override
         public void insertElement(Association<K, V> element) {
+            logger.entry(element);
             manipulator.insertElement(element);
             recalculateIndexes();
+            logger.exit();
         }
 
         @Override
         public Association<K, V> removeNextElement() {
-            if (!hasNextElement()) throw new IllegalStateException("The iterator is at the end of the map.");
+            logger.entry();
+            if (!hasNextElement()) {
+                IllegalStateException exception = new IllegalStateException("The iterator is at the end of the map.");
+                logger.throwing(exception);
+                throw exception;
+            }
             Association<K, V> result = manipulator.removeNextElement();
             recalculateIndexes();
+            logger.exit(result);
             return result;
         }
 
         @Override
         public Association<K, V> removePreviousElement() {
-            if (!hasPreviousElement()) throw new IllegalStateException("The iterator is at the beginning of the map.");
+            logger.entry();
+            if (!hasPreviousElement()) {
+                IllegalStateException exception = new IllegalStateException("The iterator is at the beginning of the map.");
+                logger.throwing(exception);
+                throw exception;
+            }
             Association<K, V> result = manipulator.removePreviousElement();
             recalculateIndexes();
+            logger.exit(result);
             return result;
         }
 

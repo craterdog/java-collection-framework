@@ -34,7 +34,7 @@ public interface Accessible<E> extends Iteratable<E> {
      * @param elements The elements to be checked for in the collection.
      * @return Whether or not any of the specified elements are contained in the collection.
      */
-    boolean containsAnyElementsIn(Iteratable<? extends E> elements);
+    boolean containsAnyElementsIn(Iterable<? extends E> elements);
 
     /**
      * This method determines whether all of the specified elements are contained in
@@ -43,7 +43,7 @@ public interface Accessible<E> extends Iteratable<E> {
      * @param elements The elements to be checked for in the collection.
      * @return Whether or not all of the specified elements are contained in the collection.
      */
-    boolean containsAllElementsIn(Iteratable<? extends E> elements);
+    boolean containsAllElementsIn(Iterable<? extends E> elements);
 
     /**
      * This method adds a new element to the collection.  If the collection
@@ -70,7 +70,7 @@ public interface Accessible<E> extends Iteratable<E> {
      * @param elements The list of new elements to be added.
      * @return The number of elements that were actually added to the collection.
      */
-    int addElements(Iteratable<? extends E> elements);
+    int addElements(Iterable<? extends E> elements);
 
     /**
      * This method removes the specified element from the collection.  If the element
@@ -96,6 +96,6 @@ public interface Accessible<E> extends Iteratable<E> {
      * @param elements The list of elements to be removed from the collection.
      * @return The number of elements that were actually removed.
      */
-    int removeElements(Iteratable<? extends E> elements);
+    int removeElements(Iterable<? extends E> elements);
 
 }

@@ -69,7 +69,7 @@ public interface Indexed<E> extends Iteratable<E> {
      * @param elements The new elements to be inserted into the collection.
      * @param index The index of the element before which the new element is to be inserted.
      */
-    void insertElementsBeforeIndex(Iteratable<? extends E> elements, int index);
+    void insertElementsBeforeIndex(Iterable<? extends E> elements, int index);
 
     /**
      * This method replaces an existing element in the collection with a new one.  The new

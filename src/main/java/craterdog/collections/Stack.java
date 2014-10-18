@@ -23,7 +23,7 @@ import org.slf4j.ext.XLoggerFactory;
  * @author Derk Norton
  * @param <E> The type of element managed by this collection.
  */
-public final class Stack<E> implements LIFO<E> {
+public class Stack<E> implements LIFO<E> {
 
     static private final XLogger logger = XLoggerFactory.getXLogger(Stack.class);
 
@@ -41,13 +41,13 @@ public final class Stack<E> implements LIFO<E> {
 
 
     @Override
-    public boolean isEmpty() {
+    public final boolean isEmpty() {
         return list.isEmpty();
     }
 
 
     @Override
-    public int getNumberOfElements() {
+    public final int getNumberOfElements() {
         return list.getNumberOfElements();
     }
 
@@ -60,29 +60,34 @@ public final class Stack<E> implements LIFO<E> {
 
     @Override
     public final void toArray(E[] array) {
+        logger.entry(array);
         int size = array.length;
         Iterator<E> iterator = createDefaultIterator();
         for (int index = 0; index < size && iterator.hasNextElement(); index++) {
-            array[index] = iterator.getNextElement();
+            E element = iterator.getNextElement();
+            logger.debug("Adding the following element to the array: {}", element);
+            array[index] = element;
         }
+        logger.exit();
     }
 
 
     @Override
-    public void pushTopElement(E element) {
-        logger.entry();
+    public final void pushTopElement(E element) {
+        logger.entry(element);
         list.addElement(element);
         logger.exit();
     }
 
 
     @Override
-    public E popTopElement() {
+    public final E popTopElement() {
         logger.entry();
         E element = null;
         int size = list.getNumberOfElements();
         if (size > 0) {
             element = list.removeElementAtIndex(size);
+            logger.debug("The top element is: {}", element);
         } else {
             RuntimeException exception = new RuntimeException("Attempted to pop the top element of an empty stack.");
             logger.throwing(exception);
@@ -94,7 +99,7 @@ public final class Stack<E> implements LIFO<E> {
 
 
     @Override
-    public void removeAllElements() {
+    public final void removeAllElements() {
         logger.entry();
         list.removeAllElements();
         logger.exit();
@@ -102,12 +107,13 @@ public final class Stack<E> implements LIFO<E> {
 
 
     @Override
-    public E getTopElement() {
+    public final E getTopElement() {
         logger.entry();
         E element = null;
         int size = list.getNumberOfElements();
         if (size > 0) {
             element = list.getElementAtIndex(size);
+            logger.debug("The top element is: {}", element);
         } else {
             RuntimeException exception = new RuntimeException("Attempted to access the top element of an empty stack.");
             logger.throwing(exception);
