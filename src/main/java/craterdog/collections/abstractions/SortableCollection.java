@@ -43,15 +43,17 @@ public abstract class SortableCollection<E> extends Collection<E> implements Sor
 
 
     /**
-     * This method returns a new list that is the concatenation of this list with
-     * the specified list.
+     * This method returns a new collection that is the concatenation of this collection with
+     * the specified collection.
      *
-     * @param list The list to be concatenated.
-     * @return The resulting list.
+     * @param <E> The type of element contained in the collections.
+     * @param collection1 The first collection to be concatenated.
+     * @param collection2 The second collection to be concatenated.
+     * @return The resulting collection.
      */
-    static public <E> SortableCollection<E> concatenate(SortableCollection<E> list1, SortableCollection<E> list2) {
-        List<E> result = new List<>(list1);
-        result.addElements(list2);
+    static public <E> SortableCollection<E> concatenate(SortableCollection<E> collection1, SortableCollection<E> collection2) {
+        List<E> result = new List<>(collection1);
+        result.addElements(collection2);
         return result;
     }
 
