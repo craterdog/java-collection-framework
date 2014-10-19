@@ -14,7 +14,7 @@ to live with many of the original mistakes to maintain backward compatibility.
 This project starts with a clean slate. It contains a set of Java collection classes that are independent
 of the `java.util` collection classes but that still integrate with the built-in Java language features
 that depend on the `java.lang.Iterable` interface. These classes provide the following nice features:
- * simple, easy to understand interfaces (see the [javadocs](http://craterdog.github.io/java-collection-framework))
+ * simple, easy to understand interfaces (see the [javadocs](http://craterdog.github.io/java-collection-framework/3.0/index.html))
  * self optimizing implementations
  * a framework in which to develop more specialized collection classes
 
