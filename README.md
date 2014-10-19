@@ -47,6 +47,9 @@ To get started using these classes, include the following dependency in your mav
     </dependency>
 ```
 
+The source code, javadocs and jar file artifacts for this project are available from the *Maven Central Repository*.
+If your project doesn't currently use maven and you would like to, click [here](https://github.com/craterdog/maven-parent-poms) to get started down that path quickly.
+
 ## Choosing a Collection
 The following flow chart provides a way to easily choose which collection type is right for your
 needs:
