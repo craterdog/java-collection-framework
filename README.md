@@ -52,3 +52,7 @@ The following flow chart provides a way to easily choose which collection type i
 needs:
 
 ![Collection Flow Chart](https://github.com/craterdog/java-collection-framework/blob/master/docs/images/FlowChart.png)
+
+No need to worry about the underlying implementation of each type of collection, they are all self optimizing and adjust
+automatically to varying read/update percentages.
+
