@@ -33,7 +33,7 @@ The following highlights the main types of collections that this project provide
 ## Quick Links
 For more detail on this project click on the following links:
  * [javadocs](http://craterdog.github.io/java-collection-framework/3.0/index.html)
- * [wiki](https://github.com/craterdog/java-collection-framework/wiki)
+ * [wiki](https://github.com/craterdog/java-collection-framework/wiki/Crater-Dog-Technologies%E2%84%A2-Java-Collection-Framework)
  * [website](http://craterdog.com)
 
 ## Getting Started
