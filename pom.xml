@@ -60,6 +60,23 @@
     </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <!-- disable java.lang.* and java.util.* links for this project only to highlight
+                         the difference between Java collections and Crater Dog collections. -->
+                    <detectJavaApiLink>false</detectJavaApiLink>
+                    <links>
+                        <link>http://craterdog.github.io/java-core-interfaces/3.0/package-list</link>
+                    </links>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
     <scm>
         <connection>scm:git:git@github.com:craterdog/java-collection-framework.git</connection>
         <developerConnection>scm:git:git@github.com:craterdog/java-collection-framework.git</developerConnection>
