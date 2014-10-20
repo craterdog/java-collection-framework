@@ -1,6 +1,6 @@
 # Java Collection Framework
 
-## A Gist of It
+## The Gist of It
 The Java language development team that created the original `java.util` collection classes was fairly
 new to object oriented design and collection frameworks and therefore made some common mistakes:
  * using *implementation inheritance* instead of *delegation* (a Stack is **not** a Vector!)
