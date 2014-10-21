@@ -132,31 +132,6 @@ public class BagTest {
 
 
     /**
-     * This method runs the standard time test on a bag without a comparator.
-     */
-    @Test
-    public void testBagTimingWithoutComparator() {
-        logger.info("Beginning testBagTimingWithoutComparator()...");
-        Bag<Integer> bag = new Bag<>();
-        CollectionTestUtils.runTimeTest(bag);
-        logger.info("Completed testBagTimingWithoutComparator().\n");
-    }
-
-
-    /**
-     * This method runs the standard time test on a bag with a custom comparator.
-     */
-    @Test
-    public void testBagTimingWithComparator() {
-        logger.info("Beginning testBagTimingWithComparator()...");
-        CollectionTestUtils.InOrderIntegerComparator comparator = new CollectionTestUtils.InOrderIntegerComparator();
-        Bag<Integer> bag = new Bag<>(comparator);
-        CollectionTestUtils.runTimeTest(bag);
-        logger.info("Completed testBagTimingWithComparator().\n");
-    }
-
-
-    /**
      * This method reorders a bag without a comparator.
      */
     @Test

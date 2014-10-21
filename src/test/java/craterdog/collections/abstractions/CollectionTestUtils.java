@@ -12,6 +12,7 @@ package craterdog.collections.abstractions;
 import craterdog.collections.Association;
 import craterdog.collections.List;
 import craterdog.collections.interfaces.Iteratable;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Random;
 import org.slf4j.ext.XLogger;
@@ -30,39 +31,39 @@ public class CollectionTestUtils {
 
 
     /**
-     * This utility function runs a standard time test on a collection.
+     * This utility function runs a standard time test on a Crater Dog collection.
      *
-     * @param collection The collection to be tested.
+     * @param collection The Crater Dog collection to be tested.
+     * @return The duration of the test in milliseconds.
      */
-    static public void runTimeTest(Collection<Integer> collection) {
+    static public long runCDTimeTest(Collection<Integer> collection) {
         long startInMillis = System.currentTimeMillis();
 
-        for (int j = 0; j < 100; j++) {
+        for (int j = 0; j < 1000; j++) {
 
             logger.debug("  Adding random elements to the collection...");
             int size = collection.getNumberOfElements();
             assert collection.isEmpty() || size > 0;
-            for (int i = 0; i < 100; i++) {
-                int value = generator.nextInt(10);
+            for (int i = 0; i < 1000; i++) {
+                int value = generator.nextInt(100);
                 if (collection.addElement(value)) size++;
             }
             assert collection.getNumberOfElements() == size;
 
             logger.debug("  Looking for subsets of the collection...");
-            Integer[] possibles = { 1, 2, 3 };
-            Iteratable<Integer> elements = new List<>(possibles);
+            Integer[] array = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            Iteratable<Integer> elements = new List<>(array);
             collection.containsAnyElementsIn(elements);
             collection.containsAllElementsIn(elements);
 
             logger.debug("  Adding multiple elements to the collection...");
             size += collection.addElements(elements);
-            Integer[] array = { 4, 5, 6 };
             size += collection.addElements(array);
             assert collection.getNumberOfElements() == size;
 
             logger.debug("  Performing random searches on the collection...");
-            for (int i = 0; i < 10; i++) {
-                int value = generator.nextInt(10);
+            for (int i = 0; i < 1000; i++) {
+                int value = generator.nextInt(100);
                 collection.containsElement(value);
             }
 
@@ -78,8 +79,8 @@ public class CollectionTestUtils {
             }
 
             logger.debug("  Removing random elements from the collection...");
-            for (int i = 0; i < 20; i++) {
-                int value = generator.nextInt(10);
+            for (int i = 0; i < 1000; i++) {
+                int value = generator.nextInt(100);
                 if (collection.removeElement(value)) size--;
             }
             assert size == collection.getNumberOfElements();
@@ -96,7 +97,83 @@ public class CollectionTestUtils {
 
         long stopInMillis = System.currentTimeMillis();
         long durationInMillis = stopInMillis - startInMillis;
-        logger.info("  The timed test took " + durationInMillis + " milliseconds.");
+        return durationInMillis;
+    }
+
+
+    /**
+     * This utility function runs a standard time test on a Java collection.
+     *
+     * @param collection The Java collection to be tested.
+     * @return The duration of the test in milliseconds.
+     */
+    static public long runJavaTimeTest(java.util.Collection<Integer> collection) {
+        long startInMillis = System.currentTimeMillis();
+
+        for (int j = 0; j < 1000; j++) {
+
+            logger.debug("  Adding random elements to the collection...");
+            int size = collection.size();
+            assert collection.isEmpty() || size > 0;
+            for (int i = 0; i < 1000; i++) {
+                int value = generator.nextInt(100);
+                if (collection.add(value)) size++;
+            }
+            assert collection.size() == size;
+
+            logger.debug("  Looking for subsets of the collection...");
+            Integer[] array = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            java.util.Collection<Integer> elements = java.util.Arrays.asList(array);
+            //no similar method for "collection.containsAnyElementsIn(elements);" so fake it
+            for (Integer integer : elements) {
+                if (collection.contains(integer)) break;
+            }
+            collection.containsAll(elements);
+
+            logger.debug("  Adding multiple elements to the collection...");
+            collection.addAll(elements);
+            collection.addAll(Arrays.asList(array));
+            size = collection.size();
+
+            logger.debug("  Performing random searches on the collection...");
+            for (int i = 0; i < 1000; i++) {
+                int value = generator.nextInt(100);
+                collection.contains(value);
+            }
+
+            logger.debug("  Iterating over the elements in the collection in order...");
+            java.util.Iterator<Integer> iterator = collection.iterator();
+            while (iterator.hasNext()) {
+                iterator.next();
+            }
+
+            logger.debug("  Iterating over the elements in the collection in reverse order...");
+            java.util.List<Integer> list = new java.util.ArrayList<>(collection);
+            java.util.ListIterator<Integer> listIterator = list.listIterator();
+            while (listIterator.hasPrevious()) {
+                listIterator.previous();
+            }
+
+            logger.debug("  Removing random elements from the collection...");
+            for (int i = 0; i < 1000; i++) {
+                int value = generator.nextInt(100);
+                if (collection.remove(value)) size--;
+            }
+            assert size == collection.size();
+
+            logger.debug("  Removing multiple elements from the collection...");
+            collection.removeAll(Arrays.asList(array));
+            collection.removeAll(elements);
+            collection.size();
+
+        }
+
+        logger.debug("  Removing all the elements from the collection...");
+        collection.clear();
+
+        long stopInMillis = System.currentTimeMillis();
+        long durationInMillis = stopInMillis - startInMillis;
+        return durationInMillis;
     }
 
 

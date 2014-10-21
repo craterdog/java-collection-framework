@@ -160,7 +160,7 @@ public class SetTest {
     public void testSetTimingWithoutComparator() {
         logger.info("Beginning testSetTimingWithoutComparator()...");
         Set<Integer> set = new Set<>();
-        CollectionTestUtils.runTimeTest(set);
+        CollectionTestUtils.runCDTimeTest(set);
         logger.info("Completed testSetTimingWithoutComparator().\n");
     }
 
@@ -173,7 +173,7 @@ public class SetTest {
         logger.info("Beginning testSetTimingWithComparator()...");
         CollectionTestUtils.InOrderIntegerComparator comparator = new CollectionTestUtils.InOrderIntegerComparator();
         Set<Integer> set = new Set<>(comparator);
-        CollectionTestUtils.runTimeTest(set);
+        CollectionTestUtils.runCDTimeTest(set);
         logger.info("Completed testSetTimingWithComparator().\n");
     }
 

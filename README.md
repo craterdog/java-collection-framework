@@ -3,6 +3,7 @@
 ## The Gist of It
 The Java language development team that created the original `java.util` collection classes was fairly
 new to object oriented design and collection frameworks and therefore made some common mistakes:
+
  * using *implementation inheritance* instead of *delegation* (a Stack is **not** a Vector!)
  * exposing underlying implementations (e.g. hashtable, linked list, and tree)
  * confusing *ordered* and *sortable* collections (e.g. SortedSet)
@@ -16,22 +17,24 @@ somewhat constrained by the original mistakes to maintain backward compatibility
 This project starts with a clean slate. It defines a set of Java collection classes that are independent
 of the `java.util` collection classes but that still interoperate with them and also integrate with the built-in Java language features
 that depend on the `java.lang.Iterable` interface. These classes provide the following nice features:
+
  * *simple*, easy to understand interfaces
  * *self-optimizing* implementations
  * a well designed *framework* in which to work
 
-## Main Collection Classes
+## Highlighted Components
 The following highlights the main types of collections that this project provides:
 
- * *Bag*
- * *Set*
- * *List*
- * *Map*
- * *Stack*
- * *Queue*
+ * *Bag* - an ordered collection where duplicates are allowed
+ * *Set* - an ordered collection where duplicates are *not* allowed
+ * *List* - a sortable collection with implicit indexes
+ * *Map* - a sortable collection with explicit indexes
+ * *Stack* - a collection that supports last in first out (LIFO)
+ * *Queue* - a collection that supports first in first out (FIFO)
 
 ## Quick Links
 For more detail on this project click on the following links:
+
  * [javadocs](http://craterdog.github.io/java-collection-framework/3.0/index.html)
  * [wiki](https://github.com/craterdog/java-collection-framework/wiki/Crater-Dog-Technologies%E2%84%A2-Java-Collection-Framework)
  * [website](http://craterdog.com)
@@ -47,8 +50,9 @@ To get started using these classes, include the following dependency in your mav
     </dependency>
 ```
 
-The source code, javadocs and jar file artifacts for this project are available from the *Maven Central Repository*.
-If your project doesn't currently use maven and you would like to, click [here](https://github.com/craterdog/maven-parent-poms) to get started down that path quickly.
+The source code, javadocs and jar file artifacts for this project are available from the
+*Maven Central Repository*. If your project doesn't currently use maven and you would like to,
+click [here](https://github.com/craterdog/maven-parent-poms) to get started down that path quickly.
 
 ## Choosing a Collection
 The following flow chart provides a way to easily choose which collection type is right for your
@@ -56,6 +60,5 @@ needs:
 
 ![Collection Flow Chart](https://github.com/craterdog/java-collection-framework/blob/master/docs/images/FlowChart.png)
 
-No need to worry about the underlying implementation of each type of collection, they are all self optimizing and adjust
-automatically to varying read/update percentages.
-
+No need to worry about the underlying implementation of each type of collection, they are all
+self-optimizing and adjust automatically to varying read/update percentages.

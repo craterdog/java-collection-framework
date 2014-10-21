@@ -181,18 +181,6 @@ public class ListTest {
 
 
     /**
-     * This method runs the standard time test on a list.
-     */
-    @Test
-    public void testListTiming() {
-        logger.info("Beginning testListTiming()...");
-        List<Integer> list = new List<>();
-        CollectionTestUtils.runTimeTest(list);
-        logger.info("Completed testListTiming().\n");
-    }
-
-
-    /**
      * This method tests the ordered collection methods from the <code>Sortable</code> interface with a list.
      */
     @Test
