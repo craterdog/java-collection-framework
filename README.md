@@ -1,6 +1,6 @@
 # Java Collection Framework
 
-## The Gist of It
+## The Gist
 The Java language development team that created the original `java.util` collection classes was fairly
 new to object oriented design and collection frameworks and therefore made some common mistakes:
 
