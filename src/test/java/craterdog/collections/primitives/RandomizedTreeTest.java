@@ -143,7 +143,7 @@ public class RandomizedTreeTest {
         logger.info("  Testing the access to indexed elements in random order...");
         if (!duplicatesAllowed) {
             for (int index : randomOrder) {
-                int element = tree.elementAt(index);
+                int element = tree.get(index);
                 if (index != element) fail("  The index (" + index + ") did not match the element(" + element + ").");
                 Assert.assertEquals("  The index returned does not match the element's index.", index, tree.indexOf(element));
             }

@@ -163,7 +163,7 @@ public final class RandomizedTree<E> extends AbstractCollection<E> {
      * @param index The index of the element to be returned.
      * @return The element at the specified index.
      */
-    public E elementAt(int index) {
+    public E get(int index) {
         // starting at the root, search for the node with the specified index
         TreeNode node = findNode(root, index);
         return node.element;
@@ -184,7 +184,7 @@ public final class RandomizedTree<E> extends AbstractCollection<E> {
         // startng at the root, work our way down comparing each node
         TreeNode currentTree = root;
         int index = currentTree.getLeftSubtreeSize();
-        while (currentTree != null) {
+        while (true) {
             int comparison = compareElements(element, currentTree.element);
             if (comparison == 0) {
                 // found it

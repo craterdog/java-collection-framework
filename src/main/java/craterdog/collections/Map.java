@@ -29,7 +29,7 @@ public class Map<K, V> extends SortableCollection<Association<K, V>> implements 
 
     static private final XLogger logger = XLoggerFactory.getXLogger(Map.class);
 
-    private final java.util.Map<K, Integer> indexes = new java.util.TreeMap<>();
+    private final java.util.Map<K, Integer> indexes = new java.util.HashMap<>();
     private final List<Association<K, V>> associations = new List<>();
 
 

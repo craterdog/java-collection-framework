@@ -65,6 +65,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven-javadoc-plugin-version}</version>
                 <configuration>
                     <!-- disable java.lang.* and java.util.* links for this project only to highlight
                          the difference between Java collections and Crater Dog collections. -->
