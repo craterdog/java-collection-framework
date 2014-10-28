@@ -13,6 +13,7 @@ import java.lang.reflect.Array;
 import java.util.AbstractCollection;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.ListIterator;
 import org.apache.commons.lang.math.RandomUtils;
 
@@ -24,13 +25,13 @@ import org.apache.commons.lang.math.RandomUtils;
  * but uses random choices to keep the tree statically balanced after each insertion or deletion.
  * All nodes in the tree have an equal probability of being the root node.  This implementation is
  * configurable such that it allows the programmer to specify whether or not duplicate entities are
- * allowed in the tree.
+ * allowed in the tree.  Since this is a binary tree it implements an ordered collection.
  *
  *
  * @author Derk Norton
  * @param <E> The type of the elements in the tree.
  */
-public final class RandomizedTree<E> extends AbstractCollection<E> {
+public final class RandomizedTree<E> extends AbstractCollection<E> implements Cloneable {
 
     private boolean duplicatesAllowed;
     private Comparator<? super E> comparator;
@@ -84,6 +85,7 @@ public final class RandomizedTree<E> extends AbstractCollection<E> {
         super();
         this.duplicatesAllowed = duplicatesAllowed;
         this.comparator = comparator;
+        this.root = null;
     }
 
 
@@ -245,6 +247,18 @@ public final class RandomizedTree<E> extends AbstractCollection<E> {
         return new TreeIterator();
     }
 
+
+    /**
+     * This method returns an iterator for the collection which is currently pointing
+     * at the slot right before the first element.
+     *
+     * @return A list iterator pointing at the slot before the first element.
+     */
+    public ListIterator<E> listIterator() {
+        return new TreeIterator();
+    }
+
+
     /**
      * This method returns an iterator for the collection which is currently pointing
      * at the slot right before the specified index.
@@ -252,8 +266,55 @@ public final class RandomizedTree<E> extends AbstractCollection<E> {
      * @param index The index before the next element in the collection to be returned by the iterator.
      * @return A list iterator pointing at the slot before the element referenced by the specified index.
      */
-    public ListIterator<E> iterator(int index) {
+    public ListIterator<E> listIterator(int index) {
         return new TreeIterator(index);
+    }
+
+
+    @Override
+    // NOTE: Only ordered collections whose elements are in the same order will be equal.
+    public boolean equals(Object object) {
+        if (object == this) return true;
+        if (!(object instanceof Collection)) return false;
+        Collection<?> that = (Collection<?>) object;
+        if (this.size() != that.size()) return false;
+        Iterator<E> e1 = this.iterator();
+        Iterator<?> e2 = that.iterator();
+        while(e1.hasNext()) {
+            E element1 = e1.next();
+            Object element2 = e2.next();
+            if (!(element1 == null ? element2 == null : element1.equals(element2))) return false;
+        }
+        return true;
+    }
+
+
+    @Override
+    // NOTE: Only ordered collections whose elements are in the same order will have equal hash codes.
+    public int hashCode() {
+        int hashCode = 1;
+        for (E element : this)
+            hashCode = 31 * hashCode + (element == null ? 0 : element.hashCode());
+        return hashCode;
+    }
+
+
+    @Override
+    public Object clone() {
+        try {
+            @SuppressWarnings("unchecked")
+            RandomizedTree<E> copy = (RandomizedTree<E>) super.clone();
+            copy.duplicatesAllowed = this.duplicatesAllowed;
+            copy.comparator = this.comparator;
+            copy.root = null;
+            for (E element : this) {
+                copy.add(element);
+            }
+            return copy;
+        } catch (CloneNotSupportedException e) {
+            // this shouldn't happen, since we are Cloneable
+            throw new InternalError();
+        }
     }
 
 

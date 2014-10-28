@@ -12,9 +12,11 @@ package craterdog.collections.primitives;
 import java.util.AbstractCollection;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
+import java.util.RandomAccess;
 
 
 /**
@@ -28,7 +30,7 @@ import java.util.NoSuchElementException;
  * @author Derk Norton
  * @param <E> The type of the elements in the array.
  */
-public final class DynamicArray<E> extends AbstractCollection<E> implements List<E> {
+public final class DynamicArray<E> extends AbstractCollection<E> implements List<E>, RandomAccess, Cloneable {
 
     // the capacity cannot get any smaller than this value
     static private final int MINIMUM_CAPACITY = 16;
@@ -58,7 +60,7 @@ public final class DynamicArray<E> extends AbstractCollection<E> implements List
      */
     public DynamicArray(int minimumCapacity) {
         int actualSize = MINIMUM_CAPACITY;
-        while (actualSize < minimumCapacity) actualSize *= 2;  // make sure it is a power of two
+        while (actualSize < minimumCapacity) actualSize <<= 1;  // make sure it is a power of two
         this.array = new Object[actualSize];
     }
 
@@ -84,24 +86,11 @@ public final class DynamicArray<E> extends AbstractCollection<E> implements List
 
 
     @Override
-    public boolean contains(Object element) {
-        @SuppressWarnings("unchecked")
-        int index = indexOf((E) element);
-        boolean result = index > -1;
-        return result;
-    }
-
-
-    @Override
     public int indexOf(Object element) {
         for (int index = 0; index < size; index++) {
             @SuppressWarnings("unchecked")
             E candidate = (E) array[index];
-            if (candidate == null) {
-                if (element == null) return index;
-            } else {
-                if (candidate.equals(element)) return index;
-            }
+            if (candidate == null ? element == null : candidate.equals(element)) return index;
         }
         return -1;  // not found
     }
@@ -112,11 +101,7 @@ public final class DynamicArray<E> extends AbstractCollection<E> implements List
         for (int index = size - 1; index >= 0; index--) {
             @SuppressWarnings("unchecked")
             E candidate = (E) array[index];
-            if (candidate == null) {
-                if (element == null) return index;
-            } else {
-                if (candidate.equals(element)) return index;
-            }
+            if (candidate == null ? element == null : candidate.equals(element)) return index;
         }
         return -1;  // not found
     }
@@ -140,9 +125,8 @@ public final class DynamicArray<E> extends AbstractCollection<E> implements List
 
 
     @Override
-    public boolean add(E newElement) {
-        if (array.length == size) doubleCapacity();
-        array[size++] = newElement;
+    public boolean add(E element) {
+        add(size, element);
         return true;
     }
 
@@ -150,8 +134,19 @@ public final class DynamicArray<E> extends AbstractCollection<E> implements List
     @Override
     public void add(int index, E element) {
         if (array.length == size) doubleCapacity();
-        System.arraycopy(array, index, array, index + 1, size++ - index);
+        if (index < size) System.arraycopy(array, index, array, index + 1, size - index);
         array[index] = element;
+        size++;
+    }
+
+
+    @Override
+    public boolean addAll(int index, Collection<? extends E> collection) {
+        ListIterator<E> iterator = listIterator(index);
+        for (E element : collection) {
+            iterator.add(element);
+        }
+        return !collection.isEmpty();
     }
 
 
@@ -171,28 +166,29 @@ public final class DynamicArray<E> extends AbstractCollection<E> implements List
      * down to fill in the gap.  This method returns the element that was removed.
      *
      * @param firstIndex The index of the first element to be removed.
-     * @param numberOfElements The number of elements to be removed.
+     * @param lastIndex The index of the last element after the range to be removed.
      * @return The elements that were removed from the array.
      */
-    public DynamicArray<E> remove(int firstIndex, int numberOfElements) {
+    public DynamicArray<E> remove(int firstIndex, int lastIndex) {
+        int numberOfElements = lastIndex - firstIndex;
         DynamicArray<E> results = new DynamicArray<>(numberOfElements);
-        for (int i = firstIndex; i < firstIndex + numberOfElements; i++) {
+        for (int i = firstIndex; i < lastIndex; i++) {
             @SuppressWarnings("unchecked")
             E element = (E) array[i];
             results.add(element);
         }
-        System.arraycopy(array, firstIndex + numberOfElements, array, firstIndex, size - firstIndex - numberOfElements);
+        System.arraycopy(array, lastIndex, array, firstIndex, size - lastIndex);
         Arrays.fill(array, size - numberOfElements, size, null);
         size -= numberOfElements;
-        if (size < array.length / 4) halveCapacity();  // use 1/4th to ensure hysteresis
+        if (size < array.length >> 2) halveCapacity();  // use 1/4th to ensure hysteresis
         return results;
     }
 
 
     @Override
-    public boolean remove(Object oldElement) {
+    public boolean remove(Object object) {
         @SuppressWarnings("unchecked")
-        E element = (E) oldElement;
+        E element = (E) object;
         int index = indexOf(element);
         if (index < 0) return false;
         remove(index);
@@ -214,17 +210,6 @@ public final class DynamicArray<E> extends AbstractCollection<E> implements List
 
 
     @Override
-    public boolean addAll(int index, Collection<? extends E> collection) {
-        boolean result = !collection.isEmpty();
-        ListIterator<E> iterator = iterator(index);
-        for (E element : collection) {
-            iterator.add(element);
-        }
-        return result;
-    }
-
-
-    @Override
     public ListIterator<E> listIterator() {
         return new ArrayIterator();
     }
@@ -238,22 +223,73 @@ public final class DynamicArray<E> extends AbstractCollection<E> implements List
 
     @Override
     public DynamicArray<E> subList(int fromIndex, int toIndex) {
-        int newSize = toIndex - fromIndex + 1;
-        DynamicArray<E> results = new DynamicArray<>(newSize);
-        System.arraycopy(array, fromIndex, results.array, 0, newSize);
+        int numberOfElements = toIndex - fromIndex;
+        DynamicArray<E> results = new DynamicArray<>(numberOfElements);
+        System.arraycopy(array, fromIndex, results.array, 0, numberOfElements);
+        results.size = numberOfElements;
         return results;
     }
 
 
-    /**
-     * This method returns an iterator for the collection which is currently pointing
-     * at the slot right before the specified index.
-     *
-     * @param index The index before the next element in the collection to be returned by the iterator.
-     * @return A list iterator pointing at the slot before the element referenced by the specified index.
-     */
-    public ListIterator<E> iterator(int index) {
-        return new ArrayIterator(index);
+    @Override
+    public Object[] toArray() {
+        return Arrays.copyOf(array, size);
+    }
+
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T[] toArray(T[] array) {
+        T[] result;
+        if (array.length < size) {
+            result = (T[]) Arrays.copyOf(this.array, size, array.getClass());
+        } else {
+            result = array;
+            System.arraycopy(this.array, 0, result, 0, size);
+        }
+        return result;
+    }
+
+
+    @Override
+    // NOTE: Only ordered collections whose elements are in the same order will be equal.
+    public boolean equals(Object object) {
+        if (object == this) return true;
+        if (!(object instanceof Collection<?>)) return false;
+        Collection<?> that = (Collection<?>) object;
+        if (this.size != that.size()) return false;
+        Iterator<E> e1 = this.iterator();
+        Iterator<?> e2 = that.iterator();
+        while(e1.hasNext()) {
+            E element1 = e1.next();
+            Object element2 = e2.next();
+            if (!(element1==null ? element2==null : element1.equals(element2))) return false;
+        }
+        return true;
+    }
+
+
+    @Override
+    // NOTE: Only ordered collections whose elements are in the same order will have equal hash codes.
+    public int hashCode() {
+        int hashCode = 1;
+        for (E e : this)
+            hashCode = 31*hashCode + (e==null ? 0 : e.hashCode());
+        return hashCode;
+    }
+
+
+    @Override
+    public Object clone() {
+        try {
+            @SuppressWarnings("unchecked")
+            DynamicArray<E> copy = (DynamicArray<E>) super.clone();
+            copy.array = Arrays.copyOf(array, size);
+            return copy;
+        } catch (CloneNotSupportedException e) {
+            // this shouldn't happen, since we are Cloneable
+            throw new InternalError();
+        }
     }
 
 
@@ -323,7 +359,8 @@ public final class DynamicArray<E> extends AbstractCollection<E> implements List
 
         @Override
         public void add(E element) {
-            DynamicArray.this.add(lastIndex = index++, element);
+            DynamicArray.this.add(index++, element);
+            lastIndex = -1;
         }
 
         @Override

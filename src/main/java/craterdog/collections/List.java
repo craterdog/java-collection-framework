@@ -16,6 +16,7 @@ import craterdog.collections.abstractions.Sorter;
 import craterdog.collections.interfaces.Indexed;
 import craterdog.collections.interfaces.Iteratable;
 import craterdog.collections.primitives.DynamicArray;
+import java.util.Arrays;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 
@@ -53,9 +54,7 @@ public class List<E> extends SortableCollection<E> implements Indexed<E> {
         logger.entry(elements);
         int size = elements.length;
         this.array = new DynamicArray<>(size);
-        for (E element : elements) {
-            this.array.add(element);
-        }
+        this.array.addAll(Arrays.asList(elements));
         logger.exit();
     }
 
@@ -299,14 +298,14 @@ public class List<E> extends SortableCollection<E> implements Indexed<E> {
         public void goToIndex(int index) {
             logger.entry(index);
             index = normalizedIndex(index);
-            iterator = array.iterator(index - 1);  // convert to zero based indexing
+            iterator = array.listIterator(index - 1);  // convert to zero based indexing
             logger.exit();
         }
 
         @Override
         public void goToEnd() {
             logger.entry();
-            iterator = array.iterator(array.size());  // convert to zero based indexing
+            iterator = array.listIterator(array.size());  // convert to zero based indexing
             logger.exit();
         }
 

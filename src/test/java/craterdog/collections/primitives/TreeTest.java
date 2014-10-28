@@ -26,9 +26,9 @@ import org.slf4j.ext.XLoggerFactory;
  *
  * @author Derk Norton
  */
-public class RandomizedTreeTest {
+public class TreeTest {
 
-    static private final XLogger logger = XLoggerFactory.getXLogger(RandomizedTreeTest.class);
+    static private final XLogger logger = XLoggerFactory.getXLogger(TreeTest.class);
 
     /**
      * Log a message at the beginning of the tests.
@@ -133,7 +133,7 @@ public class RandomizedTreeTest {
 
         logger.info("  Testing iterating over the elements in reverse order...");
         i = 0;
-        ListIterator<Integer> iterator = tree.iterator(tree.size());
+        ListIterator<Integer> iterator = tree.listIterator(tree.size());
         while(iterator.hasPrevious()) {
             int v = iterator.previous();
             treeValues[i++] = v;
