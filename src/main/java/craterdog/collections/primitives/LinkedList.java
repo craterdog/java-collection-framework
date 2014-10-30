@@ -26,10 +26,10 @@ import java.util.RandomAccess;
 public final class LinkedList<E> extends AbstractCollection<E> implements List<E>, RandomAccess, Cloneable {
 
     // the current number of elements in the list
-    private int size;
+    private int size = 0;
 
     // the head of the list
-    private Link head;
+    private Link head = null;
 
     /**
      * This default constructor creates an empty instance of a linked list.

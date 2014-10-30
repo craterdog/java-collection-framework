@@ -62,6 +62,7 @@ public final class DynamicArray<E> extends AbstractCollection<E> implements List
         int actualSize = MINIMUM_CAPACITY;
         while (actualSize < minimumCapacity) actualSize <<= 1;  // make sure it is a power of two
         this.array = new Object[actualSize];
+        this.size = 0;  // no elements in the array yet
     }
 
 
@@ -156,7 +157,7 @@ public final class DynamicArray<E> extends AbstractCollection<E> implements List
         E element = (E) array[index];
         System.arraycopy(array, index + 1, array, index, --size - index);
         array[size] = null;
-        if (size < array.length >> 2) halveCapacity();  // use 1/4th to ensure hysteresis
+        if (size < array.length >>> 2) halveCapacity();  // less than 1/4th to ensure hysteresis
         return element;
     }
 

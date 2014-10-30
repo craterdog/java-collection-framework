@@ -150,7 +150,7 @@ public abstract class OrderedCollection<E> extends Collection<E> implements Orde
      */
     private class OrderedIterator extends Iterator<E> {
 
-        private java.util.ListIterator<E> iterator = tree.iterator();
+        private java.util.ListIterator<E> iterator = tree.listIterator();
 
         @Override
         public void goToStart() {
@@ -160,12 +160,12 @@ public abstract class OrderedCollection<E> extends Collection<E> implements Orde
         @Override
         public void goToIndex(int index) {
             index = normalizedIndex(index);
-            iterator = tree.iterator(index - 1);
+            iterator = tree.listIterator(index - 1);
         }
 
         @Override
         public void goToEnd() {
-            iterator = tree.iterator(tree.size());
+            iterator = tree.listIterator(tree.size());
         }
 
         @Override
