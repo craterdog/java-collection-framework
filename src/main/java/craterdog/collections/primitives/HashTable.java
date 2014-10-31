@@ -38,9 +38,6 @@ public final class HashTable<K, V> extends AbstractMap<K, V> implements Map<K, V
     // the current number of elements in the table
     private int size;
 
-    // the number of key collisions that have occurred
-    private int collisions;
-
     // the storage for the elements, the size of the table must be a power of 2
     private DynamicArray[] table;
 
@@ -79,7 +76,6 @@ public final class HashTable<K, V> extends AbstractMap<K, V> implements Map<K, V
         this.table = createTable(actualSize);
         this.function = new UniversalHashFunction(hashWidth);
         this.size = 0;  // no elements in the table yet
-        this.collisions = 0;
     }
 
 
@@ -103,17 +99,6 @@ public final class HashTable<K, V> extends AbstractMap<K, V> implements Map<K, V
     }
 
 
-    /**
-     * This method returns the number of hash collisions that occurred between keys in the current
-     * hash table.
-     *
-     * @return The number of hash collisions that have occurred between keys.
-     */
-    int collisions() {
-        return collisions;
-    }
-
-
     @Override
     public void clear() {
         Arrays.fill(table, null);  // assist with garbage collection
@@ -121,7 +106,6 @@ public final class HashTable<K, V> extends AbstractMap<K, V> implements Map<K, V
         hashWidth = 4;
         function = new UniversalHashFunction(hashWidth);
         size = 0;  // no elements in the table yet
-        collisions = 0;
     }
 
 
@@ -187,7 +171,6 @@ public final class HashTable<K, V> extends AbstractMap<K, V> implements Map<K, V
         }
         bucket.add(new SimpleEntry<>(key, value));
         size++;
-        if (bucket.size() > 1) collisions++;
         return null;
     }
 
@@ -201,7 +184,6 @@ public final class HashTable<K, V> extends AbstractMap<K, V> implements Map<K, V
             K entryKey = entry.getKey();
             if (entryKey != null && entryKey.equals(key)) {
                 bucket.remove(i);
-                if (bucket.size() > 0) collisions--;
                 if (--size < table.length >>> 2) halveCapacity();  // less than 1/4th to ensure hysteresis
                 return entry.getValue();
             }
@@ -221,8 +203,9 @@ public final class HashTable<K, V> extends AbstractMap<K, V> implements Map<K, V
     public Object clone() {
         try {
             HashTable<K, V> copy = (HashTable<K, V>) super.clone();
-            copy.table = Arrays.copyOf(table, size);
-            for (int i = 0; i < table.length; i++) {
+            int length = table.length;
+            copy.table = Arrays.copyOf(table, length);
+            for (int i = 0; i < length; i++) {
                 copy.table[i] = (DynamicArray<Entry<K, V>>) table[i].clone();
             }
             return copy;
@@ -261,12 +244,10 @@ public final class HashTable<K, V> extends AbstractMap<K, V> implements Map<K, V
 
 
     private void rehashTo(DynamicArray<Entry<K, V>>[] newTable) {
-        collisions = 0;
         for (DynamicArray<Entry<K, V>> array : table) {
             for (Entry<K, V> entry : array) {
                 int hash = function.hashValue(entry.getKey());
                 newTable[hash].add(entry);
-                if (newTable[hash].size() > 1) collisions++;
             }
         }
         Arrays.fill(table, null);  // to aid in garbage collection
@@ -355,7 +336,6 @@ public final class HashTable<K, V> extends AbstractMap<K, V> implements Map<K, V
             if (lastBucketIndex < 0) throw new IllegalStateException();
             DynamicArray<Entry<K, V>> bucket = table[lastTableIndex];
             bucket.remove(lastBucketIndex);
-            if (bucket.size() > 0) collisions--;
             // NOTE: do not rehash the table here!
             tableIndex = lastTableIndex;
             bucketIndex = lastBucketIndex;

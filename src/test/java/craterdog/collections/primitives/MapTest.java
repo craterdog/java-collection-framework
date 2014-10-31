@@ -86,10 +86,14 @@ public class MapTest {
                     assertTrue(map.containsValue(i));
                     assertEquals(i, (int) map.get(i));
                     assertEquals(i, map.size() - 1);
-                    if (map instanceof HashTable) {
-                        HashTable<Integer, Integer> table = (HashTable<Integer, Integer>) map;
-                        logger.info("Number of collisions: {}", table.collisions());
-                    }
+                }
+
+                // clone and compare
+                if (map instanceof HashTable) {
+                    HashTable<Integer, Integer> hashtable = (HashTable<Integer, Integer>) map;
+                    @SuppressWarnings("unchecked")
+                    HashTable<Integer, Integer> copy = (HashTable<Integer, Integer>) hashtable.clone();
+                    assertEquals(map, copy);
                 }
 
                 // remove the elements one by one so that the map resizes its capacity back to the minimum
@@ -97,6 +101,13 @@ public class MapTest {
                     map.remove(i);
                     assertEquals(i, map.size());
                 }
+
+                // add a few more associations
+                Map<Integer, Integer> more = new HashTable<>();
+                more.put(5, 5);
+                more.put(6, 6);
+                map.putAll(more);
+                assertEquals(7, map.size());
 
                 // clear out the rest of the elements
                 map.clear();
