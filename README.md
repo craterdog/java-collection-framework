@@ -1,6 +1,6 @@
 # Java Collection Framework
 
-## The Gist
+## In a Nut Shell
 The Java language development team that created the original `java.util` collection classes was fairly
 new to object oriented design and collection frameworks and therefore made some common mistakes:
 
@@ -36,7 +36,7 @@ The following highlights the main types of collections that this project provide
 For more detail on this project click on the following links:
 
  * [javadocs](http://craterdog.github.io/java-collection-framework/3.0/index.html)
- * [wiki](https://github.com/craterdog/java-collection-framework/wiki/Crater-Dog-Technologies%E2%84%A2-Java-Collection-Framework)
+ * [wiki](https://github.com/craterdog/java-collection-framework/wiki)
  * [website](http://craterdog.com)
 
 ## Getting Started
