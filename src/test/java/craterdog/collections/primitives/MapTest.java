@@ -57,6 +57,13 @@ public class MapTest {
     }
 
 
+    /**
+     * This unit test method does simple functional and performance tests on the java.util and
+     * craterdog.collections.primitives classes that support the java.util.Map interface.
+     *
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
     @Test
     public void testMethods() throws InstantiationException, IllegalAccessException {
         Class<?>[] classes = {

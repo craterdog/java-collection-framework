@@ -47,6 +47,13 @@ public class ListTest {
     }
 
 
+    /**
+     * This unit test method does simple functional and performance tests on the java.util and
+     * craterdog.collections.primitives classes that support the java.util.List interface.
+     *
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
     @Test
     public void testMethods() throws InstantiationException, IllegalAccessException {
         Class<?>[] classes = {java.util.ArrayList.class, java.util.LinkedList.class, DynamicArray.class, LinkedList.class};
