@@ -35,7 +35,7 @@ The following highlights the main types of collections that this project provide
 ## Quick Links
 For more detail on this project click on the following links:
 
- * [javadocs](http://craterdog.github.io/java-collection-framework/3.0/index.html)
+ * [javadocs](http://craterdog.github.io/java-collection-framework/3.3/index.html)
  * [wiki](https://github.com/craterdog/java-collection-framework/wiki)
  * [release notes](https://github.com/craterdog/java-collection-framework/wiki/Release-Notes)
  * [website](http://craterdog.com)
@@ -47,7 +47,7 @@ To get started using these classes, include the following dependency in your mav
     <dependency>
         <groupId>com.craterdog</groupId>
         <artifactId>java-collection-framework</artifactId>
-        <version>3.0</version>
+        <version>3.3</version>
     </dependency>
 ```
 
