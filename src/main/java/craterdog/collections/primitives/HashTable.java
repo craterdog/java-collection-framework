@@ -39,7 +39,7 @@ public final class HashTable<K, V> extends AbstractMap<K, V> implements Map<K, V
     private int size;
 
     // the storage for the elements, the size of the table must be a power of 2
-    private DynamicArray[] table;
+    private DynamicArray<Entry<K, V>>[] table;
 
     // the number of bits required in the hash: log2(table.length)
     private int hashWidth = 4;  // starts out at: log2(MINIMUM_CAPACITY)
@@ -66,7 +66,6 @@ public final class HashTable<K, V> extends AbstractMap<K, V> implements Map<K, V
      *
      * @param minimumCapacity The minimum initial size of the table.
      */
-    @SuppressWarnings("unchecked")
     public HashTable(int minimumCapacity) {
         int actualSize = MINIMUM_CAPACITY;
         while (actualSize < minimumCapacity) {
@@ -217,8 +216,8 @@ public final class HashTable<K, V> extends AbstractMap<K, V> implements Map<K, V
 
 
     private DynamicArray<Entry<K, V>>[] createTable(int numberOfBuckets) {
-        @SuppressWarnings("unchecked")
-        DynamicArray[] newTable = (DynamicArray[]) new DynamicArray[numberOfBuckets];
+        @SuppressWarnings({"rawtypes", "unchecked"})
+        DynamicArray<Entry<K, V>>[] newTable = (DynamicArray<Entry<K, V>>[]) new DynamicArray[numberOfBuckets];
         for (int i = 0; i < numberOfBuckets; i++) {
             newTable[i] = new DynamicArray<>();
         }
@@ -227,7 +226,6 @@ public final class HashTable<K, V> extends AbstractMap<K, V> implements Map<K, V
 
 
     private void doubleCapacity() {
-        @SuppressWarnings("unchecked")
         DynamicArray<Entry<K, V>>[] newTable = createTable(table.length << 1);  // multiply current length by 2
         function = new UniversalHashFunction(++hashWidth);
         rehashTo(newTable);
@@ -236,7 +234,6 @@ public final class HashTable<K, V> extends AbstractMap<K, V> implements Map<K, V
 
     private void halveCapacity() {
         if (table.length == MINIMUM_CAPACITY) return;  // make sure we don't shrink too much
-        @SuppressWarnings("unchecked")
         DynamicArray<Entry<K, V>>[] newTable = createTable(table.length >>> 1);  // divide current length by 2
         function = new UniversalHashFunction(--hashWidth);
         rehashTo(newTable);

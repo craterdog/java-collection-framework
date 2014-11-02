@@ -29,7 +29,7 @@ public final class LinkedList<E> extends AbstractCollection<E> implements List<E
     private int size = 0;
 
     // the head of the list
-    private Link head = null;
+    private Link<E> head = null;
 
     /**
      * This default constructor creates an empty instance of a linked list.
@@ -81,7 +81,7 @@ public final class LinkedList<E> extends AbstractCollection<E> implements List<E
 
     @Override
     public E get(int index) {
-        Link link = getLinkAtIndex(index);
+        Link<E> link = getLinkAtIndex(index);
         E element = link.value;
         return element;
     }
@@ -89,7 +89,7 @@ public final class LinkedList<E> extends AbstractCollection<E> implements List<E
 
     @Override
     public E set(int index, E element) {
-        Link link = getLinkAtIndex(index);
+        Link<E> link = getLinkAtIndex(index);
         E oldElement = link.value;
         link.value = element;
         return oldElement;
@@ -110,7 +110,7 @@ public final class LinkedList<E> extends AbstractCollection<E> implements List<E
         } else if (index == size) {
             appendElementToList(newElement);
         } else {
-            Link existingLink = getLinkAtIndex(index);
+            Link<E> existingLink = getLinkAtIndex(index);
             insertElementIntoListBeforeLink(existingLink, newElement);
         }
     }
@@ -128,7 +128,7 @@ public final class LinkedList<E> extends AbstractCollection<E> implements List<E
 
     @Override
     public E remove(int index) {
-        Link existingLink = getLinkAtIndex(index);
+        Link<E> existingLink = getLinkAtIndex(index);
         E element = existingLink.value;
         removeLinkFromList(existingLink);
         return element;
@@ -156,15 +156,11 @@ public final class LinkedList<E> extends AbstractCollection<E> implements List<E
             size = 0;
         } else {
             // retrieve the links
-            Link firstLink = getLinkAtIndex(firstIndex);
-            Link lastLink = getLinkAtIndex(lastIndex);  // the link past the range
+            Link<E> firstLink = getLinkAtIndex(firstIndex);
+            Link<E> lastLink = getLinkAtIndex(lastIndex);  // the link past the range
 
             // remove the links in the range
-            Link temp = lastLink.previous;
-            firstLink.previous.next = lastLink;
-            lastLink.previous.next = firstLink;
-            lastLink.previous = firstLink.previous;
-            firstLink.previous = temp;
+            Link.removeLinks(firstLink, lastLink);
             if (firstIndex == 0) head = lastLink;
             size -= numberRemoved;
 
@@ -183,7 +179,7 @@ public final class LinkedList<E> extends AbstractCollection<E> implements List<E
         if (size == 0) return false;
 
         // search the list for the element
-        Link link = head;
+        Link<E> link = head;
         do {
             if (link.value == null ? object == null : link.value.equals(object)) {
                 removeLinkFromList(link);
@@ -287,8 +283,8 @@ public final class LinkedList<E> extends AbstractCollection<E> implements List<E
     private final class LinkedListIterator implements ListIterator<E> {
 
         int index;
-        Link link;
-        Link lastLink;
+        Link<E> link;
+        Link<E> lastLink;
 
         private LinkedListIterator() {
             this.index = 0;
@@ -370,19 +366,8 @@ public final class LinkedList<E> extends AbstractCollection<E> implements List<E
     }
 
 
-    // the structure to hold each element in the list
-    private class Link {
-        E value;
-        Link previous;
-        Link next;
-        Link(E value) {
-            this.value = value;
-        }
-    }
-
-
-    private Link getLinkAtIndex(int index) {
-        Link link = head;
+    private Link<E> getLinkAtIndex(int index) {
+        Link<E> link = head;
         if (index < size / 2) {
             for (int i = 0; i < index; i++) {
                 link = link.next;
@@ -397,7 +382,7 @@ public final class LinkedList<E> extends AbstractCollection<E> implements List<E
 
 
     private void insertElementIntoEmptyList(E element) {
-        head = new Link(element);
+        head = new Link<E>(element);
         head.next = head;
         head.previous = head;
         size = 1;
@@ -405,31 +390,23 @@ public final class LinkedList<E> extends AbstractCollection<E> implements List<E
 
 
     private void appendElementToList(E element) {
-        Link newLink = new Link(element);
-        newLink.next = head;
-        newLink.previous = head.previous;
-        head.previous.next = newLink;
-        head.previous = newLink;
+        Link<E> newLink = new Link<>(element);
+        Link.insertBeforeLink(newLink, head);
         size++;
     }
 
 
-    private void insertElementIntoListBeforeLink(Link existingLink, E element) {
-        Link newLink = new Link(element);
-        newLink.next = existingLink;
-        newLink.previous = existingLink.previous;
-        existingLink.previous.next = newLink;
-        existingLink.previous = newLink;
+    private void insertElementIntoListBeforeLink(Link<E> existingLink, E element) {
+        Link<E> newLink = new Link<>(element);
+        Link.insertBeforeLink(newLink, existingLink);
         if (head == existingLink) head = newLink;
         size++;
     }
 
-    private void removeLinkFromList(Link existingLink) {
+
+    private void removeLinkFromList(Link<E> existingLink) {
         if (head == existingLink) head = existingLink.next;
-        existingLink.previous.next = existingLink.next;
-        existingLink.next.previous = existingLink.previous;
-        existingLink.previous = null;
-        existingLink.next = null;
+        Link.removeLink(existingLink);
         if (--size == 0) head = null;
     }
 
