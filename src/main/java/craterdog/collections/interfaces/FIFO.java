@@ -26,7 +26,8 @@ public interface FIFO<E> extends Iteratable<E> {
      * drops.
      *
      * @param element The new element to be added.
-     * @throws java.lang.InterruptedException
+     * @throws java.lang.InterruptedException The thread that was waiting to add an element
+     * was interrupted.
      */
     void addTailElement(E element) throws InterruptedException;
 
@@ -35,7 +36,8 @@ public interface FIFO<E> extends Iteratable<E> {
      * the queue is empty, the method blocks until an element is available.
      *
      * @return The head element in the queue.
-     * @throws java.lang.InterruptedException
+     * @throws java.lang.InterruptedException The thread that was waiting to remove an element
+     * was interrupted.
      */
     E removeHeadElement() throws InterruptedException;
 

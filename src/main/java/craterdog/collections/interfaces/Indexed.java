@@ -78,7 +78,7 @@ public interface Indexed<E> extends Iteratable<E> {
      * @param element The new element that will replace the existing one.
      * @param index The index of the existing element.
      *
-     * @return
+     * @return The element that was at the specified index.
      */
     E replaceElementAtIndex(E element, int index);
 

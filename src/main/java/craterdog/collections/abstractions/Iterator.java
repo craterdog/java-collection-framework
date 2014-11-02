@@ -35,7 +35,7 @@ public abstract class Iterator<E> implements java.util.Iterator<E> {
      * This method moves the iterator to the slot just before the specified index.  The
      * next element to be returned will then be the element with that index.
      *
-     * @param index
+     * @param index This index of element to be returned next by the iterator.
      */
     public abstract void goToIndex(int index);
 
