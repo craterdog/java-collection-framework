@@ -18,7 +18,8 @@ import org.slf4j.ext.XLoggerFactory;
 /**
  * This collection class implements a stack (LIFO) data structure.  Attempting to access an
  * entity on an empty stack is considered a bug in the calling code and a runtime exception
- * is thrown.
+ * is thrown.  The implementation dynamically scales up and down the size of the underlying
+ * data structures as the number elements changes over time.
  *
  * @author Derk Norton
  * @param <E> The type of element managed by this collection.

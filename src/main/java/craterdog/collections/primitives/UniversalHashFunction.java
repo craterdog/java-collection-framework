@@ -9,7 +9,7 @@
  ************************************************************************/
 package craterdog.collections.primitives;
 
-import java.security.SecureRandom;
+import org.apache.commons.lang.math.RandomUtils;
 
 
 /**
@@ -23,8 +23,6 @@ import java.security.SecureRandom;
  * @author Derk Norton
  */
 public final class UniversalHashFunction {
-
-    static private final SecureRandom generator = new SecureRandom();
 
     private final int w;  // width of a word (defaults to int)
     private final int d;  // difference between word width and hash width
@@ -40,8 +38,8 @@ public final class UniversalHashFunction {
     public UniversalHashFunction(int wordWidth, int hashWidth) {
         this.w = wordWidth;
         this.d = wordWidth - hashWidth;
-        this.a = (generator.nextInt() & 0x7FFFFFFF) | 0x00000001;  // make sure a is positive and odd
-        this.b = generator.nextInt(1 << d);  // in range [0..2^d)
+        this.a = (RandomUtils.nextInt() & 0x7FFFFFFF) | 0x00000001;  // make sure a is positive and odd
+        this.b = RandomUtils.nextInt(1 << d);  // in range [0..2^d)
     }
 
 

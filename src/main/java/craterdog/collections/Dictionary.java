@@ -16,7 +16,8 @@ import org.slf4j.ext.XLoggerFactory;
 
 /**
  * This collection class is a convenience class that implements a <code>Map</code> whose keys
- * are always of type <code>String</code>.
+ * are always of type <code>String</code>.  The implementation dynamically scales up and down
+ * the size of the underlying data structures as the number elements changes over time.
  *
  * @author Derk Norton
  * @param <V> The type of the value in the association.

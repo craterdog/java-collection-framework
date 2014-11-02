@@ -17,6 +17,8 @@ import org.slf4j.ext.XLoggerFactory;
 
 /**
  * This collection class implements an ordered collection that does not allow duplicate elements.
+ * The implementation dynamically scales up and down the size of the underlying data structures as
+ * the number elements changes over time.
  *
  * @author Derk Norton
  * @param <E> The type of element managed by the collection.

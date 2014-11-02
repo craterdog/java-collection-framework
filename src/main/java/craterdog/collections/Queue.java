@@ -18,7 +18,8 @@ import org.slf4j.ext.XLoggerFactory;
 /**
  * This collection class implements a queue (FIFO) data structure.  Normally, multiple
  * threads will be accessing a queue at the same time.  This class enforces synchronized
- * access to all methods of this class.
+ * access to all methods of this class.  The implementation dynamically scales up and down
+ * the size of the underlying data structures as the number elements changes over time.
  *
  * @author Derk Norton
  * @param <E> The type of element managed by this collection.

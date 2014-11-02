@@ -21,7 +21,10 @@ import org.slf4j.ext.XLoggerFactory;
 
 
 /**
- * This collection class implements a sortable collection containing key-value associations.
+ * This collection class implements a sortable collection containing key-value associations.  The
+ * implementation is optimized for both inserting new associations and looking up values based on
+ * their key.  The implementation also dynamically scales up and down the number of buckets as the
+ * number of associations changes over time.
  *
  * @author Derk Norton
  * @param <K> The type of the key in the association.
@@ -31,7 +34,10 @@ public class Map<K, V> extends SortableCollection<Association<K, V>> implements 
 
     static private final XLogger logger = XLoggerFactory.getXLogger(Map.class);
 
+    // a hash table mapping each association key to its corresponding link in the linked list
     private final HashTable<K, Link<Association<K, V>>> indexes = new HashTable<>();
+
+    // a linked list containing the key value associations in their proper order
     private Link<Association<K, V>> associations = null;
 
 

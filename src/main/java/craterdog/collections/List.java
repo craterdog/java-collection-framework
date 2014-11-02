@@ -22,8 +22,9 @@ import org.slf4j.ext.XLoggerFactory;
 
 
 /**
- * This collection class implements a self-optimizing list which monitors its space
- * consumption and adjusts it as needed.
+ * This collection class implements a sortable list which performs very well for both inserts and
+ * indexed lookups of its values.  The implementation dynamically scales up and down the size of
+ * the underlying data structures as the number of associations changes over time.
  *
  * @author Derk Norton
  * @param <E> The type of element managed by the collection.
