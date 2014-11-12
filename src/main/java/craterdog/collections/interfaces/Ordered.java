@@ -9,6 +9,8 @@
  ************************************************************************/
 package craterdog.collections.interfaces;
 
+import java.util.Comparator;
+
 
 /**
  * This interface defines the methods that must be implemented by each collection that
@@ -18,5 +20,12 @@ package craterdog.collections.interfaces;
  * @param <E> The type of element managed by the collection.
  */
 public interface Ordered<E> extends Iteratable<E> {
+
+    /**
+     * This method returns the comparator that is used to order the elements in this collection.
+     *
+     * @return The comparator that is used to order the elements in this collection.
+     */
+    Comparator<? super E> getComparator();
 
 }

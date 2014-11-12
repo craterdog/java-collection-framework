@@ -142,6 +142,12 @@ public abstract class OrderedCollection<E> extends Collection<E> implements Orde
     }
 
 
+    @Override
+    public final Comparator<? super E> getComparator() {
+        return tree.comparator();
+    }
+
+
     /*
      * This iterator class implements the <code>Iterator</code> abstraction  It utilizes the
      * underlying tree iterators from the underlying tree implementation.  Like most iterators,

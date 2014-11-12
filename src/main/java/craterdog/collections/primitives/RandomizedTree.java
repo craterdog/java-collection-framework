@@ -271,6 +271,16 @@ public final class RandomizedTree<E> extends AbstractCollection<E> implements Cl
     }
 
 
+    /**
+     * This method returns the comparator that is used to order the elements in this collection.
+     *
+     * @return The comparator that is used to order the elements in this collection.
+     */
+    public Comparator<? super E> comparator() {
+        return comparator;
+    }
+
+
     @Override
     // NOTE: Only ordered collections whose elements are in the same order will be equal.
     public boolean equals(Object object) {
