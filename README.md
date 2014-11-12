@@ -1,12 +1,9 @@
-# Java Collection Framework
-
-## In a Nut Shell
-The Java language development team that created the original `java.util` collection classes was fairly
-new to object oriented design and collection frameworks and therefore made some common mistakes:
-
- * using *implementation inheritance* instead of *delegation* (a Stack is **not** a Vector!)
+## Java Collection Framework
+The Java language development team that created the original `java.util` collection classes was fairly new
+to object oriented design and collection frameworks and therefore made some common mistakes:
+ * using implementation inheritance instead of delegation (a `Stack` is **not** a `Vector`!)
  * exposing underlying implementations (e.g. hashtable, linked list, and tree)
- * confusing *ordered* and *sortable* collections (e.g. SortedSet)
+ * confusing _ordered_ and _sortable_ collections (e.g. `SortedSet` which is really an _ordered_ set)
 
 We forgive them, however, since they got a lot of things right :wink:.
 
@@ -15,8 +12,9 @@ somewhat constrained by the original mistakes to maintain backward compatibility
 
 ## A Clean Slate
 This project starts with a clean slate. It defines a set of Java collection classes that are independent
-of the `java.util` collection classes but that still interoperate with them and also integrate with the built-in Java language features
-that depend on the `java.lang.Iterable` interface. These classes provide the following nice features:
+of the `java.util` collection classes but that still interoperate with them and also integrate with the
+built-in Java language features that depend on the `java.lang.Iterable` interface. These classes provide
+the following nice features:
 
  * *simple*, easy to understand interfaces
  * *self-optimizing* implementations
