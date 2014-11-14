@@ -25,7 +25,7 @@ public interface LIFO<E> extends Iteratable<E> {
      *
      * @param element The new element to be added.
      */
-    void pushTopElement(E element);
+    void pushElementOnTop(E element);
 
     /**
      * This method pops the top element off of the stack.  If the stack is empty
@@ -33,7 +33,7 @@ public interface LIFO<E> extends Iteratable<E> {
      *
      * @return The top element from the stack.
      */
-    E popTopElement();
+    E popElementOffTop();
 
     /**
      * This method returns a reference to the top element on the stack without

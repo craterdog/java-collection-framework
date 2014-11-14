@@ -15,8 +15,7 @@ import java.util.Comparator;
 /**
  * This abstract class defines a framework for each concrete sorter class
  * that sorts the elements in a collection using a specific algorithm and
- * comparator function.  The collection to be sorted should be passed into
- * the constructor for the concrete sorter class.
+ * comparator function.
  *
  * @author Derk Norton
  * @param <E> The type of element being sorted.

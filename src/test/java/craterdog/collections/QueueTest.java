@@ -93,7 +93,7 @@ public class QueueTest {
                 while (value < 100) {
                     Thread.sleep(value);
                     logger.info("  Attempting to add an element to the queue...");
-                    queue.addTailElement(value);
+                    queue.addElementToTail(value);
                     logger.info("  The following value was added: " + value);
                     int temp = value;
                     value += previous;
@@ -121,7 +121,7 @@ public class QueueTest {
                 int index = 1;
                 while (index < 100) {
                     logger.info("  Attempting to remove an element from the queue: {}", queue);
-                    int value = queue.removeHeadElement();
+                    int value = queue.removeElementFromHead();
                     logger.info("  The following value was removed: " + value);
                     int temp = index;
                     index += previous;

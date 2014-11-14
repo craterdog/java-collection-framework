@@ -86,7 +86,7 @@ public class Queue<E> implements FIFO<E> {
 
 
     @Override
-    public final synchronized void addTailElement(E element) throws InterruptedException {
+    public final synchronized void addElementToTail(E element) throws InterruptedException {
         logger.entry();
         while (true) {  // do this in a loop in case there are spurious wakeups (see Object.wait() javadoc)
             int size = list.getNumberOfElements();
@@ -105,7 +105,7 @@ public class Queue<E> implements FIFO<E> {
 
 
     @Override
-    public final synchronized E removeHeadElement() throws InterruptedException {
+    public final synchronized E removeElementFromHead() throws InterruptedException {
         logger.entry();
         E element = null;
         while (true) {  // do this in a loop in case there are spurious wakeups (see Object.wait() javadoc)

@@ -64,7 +64,7 @@ public class StackTest {
 
         logger.info("  Pushing elements onto the stack: {}", stack);
         for (int i = 1; i <= 5; i++) {
-            stack.pushTopElement(i);
+            stack.pushElementOnTop(i);
             int size = stack.getNumberOfElements();
             assertEquals("  The stack size is incorrect.", i, size);
             int element = stack.getTopElement();
@@ -73,7 +73,7 @@ public class StackTest {
 
         logger.info("  Popping elements off the stack: {}", stack);
         for (int i = 5; i >= 1; i--) {
-            int element = stack.popTopElement();
+            int element = stack.popElementOffTop();
             assertEquals("  The popped element is incorrect.", i, element);
             int size = stack.getNumberOfElements();
             assertEquals("  The stack size is incorrect.", i - 1, size);
@@ -81,7 +81,7 @@ public class StackTest {
 
         try {
             logger.info("  Attempting to pop the top element off of an empty stack...");
-            stack.popTopElement();
+            stack.popElementOffTop();
             fail("  An empty stack exception should have been thrown.");
         } catch (RuntimeException e) {
             logger.info("  Empty stack exception thrown.");

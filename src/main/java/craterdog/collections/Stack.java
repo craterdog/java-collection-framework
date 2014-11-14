@@ -74,7 +74,7 @@ public class Stack<E> implements LIFO<E> {
 
 
     @Override
-    public final void pushTopElement(E element) {
+    public final void pushElementOnTop(E element) {
         logger.entry(element);
         list.addElement(element);
         logger.exit();
@@ -82,7 +82,7 @@ public class Stack<E> implements LIFO<E> {
 
 
     @Override
-    public final E popTopElement() {
+    public final E popElementOffTop() {
         logger.entry();
         E element = null;
         int size = list.getNumberOfElements();

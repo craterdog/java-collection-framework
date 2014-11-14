@@ -29,7 +29,7 @@ public interface FIFO<E> extends Iteratable<E> {
      * @throws java.lang.InterruptedException The thread that was waiting to add an element
      * was interrupted.
      */
-    void addTailElement(E element) throws InterruptedException;
+    void addElementToTail(E element) throws InterruptedException;
 
     /**
      * This method removes the next element from the head of the queue.  If
@@ -39,7 +39,7 @@ public interface FIFO<E> extends Iteratable<E> {
      * @throws java.lang.InterruptedException The thread that was waiting to remove an element
      * was interrupted.
      */
-    E removeHeadElement() throws InterruptedException;
+    E removeElementFromHead() throws InterruptedException;
 
     /**
      * This method returns a reference to the element at the head of the queue
