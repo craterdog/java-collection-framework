@@ -1,6 +1,6 @@
 ![Java Collection Framework](https://github.com/craterdog/java-collection-framework/blob/master/docs/images/MarbleBag.jpg)
 
-## Java Collection Framework
+## A Better Java Collection Framework
 The Java language development team that created the original `java.util` collection classes was fairly new
 to object oriented design and collection frameworks and therefore made some common mistakes:
  * using implementation inheritance instead of delegation (a `Stack` is **not** a `Vector`!)
@@ -27,8 +27,8 @@ The following highlights the main types of collections that this project provide
 
  * *Bag* - an ordered collection where duplicates are allowed
  * *Set* - an ordered collection where duplicates are *not* allowed
- * *List* - a sortable collection with implicit indexes
- * *Map* - a sortable collection with explicit indexes
+ * *List* - a sortable collection with implicit numberic indexes
+ * *Map* - a sortable collection with explicit arbitrary typed keys
  * *Stack* - a collection that supports last in first out (LIFO)
  * *Queue* - a collection that supports first in first out (FIFO)
 
