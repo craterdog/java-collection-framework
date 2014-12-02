@@ -81,15 +81,7 @@ public class ListTest {
         Integer[] third = { 1, 2, 3, 4, 5, 6 };
         List<Integer> thirdList = new List<>(third);
         actual = thirdList.toString();
-        String expectedThird =
-                "[\n" +
-                "    1,\n" +
-                "    2,\n" +
-                "    3,\n" +
-                "    4,\n" +
-                "    5,\n" +
-                "    6\n" +
-                "]";
+        String expectedThird = "[1, 2, 3, 4, 5, 6]";
         assertEquals(expectedThird, actual);
         logger.info("  The third list is: {}", actual);
 

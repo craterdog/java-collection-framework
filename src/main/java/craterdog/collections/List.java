@@ -166,7 +166,7 @@ public class List<E> extends SortableCollection<E> implements Indexed<E> {
 
 
     @Override
-    public final Indexed<? super E> getElementsInRange(int firstIndex, int lastIndex) {
+    public final List<E> getElementsInRange(int firstIndex, int lastIndex) {
         logger.entry(firstIndex, lastIndex);
         firstIndex = normalizedIndex(firstIndex);
         lastIndex = normalizedIndex(lastIndex);
@@ -185,6 +185,15 @@ public class List<E> extends SortableCollection<E> implements Indexed<E> {
 
 
     @Override
+    public final void insertElementBeforeIndex(E element, int index) {
+        logger.entry(element, index);
+        index = normalizedIndex(index);
+        array.add(index - 1, element);  // convert to zero based indexing
+        logger.exit();
+    }
+
+
+    @Override
     public final void insertElementsBeforeIndex(Iterable<? extends E> elements, int index) {
         logger.entry(elements, index);
         index = normalizedIndex(index);
@@ -194,44 +203,6 @@ public class List<E> extends SortableCollection<E> implements Indexed<E> {
             logger.debug("Inserting element: {}", element);
             manipulator.insertElement(element);
         }
-        logger.exit();
-    }
-
-
-    @Override
-    public final Indexed<? super E> removeElementsInRange(int firstIndex, int lastIndex) {
-        logger.entry(firstIndex, lastIndex);
-        firstIndex = normalizedIndex(firstIndex);
-        lastIndex = normalizedIndex(lastIndex);
-        List<E> result = new List<>(array.remove(firstIndex - 1, lastIndex - firstIndex + 1));
-        logger.exit(result);
-        return result;
-    }
-
-
-    @Override
-    public Manipulator<E> createDefaultManipulator() {
-        logger.entry();
-        Manipulator<E> manipulator = new ListManipulator();
-        logger.exit(manipulator);
-        return manipulator;
-    }
-
-
-    @Override
-    protected Sorter<E> sorter() {
-        logger.entry();
-        Sorter<E> sorter = super.sorter();
-        logger.exit(sorter);
-        return sorter;
-    }
-
-
-    @Override
-    public final void insertElementBeforeIndex(E element, int index) {
-        logger.entry(element, index);
-        index = normalizedIndex(index);
-        array.add(index - 1, element);  // convert to zero based indexing
         logger.exit();
     }
 
@@ -253,6 +224,41 @@ public class List<E> extends SortableCollection<E> implements Indexed<E> {
         E result = array.remove(index - 1);  // convert to zero based indexing
         logger.exit(result);
         return result;
+    }
+
+
+    @Override
+    public final List<E> removeElementsInRange(int firstIndex, int lastIndex) {
+        logger.entry(firstIndex, lastIndex);
+        firstIndex = normalizedIndex(firstIndex);
+        lastIndex = normalizedIndex(lastIndex);
+        if (lastIndex < firstIndex) {
+            // handle the case where the indexes are backwards
+            int swap = firstIndex;
+            firstIndex = lastIndex;
+            lastIndex = swap;
+        }
+        List<E> result = new List<>(array.remove(firstIndex - 1, lastIndex));  // convert to zero based indexing
+        logger.exit(result);
+        return result;
+    }
+
+
+    @Override
+    public Manipulator<E> createDefaultManipulator() {
+        logger.entry();
+        Manipulator<E> manipulator = new ListManipulator();
+        logger.exit(manipulator);
+        return manipulator;
+    }
+
+
+    @Override
+    protected Sorter<E> createDefaultSorter() {
+        logger.entry();
+        Sorter<E> sorter = super.createDefaultSorter();
+        logger.exit(sorter);
+        return sorter;
     }
 
 

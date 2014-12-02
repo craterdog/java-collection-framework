@@ -27,14 +27,14 @@ public interface Associative<K, V> extends Iteratable<Association<K, V>> {
      *
      * @return The keys for this collection.
      */
-    Iteratable<? super K> getKeys();
+    Iteratable<K> getKeys();
 
     /**
      * This method returns the list of values for the associations in this collection.
      *
      * @return The values for this collection.
      */
-    Iteratable<? super V> getValues();
+    Iteratable<V> getValues();
 
     /**
      * This method returns the list of associations between keys and values for this collection.

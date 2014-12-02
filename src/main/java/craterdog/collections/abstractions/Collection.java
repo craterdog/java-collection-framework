@@ -36,17 +36,7 @@ public abstract class Collection<E> implements Accessible<E> {
         }
 
         // see if the collection should be formatted across multiple lines
-        int count = getNumberOfElements();
-        boolean isMultiline = count > 3;
-        if (!isMultiline) {
-            // check for a composite element
-            for (E element : this) {
-                if (element instanceof Composite) {
-                    isMultiline = true;
-                    break;
-                }
-            }
-        }
+        boolean isMultiline = checkForMultiline();
 
         // start formatting the collection
         String nextIndentation = indentation + "    ";
@@ -226,6 +216,21 @@ public abstract class Collection<E> implements Accessible<E> {
         if (index < 0) index = index + size + 1;
         if (index < 1 || index > size) throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         return index;
+    }
+
+
+    private boolean checkForMultiline() {
+        boolean isMultiline = false;
+        for (E element : this) {
+            if (element instanceof String && getNumberOfElements() > 3 ||
+                    ! (element instanceof Number ||
+                       element instanceof Boolean ||
+                       element instanceof Character)) {
+                isMultiline = true;
+                break;
+            }
+        }
+        return isMultiline;
     }
 
 }

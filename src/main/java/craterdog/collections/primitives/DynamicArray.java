@@ -163,8 +163,9 @@ public final class DynamicArray<E> extends AbstractCollection<E> implements List
 
 
     /**
-     * This method removes the element at the specified index and shifts the existing elements
-     * down to fill in the gap.  This method returns the element that was removed.
+     * This method removes the elements starting at the specified first index and
+     * excluding the element referenced by the last index.  This method returns
+     * an array containing the removed elements.
      *
      * @param firstIndex The index of the first element to be removed.
      * @param lastIndex The index of the last element after the range to be removed.

@@ -78,15 +78,7 @@ public class BagTest {
         Integer[] third = { 1, 2, 3, 4, 5, 6 };
         Bag<Integer> thirdBag = new Bag<>(third);
         actual = thirdBag.toString();
-        String expectedThird =
-                "[\n" +
-                "    1,\n" +
-                "    2,\n" +
-                "    3,\n" +
-                "    4,\n" +
-                "    5,\n" +
-                "    6\n" +
-                "]";
+        String expectedThird = "[1, 2, 3, 4, 5, 6]";
         assertEquals(expectedThird, actual);
         logger.info("  The third bag is: {}", actual);
 

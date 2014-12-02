@@ -31,7 +31,7 @@ public abstract class SortableCollection<E> extends Collection<E> implements Sor
 
     @Override
     public final void sortElements(Comparator<? super E> comparator) {
-        Sorter<E> sorter = sorter();
+        Sorter<E> sorter = createDefaultSorter();
         sorter.sortCollection(this, comparator);
     }
 
@@ -59,17 +59,17 @@ public abstract class SortableCollection<E> extends Collection<E> implements Sor
 
 
     /**
-     * This method returns a sorter that can be used by any subclass to sort its elements.
+     * This method returns a createDefaultSorter that can be used by any subclass to sort its elements.
      *
-     * @return The default sorter algorithm.
+     * @return The default createDefaultSorter algorithm.
      */
-    protected Sorter<E> sorter() {
+    protected Sorter<E> createDefaultSorter() {
         return new MergeSorter();
     }
 
 
     /*
-     * This sorter class uses a standard merge sort algorithm.  The collection is recursively split into
+     * This createDefaultSorter class uses a standard merge sort algorithm.  The collection is recursively split into
      * two collections each of which are then sorted and then the two collections are merged back into a
      * sorted collection.
      */

@@ -203,7 +203,7 @@ public class Map<K, V> extends SortableCollection<Association<K, V>> implements 
 
 
     @Override
-    public final Iteratable<? super K> getKeys() {
+    public final List<K> getKeys() {
         logger.entry();
         List<K> keys = new List<>();
         Link<Association<K, V>> link = associations;
@@ -219,7 +219,7 @@ public class Map<K, V> extends SortableCollection<Association<K, V>> implements 
 
 
     @Override
-    public final Iteratable<? super V> getValues() {
+    public final List<V> getValues() {
         logger.entry();
         List<V> values = new List<>();
         Link<Association<K, V>> link = associations;
@@ -235,7 +235,7 @@ public class Map<K, V> extends SortableCollection<Association<K, V>> implements 
 
 
     @Override
-    public final Iteratable<Association<K, V>> getAssociations() {
+    public final List<Association<K, V>> getAssociations() {
         logger.entry();
         List<Association<K, V>> results = new List<>();
         Link<Association<K, V>> link = associations;

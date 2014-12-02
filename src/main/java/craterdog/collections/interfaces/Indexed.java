@@ -50,7 +50,7 @@ public interface Indexed<E> extends Iteratable<E> {
      * @param lastIndex the index of the last element to be returned.
      * @return A collection of elements in the specified range.
      */
-    Indexed<? super E> getElementsInRange(int firstIndex, int lastIndex);
+    Indexed<E> getElementsInRange(int firstIndex, int lastIndex);
 
     /**
      * This method inserts the specified element into the collection before the element
@@ -99,6 +99,6 @@ public interface Indexed<E> extends Iteratable<E> {
      * @param lastIndex The index of the last element to be removed.
      * @return The list of the elements that were removed from the collection.
      */
-    Indexed<? super E> removeElementsInRange(int firstIndex, int lastIndex);
+    Indexed<E> removeElementsInRange(int firstIndex, int lastIndex);
 
 }
