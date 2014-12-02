@@ -12,7 +12,6 @@ package craterdog.collections;
 import craterdog.collections.abstractions.Iterator;
 import craterdog.collections.abstractions.Manipulator;
 import craterdog.collections.abstractions.SortableCollection;
-import craterdog.collections.abstractions.Sorter;
 import craterdog.collections.interfaces.Indexed;
 import craterdog.collections.interfaces.Iteratable;
 import craterdog.collections.primitives.DynamicArray;
@@ -250,15 +249,6 @@ public class List<E> extends SortableCollection<E> implements Indexed<E> {
         Manipulator<E> manipulator = new ListManipulator();
         logger.exit(manipulator);
         return manipulator;
-    }
-
-
-    @Override
-    protected Sorter<E> createDefaultSorter() {
-        logger.entry();
-        Sorter<E> sorter = super.createDefaultSorter();
-        logger.exit(sorter);
-        return sorter;
     }
 
 

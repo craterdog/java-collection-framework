@@ -9,6 +9,7 @@
  ************************************************************************/
 package craterdog.collections.abstractions;
 
+import craterdog.collections.primitives.NaturalComparator;
 import java.util.Comparator;
 
 
@@ -21,6 +22,19 @@ import java.util.Comparator;
  * @param <E> The type of element being sorted.
  */
 public abstract class Sorter<E> {
+
+    /**
+     * This method sorts the elements of its collection using a specific
+     * sorting algorithm.  The natural comparator is used to compare
+     * each pair of elements during sorting.
+     *
+     * @param collection The collection to be sorted.
+     */
+    public final void sortCollection(SortableCollection<E> collection) {
+        Comparator<? super E> comparator = new NaturalComparator<>();
+        sortCollection(collection, comparator);
+    }
+
 
     /**
      * This method sorts the elements of its collection using a specific

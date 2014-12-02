@@ -27,6 +27,13 @@ public interface Sortable<E> extends Iteratable<E> {
 
     /**
      * This method sorts the elements in the collection using the default (merge) sorting
+     * algorithm and the elements' <code>compareTo</code> method. It provides an easy way
+     * to sort a collection using its natural ordering.
+     */
+    void sortElements();
+
+    /**
+     * This method sorts the elements in the collection using the default (merge) sorting
      * algorithm and the specified comparison function.
      *
      * @param comparator The desired comparison function.
