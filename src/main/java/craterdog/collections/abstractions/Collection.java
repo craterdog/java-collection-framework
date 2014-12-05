@@ -10,7 +10,10 @@
 package craterdog.collections.abstractions;
 
 import craterdog.collections.interfaces.Accessible;
+import craterdog.collections.interfaces.Iteratable;
 import craterdog.core.Composite;
+import craterdog.utils.NaturalComparator;
+import java.util.Comparator;
 
 
 /**
@@ -19,7 +22,7 @@ import craterdog.core.Composite;
  * @author Derk Norton
  * @param <E> The type of element managed by the collection.
  */
-public abstract class Collection<E> implements Accessible<E> {
+public abstract class Collection<E> implements Comparable<Iteratable<E>>, Accessible<E> {
 
 
     @Override
@@ -83,6 +86,16 @@ public abstract class Collection<E> implements Accessible<E> {
 
 
     @Override
+    public int hashCode() {
+        int hash = 5;
+        for (E element : this) {
+            hash = 11 * hash + element.hashCode();
+        }
+        return hash;
+    }
+
+
+    @Override
     public boolean equals(Object obj) {
         if (obj == null) return false;
         if (getClass() != obj.getClass()) return false;
@@ -101,12 +114,17 @@ public abstract class Collection<E> implements Accessible<E> {
 
 
     @Override
-    public int hashCode() {
-        int hash = 5;
-        for (E element : this) {
-            hash = 11 * hash + element.hashCode();
+    public int compareTo(Iteratable<E> that) {
+        Comparator<Object> comparator = new NaturalComparator<>();
+        Iterator<E> thisIterator = this.createDefaultIterator();
+        Iterator<E> thatIterator = that.createDefaultIterator();
+        while (thisIterator.hasNextElement() && thatIterator.hasNextElement()) {
+            E thisElement = thisIterator.getNextElement();
+            E thatElement = thatIterator.getNextElement();
+            int result = comparator.compare(thisElement, thatElement);
+            if (result != 0) return result;
         }
-        return hash;
+        return Integer.compare(this.getNumberOfElements(), that.getNumberOfElements());
     }
 
 

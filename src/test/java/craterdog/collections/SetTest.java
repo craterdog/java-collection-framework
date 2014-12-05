@@ -48,6 +48,20 @@ public class SetTest {
 
 
     /**
+     * This method tests the compareTo() operation.
+     */
+    @Test
+    public void testSetComparison() {
+        logger.info("Beginning testSetComparison()...");
+        Integer[] values = { 1, 1, 2, 3, 5, 8, 13 };
+        Set<Integer> firstSet = new Set<>(values);
+        Set<Integer> secondSet = new Set<>(values);
+        int comparison = firstSet.compareTo(secondSet);
+        assertEquals(0, comparison);
+        logger.info("Completed testSetComparison().\n");
+    }
+
+    /**
      * This method tests the toString() operation.
      */
     @Test

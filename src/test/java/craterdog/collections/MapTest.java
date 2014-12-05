@@ -55,6 +55,22 @@ public class MapTest {
 
 
     /**
+     * This method tests the compareTo() operation.
+     */
+    @Test
+    public void testMapComparison() {
+        logger.info("Beginning testMapComparison()...");
+        String[] keys = { "1", "1", "2", "3", "5", "8", "13" };
+        Integer[] values = { 1, 1, 2, 3, 5, 8, 13 };
+        Map<String, Integer> firstMap = new Map<>(keys, values);
+        Map<String, Integer> secondMap = new Map<>(keys, values);
+        int comparison = firstMap.compareTo(secondMap);
+        assertEquals(0, comparison);
+        logger.info("Completed testMapComparison().\n");
+    }
+
+
+    /**
      * This method tests the toString() operation.
      */
     @Test

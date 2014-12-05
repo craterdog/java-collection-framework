@@ -48,6 +48,21 @@ public class BagTest {
 
 
     /**
+     * This method tests the compareTo() operation.
+     */
+    @Test
+    public void testBagComparison() {
+        logger.info("Beginning testBagComparison()...");
+        Integer[] values = { 1, 1, 2, 3, 5, 8, 13 };
+        Bag<Integer> firstBag = new Bag<>(values);
+        Bag<Integer> secondBag = new Bag<>(values);
+        int comparison = firstBag.compareTo(secondBag);
+        assertEquals(0, comparison);
+        logger.info("Completed testBagComparison().\n");
+    }
+
+
+    /**
      * This method tests the toString() operation.
      */
     @Test

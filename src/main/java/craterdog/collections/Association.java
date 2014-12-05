@@ -10,6 +10,8 @@
 package craterdog.collections;
 
 import craterdog.core.Composite;
+import craterdog.utils.NaturalComparator;
+import java.util.Comparator;
 import java.util.Objects;
 
 
@@ -70,10 +72,9 @@ public class Association<K, V> implements Comparable<Association<K, V>>, Composi
 
 
     @Override
-    public int compareTo(Association<K, V> association) {
-        @SuppressWarnings("unchecked")
-        Comparable<K> comparable = (Comparable<K>) key;  // may throw ClassCastException
-        return comparable.compareTo(association.key);
+    public int compareTo(Association<K, V> that) {
+        Comparator<K> comparator = new NaturalComparator<>();
+        return comparator.compare(this.key, that.key);
     }
 
 

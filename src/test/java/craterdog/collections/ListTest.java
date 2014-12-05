@@ -51,6 +51,21 @@ public class ListTest {
 
 
     /**
+     * This method tests the compareTo() operation.
+     */
+    @Test
+    public void testListComparison() {
+        logger.info("Beginning testListComparison()...");
+        Integer[] values = { 1, 1, 2, 3, 5, 8, 13 };
+        List<Integer> firstList = new List<>(values);
+        List<Integer> secondList = new List<>(values);
+        int comparison = firstList.compareTo(secondList);
+        assertEquals(0, comparison);
+        logger.info("Completed testListComparison().\n");
+    }
+
+
+    /**
      * This method tests the toString() operation.
      */
     @Test
