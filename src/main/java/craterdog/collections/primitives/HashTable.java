@@ -9,6 +9,7 @@
  ************************************************************************/
 package craterdog.collections.primitives;
 
+import craterdog.utils.UniversalHashFunction;
 import java.util.AbstractMap;
 import java.util.AbstractSet;
 import java.util.Arrays;

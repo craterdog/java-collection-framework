@@ -9,7 +9,7 @@
  ************************************************************************/
 package craterdog.collections.abstractions;
 
-import craterdog.collections.primitives.NaturalComparator;
+import craterdog.utils.NaturalComparator;
 import java.util.Comparator;
 
 

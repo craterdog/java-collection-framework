@@ -12,7 +12,7 @@ package craterdog.collections.abstractions;
 import craterdog.collections.List;
 import craterdog.collections.interfaces.Sortable;
 import craterdog.collections.primitives.MergeSorter;
-import craterdog.collections.primitives.NaturalComparator;
+import craterdog.utils.NaturalComparator;
 import java.util.Comparator;
 
 

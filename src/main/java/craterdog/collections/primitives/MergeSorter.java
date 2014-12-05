@@ -10,6 +10,7 @@
 package craterdog.collections.primitives;
 
 import craterdog.collections.abstractions.*;
+import craterdog.utils.NaturalComparator;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Comparator;

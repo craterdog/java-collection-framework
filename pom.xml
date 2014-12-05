@@ -50,14 +50,20 @@
 
     <properties>
         <core-interfaces-version>3.0</core-interfaces-version>
+        <general-utilities-version>3.4</general-utilities-version>
     </properties>
 
     <dependencies>
-    <dependency>
-        <groupId>com.craterdog</groupId>
-        <artifactId>java-core-interfaces</artifactId>
-        <version>${core-interfaces-version}</version>
-    </dependency>
+        <dependency>
+            <groupId>com.craterdog</groupId>
+            <artifactId>java-core-interfaces</artifactId>
+            <version>${core-interfaces-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.craterdog</groupId>
+            <artifactId>java-general-utilities</artifactId>
+            <version>${general-utilities-version}</version>
+        </dependency>
     </dependencies>
 
     <build>
