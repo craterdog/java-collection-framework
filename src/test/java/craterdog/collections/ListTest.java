@@ -124,8 +124,7 @@ public class ListTest {
         }
 
         logger.info("  Checking the values are in the right order...");
-        Integer[] listValues = new Integer[size + 1];
-        list.toArray(listValues);
+        Integer[] listValues = list.toArray();
         assertArrayEquals(expected, listValues);
 
         logger.info("  Inserting a list of values...");
@@ -150,8 +149,7 @@ public class ListTest {
 
         logger.info("  Removing elements at an index...");
         list.removeElementAtIndex(size + 1);
-        listValues = new Integer[size];
-        list.toArray(listValues);
+        listValues = list.toArray();
         assertArrayEquals(values, listValues);
 
         logger.info("Completed testList().\n");
@@ -202,8 +200,7 @@ public class ListTest {
         list.addElements(inOrder);
 
         logger.info("  Confirming that the entries are in order...");
-        Integer[] elements = new Integer[inOrder.length];
-        list.toArray(elements);
+        Integer[] elements = list.toArray();
         Assert.assertArrayEquals(inOrder, elements);
 
         logger.info("  Reversing the entries in the list...");
@@ -211,8 +208,7 @@ public class ListTest {
         list.sortElements(reverseComparator);
 
         logger.info("  Confirming that the entries are in reverse order...");
-        elements = new Integer[reverseOrder.length];
-        list.toArray(elements);
+        elements = list.toArray();
         Assert.assertArrayEquals(reverseOrder, elements);
 
         logger.info("  Re-reversing the entries in the list...");
@@ -220,8 +216,7 @@ public class ListTest {
         list.sortElements(inOrderComparator);
 
         logger.info("  Confirming that the entries are back in order...");
-        elements = new Integer[inOrder.length];
-        list.toArray(elements);
+        elements = list.toArray();
         Assert.assertArrayEquals(inOrder, elements);
 
         logger.info("Completed testSortingAList().\n");
@@ -250,8 +245,7 @@ public class ListTest {
         List<Integer> negativesList = new List<>(negatives);
         list.insertElementsBeforeIndex(negativesList, 1);
         Integer[] fullList = { -3, -2, -1, 0, 1, 2, 3, 4, 5 };
-        Integer[] elements = new Integer[fullList.length];
-        list.toArray(elements);
+        Integer[] elements = list.toArray();
         Assert.assertArrayEquals(fullList, elements);
 
         logger.info("  Testing the replacement of an element...");
@@ -264,11 +258,54 @@ public class ListTest {
 
         logger.info("  Testing the removal of a collection of elements...");
         list.removeElementsInRange(1, 3);
-        elements = new Integer[original.length];
-        list.toArray(elements);
+        elements = list.toArray();
         Assert.assertArrayEquals(original, elements);
 
         logger.info("Completed testElementInsertionAndDeletion().\n");
+    }
+
+    /**
+     * This method tests sorting and shuffling of lists containing instances of simple classes.
+     */
+    @Test
+    public void testSortingAndShufflingOfAList() {
+        logger.info("Beginning testSortingAndShufflingOfAList()...");
+
+        List<SimpleElement> list = new List<>();
+        list.addElement(new SimpleElement("d", 4));
+        list.addElement(new SimpleElement("c", 3));
+        list.addElement(new SimpleElement("b", 2));
+        list.addElement(new SimpleElement("a", 1));
+        logger.info("The initial list: {}", list);
+
+        list.shuffleElements();
+        logger.info("The shuffled list: {}", list);
+
+        list.sortElements();
+        logger.info("The sorted list: {}", list);
+
+        logger.info("Completed testSortingAndShufflingOfAList().\n");
+    }
+
+    static private class SimpleElement implements Comparable<SimpleElement> {
+        private final String foo;
+        private final int bar;
+
+        SimpleElement(String foo, int bar) {
+            this.foo = foo;
+            this.bar = bar;
+        }
+
+        @Override
+        public String toString() {
+            return "[" + "foo: " + foo + ", bar: " + bar + "]";
+        }
+
+        @Override
+        public int compareTo(SimpleElement that) {
+            return this.foo.compareTo(that.foo);
+        }
+
     }
 
 }

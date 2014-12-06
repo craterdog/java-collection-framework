@@ -11,7 +11,6 @@ package craterdog.collections.primitives;
 
 import craterdog.collections.abstractions.*;
 import craterdog.utils.NaturalComparator;
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -29,21 +28,16 @@ public class MergeSorter<E> extends Sorter<E> {
     @Override
     public void sortCollection(SortableCollection<E> collection, Comparator<? super E> comparator) {
         // see if any sorting is needed
-        int size;
-        if (collection != null && (size = collection.getNumberOfElements()) > 1) {
+        if (collection != null && collection.getNumberOfElements() > 1) {
 
             // make sure the comparator exists
             if (comparator == null) comparator = new NaturalComparator<>();
 
             // convert the collection to an array
-            Iterator<E> iterator = collection.createDefaultIterator();
-            E template = iterator.getNextElement();  // TOTAL HACK but java requires a template to use for allocating a new array
-            @SuppressWarnings("unchecked")
-            E[] array = (E[]) Array.newInstance(template.getClass(), size);
-            collection.toArray(array);
+            E[] array = collection.toArray();
 
             // sort the array
-            sortList(array, comparator);
+            sortArray(array, comparator);
 
             // convert it back to a collection
             collection.removeAllElements();
@@ -53,26 +47,26 @@ public class MergeSorter<E> extends Sorter<E> {
     }
 
 
-    private void sortList(E[] list, Comparator<? super E> comparator) {
-        // check to see if the list is already sorted
-        int length = list.length;
+    private void sortArray(E[] array, Comparator<? super E> comparator) {
+        // check to see if the array is already sorted
+        int length = array.length;
         if (length < 2) return;
 
-        // split the list into two halves
+        // split the array into two halves
         int leftLength = length / 2;
-        E[] left = Arrays.copyOfRange(list, 0, leftLength);
-        E[] right = Arrays.copyOfRange(list, leftLength, length);
+        E[] left = Arrays.copyOfRange(array, 0, leftLength);
+        E[] right = Arrays.copyOfRange(array, leftLength, length);
 
         // sort each half separately
-        sortList(left, comparator);
-        sortList(right, comparator);
+        sortArray(left, comparator);
+        sortArray(right, comparator);
 
         // merge the sorted halves back together
-        mergeLists(left, right, list, comparator);
+        mergeArrays(left, right, array, comparator);
     }
 
 
-    private void mergeLists(E[] left, E[] right, E[] result, Comparator<? super E> comparator) {
+    private void mergeArrays(E[] left, E[] right, E[] result, Comparator<? super E> comparator) {
         int leftIndex = 0;
         int rightIndex = 0;
         int resultIndex = 0;

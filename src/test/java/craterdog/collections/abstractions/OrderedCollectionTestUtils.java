@@ -39,8 +39,7 @@ public class OrderedCollectionTestUtils {
         collection.addElements(inOrder);
 
         logger.info("  Confirming that the entries are in order...");
-        Integer[] elements = new Integer[inOrder.length];
-        collection.toArray(elements);
+        Integer[] elements = collection.toArray();
         Assert.assertArrayEquals(inOrder, elements);
 
         logger.info("  Reversing the entries in the collection...");
@@ -48,8 +47,7 @@ public class OrderedCollectionTestUtils {
         collection = new Bag<>(collection, reverseComparator);
 
         logger.info("  Confirming that the entries are in reverse order...");
-        elements = new Integer[reverseOrder.length];
-        collection.toArray(elements);
+        elements = collection.toArray();
         Assert.assertArrayEquals(reverseOrder, elements);
 
         logger.info("  Re-reversing the entries in the collection...");
@@ -57,8 +55,7 @@ public class OrderedCollectionTestUtils {
         collection = new Set<>(collection, inOrderComparator);
 
         logger.info("  Confirming that the entries are back in order...");
-        elements = new Integer[inOrder.length];
-        collection.toArray(elements);
+        elements = collection.toArray();
         Assert.assertArrayEquals(inOrder, elements);
 
     }

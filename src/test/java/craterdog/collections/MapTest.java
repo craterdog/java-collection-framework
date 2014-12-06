@@ -155,13 +155,11 @@ public class MapTest {
         }
 
         logger.info("  Checking the keys are in the right order...");
-        Integer[] mapKeys = new Integer[size];
-        map.getKeys().toArray(mapKeys);
+        Integer[] mapKeys = map.getKeys().toArray();
         Assert.assertArrayEquals(keys, mapKeys);
 
         logger.info("  Checking the values are in the right order...");
-        Integer[] mapValues = new Integer[size];
-        map.getValues().toArray(mapValues);
+        Integer[] mapValues = map.getValues().toArray();
         assertArrayEquals(values, mapValues);
 
         logger.info("  Checking the associations are correct and in the right order...");
@@ -344,8 +342,7 @@ public class MapTest {
         }
 
         logger.info("  Confirming that the entries are in order...");
-        Integer[] keys = new Integer[inOrder.length];
-        map.getKeys().toArray(keys);
+        Integer[] keys = map.getKeys().toArray();
         Assert.assertArrayEquals(inOrder, keys);
 
         logger.info("  Reversing the entries in the map...");
@@ -353,8 +350,7 @@ public class MapTest {
         map.sortElements(reverseComparator);
 
         logger.info("  Confirming that the entries are in reverse order...");
-        keys = new Integer[reverseOrder.length];
-        map.getKeys().toArray(keys);
+        keys = map.getKeys().toArray();
         Assert.assertArrayEquals(reverseOrder, keys);
 
         logger.info("  Re-reversing the entries in the map...");
@@ -362,8 +358,7 @@ public class MapTest {
         map.sortElements(inOrderComparator);
 
         logger.info("  Confirming that the entries are back in order...");
-        keys = new Integer[inOrder.length];
-        map.getKeys().toArray(keys);
+        keys = map.getKeys().toArray();
         Assert.assertArrayEquals(inOrder, keys);
 
         logger.info("Completed testSortingAMap().\n");

@@ -26,6 +26,11 @@ import java.util.Comparator;
 public interface Sortable<E> extends Iteratable<E> {
 
     /**
+     * This method shuffles the elements in the collection using a randomizing algorithm.
+     */
+    void shuffleElements();
+
+    /**
      * This method sorts the elements in the collection using the default (merge) sorting
      * algorithm and the elements' <code>compareTo</code> method. It provides an easy way
      * to sort a collection using its natural ordering.

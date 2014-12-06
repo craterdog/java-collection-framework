@@ -12,6 +12,7 @@ package craterdog.collections.abstractions;
 import craterdog.collections.List;
 import craterdog.collections.interfaces.Sortable;
 import craterdog.collections.primitives.MergeSorter;
+import craterdog.collections.primitives.RandomSorter;
 import craterdog.utils.NaturalComparator;
 import java.util.Comparator;
 
@@ -27,6 +28,13 @@ import java.util.Comparator;
  * @param <E> The type of element managed by the collection.
  */
 public abstract class SortableCollection<E> extends Collection<E> implements Sortable<E> {
+
+
+    @Override
+    public final void shuffleElements() {
+        Sorter<E> sorter = new RandomSorter<>();
+        sorter.sortCollection(this);
+    }
 
 
     @Override

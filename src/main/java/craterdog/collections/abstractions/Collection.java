@@ -13,6 +13,7 @@ import craterdog.collections.interfaces.Accessible;
 import craterdog.collections.interfaces.Iteratable;
 import craterdog.core.Composite;
 import craterdog.utils.NaturalComparator;
+import java.lang.reflect.Array;
 import java.util.Comparator;
 
 
@@ -141,6 +142,21 @@ public abstract class Collection<E> implements Comparable<Iteratable<E>>, Access
         for (int index = 0; index < size && iterator.hasNextElement(); index++) {
             array[index] = iterator.getNextElement();
         }
+    }
+
+
+    @SuppressWarnings("unchecked")
+    public final E[] toArray() {
+        int size = this.getNumberOfElements();
+        if (size == 0) return (E[]) new Object[0];
+        Iterator<E> iterator = createDefaultIterator();
+        E template = iterator.getNextElement();  // TOTAL HACK but java requires a template to use for allocating a new array
+        E[] array = (E[]) Array.newInstance(template.getClass(), size);
+        array[0] = template;
+        for (int index = 1; index < size; index++) {
+            array[index] = iterator.getNextElement();
+        }
+        return array;
     }
 
 
