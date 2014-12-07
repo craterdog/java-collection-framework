@@ -9,10 +9,13 @@
  ************************************************************************/
 package craterdog.collections.abstractions;
 
+import craterdog.collections.List;
 import craterdog.collections.interfaces.Ordered;
 import craterdog.collections.primitives.RandomizedTree;
 import java.util.Arrays;
 import java.util.Comparator;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 
 
 /**
@@ -25,6 +28,8 @@ import java.util.Comparator;
  * @param <E> The type of element managed by this collection.
  */
 public abstract class OrderedCollection<E> extends OpenCollection<E> implements Ordered<E> {
+
+    static private final XLogger logger = XLoggerFactory.getXLogger(OrderedCollection.class);
 
     private final RandomizedTree<E> tree;
 
@@ -112,7 +117,9 @@ public abstract class OrderedCollection<E> extends OpenCollection<E> implements 
 
     @Override
     public final boolean containsElement(E element) {
+        logger.entry(element);
         boolean result = tree.contains(element);
+        logger.exit(result);
         return result;
     }
 
@@ -125,20 +132,66 @@ public abstract class OrderedCollection<E> extends OpenCollection<E> implements 
 
 
     @Override
+    public final E getElementAtIndex(int index) {
+        logger.entry(index);
+        index = normalizedIndex(index);
+        E element = tree.get(index - 1);  // convert to zero based indexing
+        logger.exit(element);
+        return element;
+    }
+
+
+    @Override
+    public final int getIndexOfElement(E element) {
+        logger.entry(element);
+        int index = tree.indexOf(element) + 1;  // convert to ordinal based indexing
+        logger.exit(index);
+        return index;
+    }
+
+
+    @Override
+    public final List<E> getElementsInRange(int firstIndex, int lastIndex) {
+        logger.entry(firstIndex, lastIndex);
+        firstIndex = normalizedIndex(firstIndex);
+        lastIndex = normalizedIndex(lastIndex);
+        List<E> result = new List<>();
+        Iterator<E> iterator = createDefaultIterator();
+        iterator.goToIndex(firstIndex);
+        int numberOfElements = lastIndex - firstIndex + 1;
+        while (numberOfElements-- > 0) {
+            E element = iterator.getNextElement();
+            logger.debug("Including element: {}", element);
+            result.addElement(element);
+        }
+        logger.exit(result);
+        return result;
+    }
+
+
+    @Override
     public final boolean addElement(E element) {
-        return tree.add(element);
+        logger.entry(element);
+        boolean result = tree.add(element);
+        logger.exit(result);
+        return result;
     }
 
 
     @Override
     public final boolean removeElement(E element) {
-        return tree.remove(element);
+        logger.entry(element);
+        boolean result = tree.remove(element);
+        logger.exit(result);
+        return result;
     }
 
 
     @Override
     public final void removeAllElements() {
+        logger.entry();
         tree.clear();
+        logger.exit();
     }
 
 

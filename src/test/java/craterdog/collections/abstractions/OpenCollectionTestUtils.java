@@ -11,7 +11,7 @@ package craterdog.collections.abstractions;
 
 import craterdog.collections.Association;
 import craterdog.collections.List;
-import craterdog.collections.interfaces.Iteratable;
+import craterdog.collections.interfaces.Accessible;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Random;
@@ -52,7 +52,7 @@ public class OpenCollectionTestUtils {
 
             logger.debug("  Looking for subsets of the collection...");
             Integer[] array = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-            Iteratable<Integer> elements = new List<>(array);
+            Accessible<Integer> elements = new List<>(array);
             collection.containsAnyElementsIn(elements);
             collection.containsAllElementsIn(elements);
 

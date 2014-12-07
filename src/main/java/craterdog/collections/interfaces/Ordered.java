@@ -19,7 +19,7 @@ import java.util.Comparator;
  * @author Derk Norton
  * @param <E> The type of element managed by the collection.
  */
-public interface Ordered<E> extends Iteratable<E> {
+public interface Ordered<E> extends Accessible<E> {
 
     /**
      * This method returns the comparator that is used to order the elements in this collection.

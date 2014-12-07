@@ -20,28 +20,28 @@ import craterdog.collections.Association;
  * @param <K> the key type.
  * @param <V> the value type.
  */
-public interface Associative<K, V> extends Iteratable<Association<K, V>> {
+public interface Associative<K, V> extends Accessible<Association<K, V>> {
 
     /**
      * This method returns the list of keys for the associations in this collection.
      *
      * @return The keys for this collection.
      */
-    Iteratable<K> getKeys();
+    Accessible<K> getKeys();
 
     /**
      * This method returns the list of values for the associations in this collection.
      *
      * @return The values for this collection.
      */
-    Iteratable<V> getValues();
+    Accessible<V> getValues();
 
     /**
      * This method returns the list of associations between keys and values for this collection.
      *
      * @return A list of the key/value associations that make up this collection.
      */
-    Iteratable<Association<K, V>> getAssociations();
+    Accessible<Association<K, V>> getAssociations();
 
     /**
      * This method returns the value associated with the specified key.

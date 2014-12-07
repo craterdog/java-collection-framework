@@ -12,7 +12,7 @@ package craterdog.collections;
 import craterdog.collections.abstractions.Iterator;
 import craterdog.collections.abstractions.Manipulator;
 import craterdog.collections.abstractions.SortableCollection;
-import craterdog.collections.interfaces.Iteratable;
+import craterdog.collections.interfaces.Accessible;
 import craterdog.collections.interfaces.Associative;
 import craterdog.collections.primitives.HashTable;
 import craterdog.collections.primitives.Link;
@@ -76,7 +76,7 @@ public class Map<K, V> extends SortableCollection<Association<K, V>> implements 
      * @param keys The keys that should be used to create the map.
      * @param values The values that should be used to create the map.
      */
-    public Map(Iteratable<K> keys, Iteratable<V> values) {
+    public Map(Accessible<K> keys, Accessible<V> values) {
         logger.entry(keys, values);
         int size = keys.getNumberOfElements();
         if (values.getNumberOfElements() != size) throw new IllegalArgumentException("The number of keys is different than the number of values.");
@@ -99,7 +99,7 @@ public class Map<K, V> extends SortableCollection<Association<K, V>> implements 
      */
     public Map(Map<K, V> elements) {
         logger.entry(elements);
-        Iteratable<Association<K, V>> entries = elements.getAssociations();
+        Accessible<Association<K, V>> entries = elements.getAssociations();
         for (Association<K, V> association : entries) {
             K key = association.key;
             V value = association.value;
@@ -155,6 +155,52 @@ public class Map<K, V> extends SortableCollection<Association<K, V>> implements 
     }
 
 
+    @Override
+    public final Association<K, V> getElementAtIndex(int index) {
+        logger.entry(index);
+        index = normalizedIndex(index);
+        Iterator<Association<K, V>> iterator = new MapManipulator();
+        iterator.goToIndex(index);
+        Association<K, V> element = iterator.getNextElement();
+        logger.exit(element);
+        return element;
+    }
+
+
+    @Override
+    public final int getIndexOfElement(Association<K, V> element) {
+        logger.entry(element);
+        int index = 0;
+        Iterator<Association<K, V>> iterator = createDefaultIterator();
+        while (iterator.hasNextElement()) {
+            Association<K, V> association = iterator.getNextElement();
+            index++;
+            if (element.equals(association)) break;
+        }
+        logger.exit(index);
+        return index;
+    }
+
+
+    @Override
+    public final List<Association<K, V>> getElementsInRange(int firstIndex, int lastIndex) {
+        logger.entry(firstIndex, lastIndex);
+        firstIndex = normalizedIndex(firstIndex);
+        lastIndex = normalizedIndex(lastIndex);
+        List<Association<K, V>> result = new List<>();
+        Iterator<Association<K, V>> iterator = createDefaultIterator();
+        iterator.goToIndex(firstIndex);
+        int numberOfElements = lastIndex - firstIndex + 1;
+        while (numberOfElements-- > 0) {
+            Association<K, V> element = iterator.getNextElement();
+            logger.debug("Including element: {}", element);
+            result.addElement(element);
+        }
+        logger.exit(result);
+        return result;
+    }
+
+
     /*
     NOTE: This method has different semantics from the associateKeyWithValue() method.  This
     method only inserts a new value if the key does not already exist in the map.  Otherwise
@@ -167,7 +213,7 @@ public class Map<K, V> extends SortableCollection<Association<K, V>> implements 
         K key = element.key;
         V value = element.value;
         if (!indexes.containsKey(element.key)) {
-            associateKeyWithValue(key, value);
+        associateKeyWithValue(key, value);
             result = true;
         }
         logger.exit(result);

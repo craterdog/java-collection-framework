@@ -15,6 +15,8 @@ import craterdog.collections.primitives.MergeSorter;
 import craterdog.collections.primitives.RandomSorter;
 import craterdog.utils.NaturalComparator;
 import java.util.Comparator;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 
 
 /**
@@ -29,11 +31,15 @@ import java.util.Comparator;
  */
 public abstract class SortableCollection<E> extends OpenCollection<E> implements Sortable<E> {
 
+    static private final XLogger logger = XLoggerFactory.getXLogger(SortableCollection.class);
+
 
     @Override
     public final void shuffleElements() {
+        logger.entry();
         Sorter<E> sorter = new RandomSorter<>();
         sorter.sortCollection(this);
+        logger.exit();
     }
 
 
@@ -54,7 +60,9 @@ public abstract class SortableCollection<E> extends OpenCollection<E> implements
 
     @Override
     public final void sortElements(Sorter<E> sorter, Comparator<? super E> comparator) {
+        logger.entry(sorter, comparator);
         sorter.sortCollection(this, comparator);
+        logger.exit();
     }
 
 
@@ -68,8 +76,10 @@ public abstract class SortableCollection<E> extends OpenCollection<E> implements
      * @return The resulting collection.
      */
     static public <E> SortableCollection<E> concatenate(SortableCollection<E> collection1, SortableCollection<E> collection2) {
+        logger.entry(collection1, collection2);
         List<E> result = new List<>(collection1);
         result.addElements(collection2);
+        logger.exit(result);
         return result;
     }
 

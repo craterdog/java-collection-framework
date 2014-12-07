@@ -9,7 +9,7 @@
  ************************************************************************/
 package craterdog.collections.abstractions;
 
-import craterdog.collections.interfaces.Accessible;
+import craterdog.collections.interfaces.Dynamic;
 
 
 /**
@@ -18,7 +18,7 @@ import craterdog.collections.interfaces.Accessible;
  * @author Derk Norton
  * @param <E> The type of element managed by the collection.
  */
-public abstract class OpenCollection<E> extends Collection<E> implements Accessible<E> {
+public abstract class OpenCollection<E> extends Collection<E> implements Dynamic<E> {
 
     @Override
     public final boolean containsAnyElementsIn(Iterable<? extends E> collection) {
@@ -104,21 +104,6 @@ public abstract class OpenCollection<E> extends Collection<E> implements Accessi
         if (index < 0) index = index + size + 1;
         if (index < 1 || index > size) throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         return index;
-    }
-
-
-    private boolean checkForMultiline() {
-        boolean isMultiline = false;
-        for (E element : this) {
-            if (element instanceof String && getNumberOfElements() > 3 ||
-                    ! (element instanceof Number ||
-                       element instanceof Boolean ||
-                       element instanceof Character)) {
-                isMultiline = true;
-                break;
-            }
-        }
-        return isMultiline;
     }
 
 }

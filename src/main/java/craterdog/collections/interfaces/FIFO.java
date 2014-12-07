@@ -18,7 +18,7 @@ package craterdog.collections.interfaces;
  * @author Derk Norton
  * @param <E> The type of element managed by the collection.
  */
-public interface FIFO<E> extends Iteratable<E> {
+public interface FIFO<E> extends Accessible<E> {
 
     /**
      * This method adds a new element to the tail of the queue.  If the queue

@@ -18,7 +18,7 @@ package craterdog.collections.interfaces;
  * @author Derk Norton
  * @param <E> The type of element managed by the collection.
  */
-public interface LIFO<E> extends Iteratable<E> {
+public interface LIFO<E> extends Accessible<E> {
 
     /**
      * This method pushes a new element onto the top of the stack.

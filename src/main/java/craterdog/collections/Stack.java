@@ -9,8 +9,7 @@
  ************************************************************************/
 package craterdog.collections;
 
-import craterdog.collections.abstractions.Collection;
-import craterdog.collections.abstractions.Iterator;
+import craterdog.collections.abstractions.ClosedCollection;
 import craterdog.collections.interfaces.LIFO;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
@@ -25,39 +24,46 @@ import org.slf4j.ext.XLoggerFactory;
  * @author Derk Norton
  * @param <E> The type of element managed by this collection.
  */
-public class Stack<E> extends Collection<E> implements LIFO<E> {
+public class Stack<E> extends ClosedCollection<E> implements LIFO<E> {
 
     static private final XLogger logger = XLoggerFactory.getXLogger(Stack.class);
 
-    private final List<E> list;
+    private final int capacity;
 
 
     /**
-     * This constructor creates a new empty stack.
+     * This constructor creates a new stack of unlimited capacity.
      */
     public Stack() {
         logger.entry();
-        this.list = new List<>();
+        this.capacity = Integer.MAX_VALUE;
         logger.exit();
     }
 
 
-    @Override
-    public final int getNumberOfElements() {
-        return list.getNumberOfElements();
-    }
-
-
-    @Override
-    public Iterator<E> createDefaultIterator() {
-        return list.createDefaultIterator();
+    /**
+     * This constructor creates a new stack with the specified capacity.
+     *
+     * @param capacity The maximum number of elements that can be on the stack
+     * at one time.
+     */
+    public Stack(int capacity) {
+        logger.entry(capacity);
+        this.capacity = capacity;
+        logger.exit();
     }
 
 
     @Override
     public final void pushElementOnTop(E element) {
         logger.entry(element);
-        list.addElement(element);
+        if (list.getNumberOfElements() < capacity) {
+            list.addElement(element);
+        } else {
+            IllegalStateException exception = new IllegalStateException("Attempted to push an element onto a full stack.");
+            logger.throwing(exception);
+            throw exception;
+        }
         logger.exit();
     }
 
@@ -71,20 +77,12 @@ public class Stack<E> extends Collection<E> implements LIFO<E> {
             element = list.removeElementAtIndex(size);
             logger.debug("The top element is: {}", element);
         } else {
-            RuntimeException exception = new RuntimeException("Attempted to pop the top element of an empty stack.");
+            IllegalStateException exception = new IllegalStateException("Attempted to pop the top element of an empty stack.");
             logger.throwing(exception);
             throw exception;
         }
         logger.exit();
         return element;
-    }
-
-
-    @Override
-    public final void removeAllElements() {
-        logger.entry();
-        list.removeAllElements();
-        logger.exit();
     }
 
 
@@ -97,7 +95,7 @@ public class Stack<E> extends Collection<E> implements LIFO<E> {
             element = list.getElementAtIndex(size);
             logger.debug("The top element is: {}", element);
         } else {
-            RuntimeException exception = new RuntimeException("Attempted to access the top element of an empty stack.");
+            IllegalStateException exception = new IllegalStateException("Attempted to access the top element of an empty stack.");
             logger.throwing(exception);
             throw exception;
         }

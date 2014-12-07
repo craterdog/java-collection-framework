@@ -9,8 +9,7 @@
  ************************************************************************/
 package craterdog.collections;
 
-import craterdog.collections.abstractions.Collection;
-import craterdog.collections.abstractions.Iterator;
+import craterdog.collections.abstractions.ClosedCollection;
 import craterdog.collections.interfaces.FIFO;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
@@ -25,12 +24,11 @@ import org.slf4j.ext.XLoggerFactory;
  * @author Derk Norton
  * @param <E> The type of element managed by this collection.
  */
-public class Queue<E> extends Collection<E> implements FIFO<E> {
+public class Queue<E> extends ClosedCollection<E> implements FIFO<E> {
 
     static private final XLogger logger = XLoggerFactory.getXLogger(Queue.class);
 
     private final int capacity;
-    private final List<E> list = new List<>();
 
 
     /**
@@ -53,18 +51,6 @@ public class Queue<E> extends Collection<E> implements FIFO<E> {
         logger.entry(capacity);
         this.capacity = capacity;
         logger.exit();
-    }
-
-
-    @Override
-    public final synchronized int getNumberOfElements() {
-        return list.getNumberOfElements();
-    }
-
-
-    @Override
-    public final synchronized Iterator<E> createDefaultIterator() {
-        return list.createDefaultIterator();
     }
 
 
@@ -105,14 +91,6 @@ public class Queue<E> extends Collection<E> implements FIFO<E> {
         }
         logger.exit(element);
         return element;
-    }
-
-
-    @Override
-    public final synchronized void removeAllElements() {
-        logger.entry();
-        list.removeAllElements();
-        logger.exit();
     }
 
 
