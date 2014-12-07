@@ -9,7 +9,7 @@
  ************************************************************************/
 package craterdog.collections;
 
-import craterdog.collections.abstractions.CollectionTestUtils;
+import craterdog.collections.abstractions.OpenCollectionTestUtils;
 import java.util.Random;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -204,7 +204,7 @@ public class ListTest {
         Assert.assertArrayEquals(inOrder, elements);
 
         logger.info("  Reversing the entries in the list...");
-        CollectionTestUtils.ReverseOrderIntegerComparator reverseComparator = new CollectionTestUtils.ReverseOrderIntegerComparator();
+        OpenCollectionTestUtils.ReverseOrderIntegerComparator reverseComparator = new OpenCollectionTestUtils.ReverseOrderIntegerComparator();
         list.sortElements(reverseComparator);
 
         logger.info("  Confirming that the entries are in reverse order...");
@@ -212,7 +212,7 @@ public class ListTest {
         Assert.assertArrayEquals(reverseOrder, elements);
 
         logger.info("  Re-reversing the entries in the list...");
-        CollectionTestUtils.InOrderIntegerComparator inOrderComparator = new CollectionTestUtils.InOrderIntegerComparator();
+        OpenCollectionTestUtils.InOrderIntegerComparator inOrderComparator = new OpenCollectionTestUtils.InOrderIntegerComparator();
         list.sortElements(inOrderComparator);
 
         logger.info("  Confirming that the entries are back in order...");

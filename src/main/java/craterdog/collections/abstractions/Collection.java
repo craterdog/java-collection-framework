@@ -9,7 +9,6 @@
  ************************************************************************/
 package craterdog.collections.abstractions;
 
-import craterdog.collections.interfaces.Accessible;
 import craterdog.collections.interfaces.Iteratable;
 import craterdog.core.Composite;
 import craterdog.utils.NaturalComparator;
@@ -23,8 +22,7 @@ import java.util.Comparator;
  * @author Derk Norton
  * @param <E> The type of element managed by the collection.
  */
-public abstract class Collection<E> implements Comparable<Iteratable<E>>, Accessible<E> {
-
+public abstract class Collection<E> implements Comparable<Iteratable<E>>, Iteratable<E> {
 
     @Override
     public String toString() {
@@ -136,6 +134,7 @@ public abstract class Collection<E> implements Comparable<Iteratable<E>>, Access
 
 
     @Override
+    @Deprecated
     public final void toArray(E[] array) {
         int size = array.length;
         Iterator<E> iterator = createDefaultIterator();
@@ -146,6 +145,7 @@ public abstract class Collection<E> implements Comparable<Iteratable<E>>, Access
 
 
     @SuppressWarnings("unchecked")
+    @Override
     public final E[] toArray() {
         int size = this.getNumberOfElements();
         if (size == 0) return (E[]) new Object[0];
@@ -161,95 +161,8 @@ public abstract class Collection<E> implements Comparable<Iteratable<E>>, Access
 
 
     @Override
-    public final boolean containsAnyElementsIn(Iterable<? extends E> collection) {
-        boolean result = false;
-        for (E element : collection) {
-            result = containsElement(element);
-            if (result) break;
-        }
-        return result;
-    }
-
-
-    @Override
-    public final boolean containsAllElementsIn(Iterable<? extends E> collection) {
-        boolean result = false;
-        for (E element : collection) {
-            result = containsElement(element);
-            if (!result) break;
-        }
-        return result;
-    }
-
-
-    @Override
-    public final int addElements(E[] elements) {
-        int count = 0;
-        for (E element : elements) {
-            if (addElement(element)) count++;
-        }
-        return count;
-    }
-
-
-    @Override
-    public final int addElements(Iterable<? extends E> elements) {
-        int count = 0;
-        for (E element : elements) {
-            if (addElement(element)) count++;
-        }
-        return count;
-    }
-
-
-    @Override
-    public final int removeElements(E[] elements) {
-        int counter = 0;
-        for (E element : elements) {
-            if (removeElement(element)) {
-                counter++;
-            }
-        }
-        return counter;
-    }
-
-
-    @Override
-    public final int removeElements(Iterable<? extends E> elements) {
-        int counter = 0;
-        for (E element : elements) {
-            if (removeElement(element)) {
-                counter++;
-            }
-        }
-        return counter;
-    }
-
-
-    @Override
     public final Iterator<E> iterator() {
         return createDefaultIterator();
-    }
-
-
-    /**
-     * This method converts negative indexes into their corresponding positive indexes and
-     * then checks to make sure the index is in the range [1..size].
-     *
-     * The mapping between indexes is as follows:
-     * <pre>
-     * Negative Indexes:   -N      -N + 1     -N + 2     -N + 3   ...   -1
-     * Positive Indexes:    1         2          3          4     ...    N
-     * </pre>
-     *
-     * @param index The index to be normalized.
-     * @return The normalized [1..N] index.
-     */
-    protected final int normalizedIndex(int index) {
-        int size = getNumberOfElements();
-        if (index < 0) index = index + size + 1;
-        if (index < 1 || index > size) throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        return index;
     }
 
 

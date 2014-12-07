@@ -24,9 +24,9 @@ import org.slf4j.ext.XLoggerFactory;
  *
  * @author Derk Norton
  */
-public class CollectionTestUtils {
+public class OpenCollectionTestUtils {
 
-    static private final XLogger logger = XLoggerFactory.getXLogger(CollectionTestUtils.class);
+    static private final XLogger logger = XLoggerFactory.getXLogger(OpenCollectionTestUtils.class);
     static private final Random generator = new Random();
 
 
@@ -36,7 +36,7 @@ public class CollectionTestUtils {
      * @param collection The Crater Dog collection to be tested.
      * @return The duration of the test in milliseconds.
      */
-    static public long runCDTimeTest(Collection<Integer> collection) {
+    static public long runCDTimeTest(OpenCollection<Integer> collection) {
         long startInMillis = System.currentTimeMillis();
 
         for (int j = 0; j < 1000; j++) {

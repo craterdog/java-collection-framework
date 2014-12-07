@@ -49,7 +49,7 @@
     </developers>
 
     <properties>
-        <core-interfaces-version>3.0</core-interfaces-version>
+        <core-interfaces-version>3.1</core-interfaces-version>
         <general-utilities-version>3.4</general-utilities-version>
     </properties>
 

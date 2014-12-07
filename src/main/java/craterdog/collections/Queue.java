@@ -9,6 +9,7 @@
  ************************************************************************/
 package craterdog.collections;
 
+import craterdog.collections.abstractions.Collection;
 import craterdog.collections.abstractions.Iterator;
 import craterdog.collections.interfaces.FIFO;
 import org.slf4j.ext.XLogger;
@@ -24,7 +25,7 @@ import org.slf4j.ext.XLoggerFactory;
  * @author Derk Norton
  * @param <E> The type of element managed by this collection.
  */
-public class Queue<E> implements FIFO<E> {
+public class Queue<E> extends Collection<E> implements FIFO<E> {
 
     static private final XLogger logger = XLoggerFactory.getXLogger(Queue.class);
 
@@ -56,12 +57,6 @@ public class Queue<E> implements FIFO<E> {
 
 
     @Override
-    public final synchronized boolean isEmpty() {
-        return list.isEmpty();
-    }
-
-
-    @Override
     public final synchronized int getNumberOfElements() {
         return list.getNumberOfElements();
     }
@@ -70,18 +65,6 @@ public class Queue<E> implements FIFO<E> {
     @Override
     public final synchronized Iterator<E> createDefaultIterator() {
         return list.createDefaultIterator();
-    }
-
-
-    @Override
-    public final void toArray(E[] array) {
-        logger.entry(array);
-        int size = array.length;
-        Iterator<E> iterator = createDefaultIterator();
-        for (int index = 0; index < size && iterator.hasNextElement(); index++) {
-            array[index] = iterator.getNextElement();
-        }
-        logger.exit();
     }
 
 
@@ -143,24 +126,6 @@ public class Queue<E> implements FIFO<E> {
         }
         logger.exit();
         return element;
-    }
-
-
-    @Override
-    public final Iterator<E> iterator() {
-        return createDefaultIterator();
-    }
-
-
-    @Override
-    public String toString() {
-        return toString("");
-    }
-
-
-    @Override
-    public String toString(String indentation) {
-        return list.toString(indentation);
     }
 
 }

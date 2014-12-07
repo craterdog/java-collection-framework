@@ -9,7 +9,7 @@
  ************************************************************************/
 package craterdog.collections;
 
-import craterdog.collections.abstractions.CollectionTestUtils;
+import craterdog.collections.abstractions.OpenCollectionTestUtils;
 import craterdog.collections.abstractions.OrderedCollectionTestUtils;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
@@ -166,7 +166,7 @@ public class SetTest {
     public void testSetTimingWithoutComparator() {
         logger.info("Beginning testSetTimingWithoutComparator()...");
         Set<Integer> set = new Set<>();
-        CollectionTestUtils.runCDTimeTest(set);
+        OpenCollectionTestUtils.runCDTimeTest(set);
         logger.info("Completed testSetTimingWithoutComparator().\n");
     }
 
@@ -177,9 +177,9 @@ public class SetTest {
     @Test
     public void testSetTimingWithComparator() {
         logger.info("Beginning testSetTimingWithComparator()...");
-        CollectionTestUtils.InOrderIntegerComparator comparator = new CollectionTestUtils.InOrderIntegerComparator();
+        OpenCollectionTestUtils.InOrderIntegerComparator comparator = new OpenCollectionTestUtils.InOrderIntegerComparator();
         Set<Integer> set = new Set<>(comparator);
-        CollectionTestUtils.runCDTimeTest(set);
+        OpenCollectionTestUtils.runCDTimeTest(set);
         logger.info("Completed testSetTimingWithComparator().\n");
     }
 
@@ -202,7 +202,7 @@ public class SetTest {
     @Test
     public void testReorderingSetWithComparator() {
         logger.info("Beginning testReorderingSetWithComparator()...");
-        CollectionTestUtils.InOrderIntegerComparator comparator = new CollectionTestUtils.InOrderIntegerComparator();
+        OpenCollectionTestUtils.InOrderIntegerComparator comparator = new OpenCollectionTestUtils.InOrderIntegerComparator();
         Set<Integer> set = new Set<>(comparator);
         OrderedCollectionTestUtils.reorderCollection(set);
         logger.info("Completed testReorderingSetWithComparator().\n");

@@ -27,7 +27,7 @@ import java.util.Comparator;
  * @author Derk Norton
  * @param <E> The type of element managed by the collection.
  */
-public abstract class SortableCollection<E> extends Collection<E> implements Sortable<E> {
+public abstract class SortableCollection<E> extends OpenCollection<E> implements Sortable<E> {
 
 
     @Override

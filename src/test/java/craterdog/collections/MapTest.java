@@ -9,9 +9,9 @@
  ************************************************************************/
 package craterdog.collections;
 
-import craterdog.collections.abstractions.Collection;
-import craterdog.collections.abstractions.CollectionTestUtils;
+import craterdog.collections.abstractions.OpenCollectionTestUtils;
 import craterdog.collections.abstractions.Iterator;
+import craterdog.collections.abstractions.OpenCollection;
 import craterdog.collections.interfaces.Iteratable;
 import java.lang.reflect.Array;
 import java.util.Random;
@@ -239,7 +239,7 @@ public class MapTest {
     public void testMapTiming() {
         logger.info("Beginning testMapTiming()...");
 
-        Collection<Association<Integer, Integer>> collection = new Map<>();
+        OpenCollection<Association<Integer, Integer>> collection = new Map<>();
         long startInMillis = System.currentTimeMillis();
 
         for (int j = 0; j < 100; j++) {
@@ -346,7 +346,7 @@ public class MapTest {
         Assert.assertArrayEquals(inOrder, keys);
 
         logger.info("  Reversing the entries in the map...");
-        CollectionTestUtils.ReverseOrderAssociationComparator reverseComparator = new CollectionTestUtils.ReverseOrderAssociationComparator();
+        OpenCollectionTestUtils.ReverseOrderAssociationComparator reverseComparator = new OpenCollectionTestUtils.ReverseOrderAssociationComparator();
         map.sortElements(reverseComparator);
 
         logger.info("  Confirming that the entries are in reverse order...");
@@ -354,7 +354,7 @@ public class MapTest {
         Assert.assertArrayEquals(reverseOrder, keys);
 
         logger.info("  Re-reversing the entries in the map...");
-        CollectionTestUtils.InOrderAssociationComparator inOrderComparator = new CollectionTestUtils.InOrderAssociationComparator();
+        OpenCollectionTestUtils.InOrderAssociationComparator inOrderComparator = new OpenCollectionTestUtils.InOrderAssociationComparator();
         map.sortElements(inOrderComparator);
 
         logger.info("  Confirming that the entries are back in order...");

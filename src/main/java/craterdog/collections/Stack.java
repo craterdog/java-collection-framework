@@ -9,6 +9,7 @@
  ************************************************************************/
 package craterdog.collections;
 
+import craterdog.collections.abstractions.Collection;
 import craterdog.collections.abstractions.Iterator;
 import craterdog.collections.interfaces.LIFO;
 import org.slf4j.ext.XLogger;
@@ -24,7 +25,7 @@ import org.slf4j.ext.XLoggerFactory;
  * @author Derk Norton
  * @param <E> The type of element managed by this collection.
  */
-public class Stack<E> implements LIFO<E> {
+public class Stack<E> extends Collection<E> implements LIFO<E> {
 
     static private final XLogger logger = XLoggerFactory.getXLogger(Stack.class);
 
@@ -42,12 +43,6 @@ public class Stack<E> implements LIFO<E> {
 
 
     @Override
-    public final boolean isEmpty() {
-        return list.isEmpty();
-    }
-
-
-    @Override
     public final int getNumberOfElements() {
         return list.getNumberOfElements();
     }
@@ -56,20 +51,6 @@ public class Stack<E> implements LIFO<E> {
     @Override
     public Iterator<E> createDefaultIterator() {
         return list.createDefaultIterator();
-    }
-
-
-    @Override
-    public final void toArray(E[] array) {
-        logger.entry(array);
-        int size = array.length;
-        Iterator<E> iterator = createDefaultIterator();
-        for (int index = 0; index < size && iterator.hasNextElement(); index++) {
-            E element = iterator.getNextElement();
-            logger.debug("Adding the following element to the array: {}", element);
-            array[index] = element;
-        }
-        logger.exit();
     }
 
 
@@ -122,24 +103,6 @@ public class Stack<E> implements LIFO<E> {
         }
         logger.exit();
         return element;
-    }
-
-
-    @Override
-    public final Iterator<E> iterator() {
-        return createDefaultIterator();
-    }
-
-
-    @Override
-    public String toString() {
-        return toString("");
-    }
-
-
-    @Override
-    public String toString(String indentation) {
-        return list.toString(indentation);
     }
 
 }

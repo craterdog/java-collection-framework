@@ -9,7 +9,7 @@
  ************************************************************************/
 package craterdog.collections;
 
-import craterdog.collections.abstractions.CollectionTestUtils;
+import craterdog.collections.abstractions.OpenCollectionTestUtils;
 import craterdog.collections.abstractions.OrderedCollectionTestUtils;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
@@ -156,7 +156,7 @@ public class BagTest {
     @Test
     public void testReorderingBagWithComparator() {
         logger.info("Beginning testReorderingBagWithComparator()...");
-        CollectionTestUtils.InOrderIntegerComparator comparator = new CollectionTestUtils.InOrderIntegerComparator();
+        OpenCollectionTestUtils.InOrderIntegerComparator comparator = new OpenCollectionTestUtils.InOrderIntegerComparator();
         Bag<Integer> bag = new Bag<>(comparator);
         OrderedCollectionTestUtils.reorderCollection(bag);
         logger.info("Completed testReorderingBagWithComparator().\n");

@@ -9,8 +9,8 @@
  ************************************************************************/
 package craterdog.collections;
 
-import craterdog.collections.abstractions.Collection;
-import craterdog.collections.abstractions.CollectionTestUtils;
+import craterdog.collections.abstractions.OpenCollection;
+import craterdog.collections.abstractions.OpenCollectionTestUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.slf4j.ext.XLogger;
@@ -53,29 +53,29 @@ public class ComparisonTest {
     public void testCDCollectionPerformance() {
 
         logger.info("  Testing the performance of a craterdog.collections.Bag with default comparator...");
-        Collection<Integer> collection = new Bag<>();
-        long durationInMilliseconds = CollectionTestUtils.runCDTimeTest(collection);
+        OpenCollection<Integer> collection = new Bag<>();
+        long durationInMilliseconds = OpenCollectionTestUtils.runCDTimeTest(collection);
         logger.info("  The test took {} milliseconds to run.\n", durationInMilliseconds);
 
         logger.info("  Testing the performance of a craterdog.collections.Bag with custom comparator...");
-        CollectionTestUtils.InOrderIntegerComparator comparator = new CollectionTestUtils.InOrderIntegerComparator();
+        OpenCollectionTestUtils.InOrderIntegerComparator comparator = new OpenCollectionTestUtils.InOrderIntegerComparator();
         collection = new Bag<>(comparator);
-        durationInMilliseconds = CollectionTestUtils.runCDTimeTest(collection);
+        durationInMilliseconds = OpenCollectionTestUtils.runCDTimeTest(collection);
         logger.info("  The test took {} milliseconds to run.\n", durationInMilliseconds);
 
         logger.info("  Testing the performance of a craterdog.collections.Set with default comparator...");
         collection = new Set<>();
-        durationInMilliseconds = CollectionTestUtils.runCDTimeTest(collection);
+        durationInMilliseconds = OpenCollectionTestUtils.runCDTimeTest(collection);
         logger.info("  The test took {} milliseconds to run.\n", durationInMilliseconds);
 
         logger.info("  Testing the performance of a craterdog.collections.Set with custom comparator...");
         collection = new Set<>(comparator);
-        durationInMilliseconds = CollectionTestUtils.runCDTimeTest(collection);
+        durationInMilliseconds = OpenCollectionTestUtils.runCDTimeTest(collection);
         logger.info("  The test took {} milliseconds to run.\n", durationInMilliseconds);
 
         logger.info("  Testing the performance of a craterdog.collections.List...");
         collection = new List<>();
-        durationInMilliseconds = CollectionTestUtils.runCDTimeTest(collection);
+        durationInMilliseconds = OpenCollectionTestUtils.runCDTimeTest(collection);
         logger.info("  The test took {} milliseconds to run.\n", durationInMilliseconds);
 
     }
@@ -90,33 +90,33 @@ public class ComparisonTest {
 
         logger.info("  Testing the performance of a java.util.HashSet...");
         java.util.Collection<Integer> collection = new java.util.HashSet<>();
-        long durationInMilliseconds = CollectionTestUtils.runJavaTimeTest(collection);
+        long durationInMilliseconds = OpenCollectionTestUtils.runJavaTimeTest(collection);
         logger.info("  The test took {} milliseconds to run.\n", durationInMilliseconds);
 
         logger.info("  Testing the performance of a java.util.LinkedHashSet...");
         collection = new java.util.LinkedHashSet<>();
-        durationInMilliseconds = CollectionTestUtils.runJavaTimeTest(collection);
+        durationInMilliseconds = OpenCollectionTestUtils.runJavaTimeTest(collection);
         logger.info("  The test took {} milliseconds to run.\n", durationInMilliseconds);
 
         logger.info("  Testing the performance of a java.util.TreeSet with default comparator...");
         collection = new java.util.TreeSet<>();
-        durationInMilliseconds = CollectionTestUtils.runJavaTimeTest(collection);
+        durationInMilliseconds = OpenCollectionTestUtils.runJavaTimeTest(collection);
         logger.info("  The test took {} milliseconds to run.\n", durationInMilliseconds);
 
         logger.info("  Testing the performance of a java.util.TreeSet with custom comparator...");
-        CollectionTestUtils.InOrderIntegerComparator comparator = new CollectionTestUtils.InOrderIntegerComparator();
+        OpenCollectionTestUtils.InOrderIntegerComparator comparator = new OpenCollectionTestUtils.InOrderIntegerComparator();
         collection = new java.util.TreeSet<>(comparator);
-        durationInMilliseconds = CollectionTestUtils.runJavaTimeTest(collection);
+        durationInMilliseconds = OpenCollectionTestUtils.runJavaTimeTest(collection);
         logger.info("  The test took {} milliseconds to run.\n", durationInMilliseconds);
 
         logger.info("  Testing the performance of a java.util.ArrayList...");
         collection = new java.util.ArrayList<>();
-        durationInMilliseconds = CollectionTestUtils.runJavaTimeTest(collection);
+        durationInMilliseconds = OpenCollectionTestUtils.runJavaTimeTest(collection);
         logger.info("  The test took {} milliseconds to run.\n", durationInMilliseconds);
 
         logger.info("  Testing the performance of a java.util.LinkedList...");
         collection = new java.util.LinkedList<>();
-        durationInMilliseconds = CollectionTestUtils.runJavaTimeTest(collection);
+        durationInMilliseconds = OpenCollectionTestUtils.runJavaTimeTest(collection);
         logger.info("  The test took {} milliseconds to run.\n", durationInMilliseconds);
 
     }

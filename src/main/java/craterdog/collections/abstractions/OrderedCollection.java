@@ -24,7 +24,7 @@ import java.util.Comparator;
  * @author Derk Norton
  * @param <E> The type of element managed by this collection.
  */
-public abstract class OrderedCollection<E> extends Collection<E> implements Ordered<E> {
+public abstract class OrderedCollection<E> extends OpenCollection<E> implements Ordered<E> {
 
     private final RandomizedTree<E> tree;
 

@@ -43,7 +43,7 @@ public class OrderedCollectionTestUtils {
         Assert.assertArrayEquals(inOrder, elements);
 
         logger.info("  Reversing the entries in the collection...");
-        CollectionTestUtils.ReverseOrderIntegerComparator reverseComparator = new CollectionTestUtils.ReverseOrderIntegerComparator();
+        OpenCollectionTestUtils.ReverseOrderIntegerComparator reverseComparator = new OpenCollectionTestUtils.ReverseOrderIntegerComparator();
         collection = new Bag<>(collection, reverseComparator);
 
         logger.info("  Confirming that the entries are in reverse order...");
@@ -51,7 +51,7 @@ public class OrderedCollectionTestUtils {
         Assert.assertArrayEquals(reverseOrder, elements);
 
         logger.info("  Re-reversing the entries in the collection...");
-        CollectionTestUtils.InOrderIntegerComparator inOrderComparator = new CollectionTestUtils.InOrderIntegerComparator();
+        OpenCollectionTestUtils.InOrderIntegerComparator inOrderComparator = new OpenCollectionTestUtils.InOrderIntegerComparator();
         collection = new Set<>(collection, inOrderComparator);
 
         logger.info("  Confirming that the entries are back in order...");
