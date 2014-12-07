@@ -24,7 +24,33 @@ package craterdog.collections.interfaces;
  * @author Derk Norton
  * @param <E> The type of element managed by the collection.
  */
-public interface Indexed<E> extends Accessible<E> {
+public interface Indexed<E> {
+
+    /**
+     * This method return the index of the specified element, or zero if the element
+     * is not found.
+     *
+     * @param element The element to be checked for in the collection.
+     * @return The index of the element of zero if the element was not found.
+     */
+    int getIndexOfElement(E element);
+
+    /**
+     * This method returns the element at the specified index.
+     *
+     * @param index The index of the element to be returned.
+     * @return The element at the specified index.
+     */
+    E getElementAtIndex(int index);
+
+    /**
+     * This method returns a collection of the elements in the specified index range.
+     *
+     * @param firstIndex The index of the first element to be returned.
+     * @param lastIndex the index of the last element to be returned.
+     * @return A collection of elements in the specified range.
+     */
+    Indexed<E> getElementsInRange(int firstIndex, int lastIndex);
 
     /**
      * This method inserts the specified element into the collection before the element

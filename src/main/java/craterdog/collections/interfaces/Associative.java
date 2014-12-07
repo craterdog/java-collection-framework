@@ -20,7 +20,7 @@ import craterdog.collections.Association;
  * @param <K> the key type.
  * @param <V> the value type.
  */
-public interface Associative<K, V> extends Accessible<Association<K, V>> {
+public interface Associative<K, V> {
 
     /**
      * This method returns the list of keys for the associations in this collection.

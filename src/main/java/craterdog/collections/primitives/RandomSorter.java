@@ -30,8 +30,10 @@ public class RandomSorter<E> extends Sorter<E> {
         if (collection != null && collection.getNumberOfElements() > 1) {
             if (collection instanceof Indexed) {
                 // randomize it in place
+                @SuppressWarnings("unchecked")
                 Indexed<E> indexedCollection = (Indexed<E>) collection;
-                randomizeIndexedCollection(indexedCollection);
+                int size = collection.getNumberOfElements();
+                randomizeIndexedCollection(indexedCollection, size);
             } else {
                 // convert the collection to an array
                 E[] array = collection.toArray();
@@ -46,8 +48,7 @@ public class RandomSorter<E> extends Sorter<E> {
         }
     }
 
-    private void randomizeIndexedCollection(Indexed<E> indexedCollection) {
-        int size = indexedCollection.getNumberOfElements();
+    private void randomizeIndexedCollection(Indexed<E> indexedCollection, int size) {
         for (int index = size; index > 1; index--) {
             int randomIndex = RandomUtils.pickRandomIndex(index) + 1;  // use ordinal based indexing
             E swap = indexedCollection.getElementAtIndex(index);

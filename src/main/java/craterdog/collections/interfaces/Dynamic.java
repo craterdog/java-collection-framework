@@ -17,7 +17,7 @@ package craterdog.collections.interfaces;
  * @author Derk Norton
  * @param <E> The type of element managed by the collection.
  */
-public interface Dynamic<E> extends Accessible<E> {
+public interface Dynamic<E> {
 
     /**
      * This method determines if an element is contained in the collection.

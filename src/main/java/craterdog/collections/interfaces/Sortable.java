@@ -23,7 +23,7 @@ import java.util.Comparator;
  * @author Derk Norton
  * @param <E> The type of element managed by the collection.
  */
-public interface Sortable<E> extends Accessible<E> {
+public interface Sortable<E> {
 
     /**
      * This method shuffles the elements in the collection using a randomizing algorithm.
