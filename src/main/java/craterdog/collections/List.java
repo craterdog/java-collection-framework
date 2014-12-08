@@ -101,16 +101,6 @@ public class List<E> extends SortableCollection<E> implements Indexed<E> {
 
 
     @Override
-    public final boolean containsElement(E element) {
-        logger.entry(element);
-        int index = getIndexOfElement(element);
-        boolean result = index > 0;
-        logger.exit(result);
-        return result;
-    }
-
-
-    @Override
     public Iterator<E> createDefaultIterator() {
         logger.entry();
         Iterator<E> iterator = new ListManipulator();

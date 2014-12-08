@@ -35,7 +35,7 @@ public abstract class SortableCollection<E> extends OpenCollection<E> implements
 
 
     @Override
-    public final void shuffleElements() {
+    public void shuffleElements() {
         logger.entry();
         Sorter<E> sorter = new RandomSorter<>();
         sorter.sortCollection(this);
@@ -44,22 +44,26 @@ public abstract class SortableCollection<E> extends OpenCollection<E> implements
 
 
     @Override
-    public final void sortElements() {
+    public void sortElements() {
+        logger.entry();
         Sorter<E> sorter = new MergeSorter<>();
         Comparator<? super E> comparator = new NaturalComparator<>();
         sorter.sortCollection(this, comparator);
+        logger.exit();
     }
 
 
     @Override
-    public final void sortElements(Comparator<? super E> comparator) {
+    public void sortElements(Comparator<? super E> comparator) {
+        logger.entry(comparator);
         Sorter<E> sorter = new MergeSorter<>();
         sorter.sortCollection(this, comparator);
+        logger.exit();
     }
 
 
     @Override
-    public final void sortElements(Sorter<E> sorter, Comparator<? super E> comparator) {
+    public void sortElements(Sorter<E> sorter, Comparator<? super E> comparator) {
         logger.entry(sorter, comparator);
         sorter.sortCollection(this, comparator);
         logger.exit();

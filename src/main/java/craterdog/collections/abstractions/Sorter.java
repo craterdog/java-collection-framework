@@ -11,6 +11,8 @@ package craterdog.collections.abstractions;
 
 import craterdog.utils.NaturalComparator;
 import java.util.Comparator;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 
 
 /**
@@ -23,6 +25,9 @@ import java.util.Comparator;
  */
 public abstract class Sorter<E> {
 
+    static private final XLogger logger = XLoggerFactory.getXLogger(Sorter.class);
+
+
     /**
      * This method sorts the elements of its collection using a specific
      * sorting algorithm.  The natural comparator is used to compare
@@ -31,8 +36,10 @@ public abstract class Sorter<E> {
      * @param collection The collection to be sorted.
      */
     public final void sortCollection(SortableCollection<E> collection) {
+        logger.entry(collection);
         Comparator<? super E> comparator = new NaturalComparator<>();
         sortCollection(collection, comparator);
+        logger.exit();
     }
 
 

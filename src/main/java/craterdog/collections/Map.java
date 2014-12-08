@@ -45,6 +45,8 @@ public class Map<K, V> extends SortableCollection<Association<K, V>> implements 
      * This constructor creates a new empty map.
      */
     public Map() {
+        logger.entry();
+        logger.exit();
     }
 
 

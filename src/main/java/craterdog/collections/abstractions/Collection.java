@@ -15,6 +15,8 @@ import craterdog.core.Sequential;
 import craterdog.utils.NaturalComparator;
 import java.lang.reflect.Array;
 import java.util.Comparator;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 
 
 /**
@@ -25,57 +27,68 @@ import java.util.Comparator;
  */
 public abstract class Collection<E> implements Comparable<Collection<E>>, Accessible<E>, Sequential<E>, Composite {
 
+    static private final XLogger logger = XLoggerFactory.getXLogger(Collection.class);
+
+
     @Override
     public String toString() {
-        return toString("");
+        logger.entry();
+        String string = toString("");
+        logger.exit(string);
+        return string;
     }
 
 
     @Override
     public String toString(String indentation) {
+        logger.entry(indentation);
+        String string = "[]";  // empty collection
+
         // check for an empty collection
-        if (isEmpty()) {
-            return "[]";
-        }
+        if (!isEmpty()) {
 
-        // see if the collection should be formatted across multiple lines
-        boolean isMultiline = checkForMultiline();
+            // see if the collection should be formatted across multiple lines
+            boolean isMultiline = checkForMultiline();
 
-        // start formatting the collection
-        String nextIndentation = indentation + "    ";
-        StringBuilder builder = new StringBuilder();
-        builder.append("[");
-        if (isMultiline) {
-            addNewLine(builder, nextIndentation);
-        }
-
-        // format each element in the collection
-        Iterator<E> iterator = this.createDefaultIterator();
-        do {
-            E element = iterator.getNextElement();
-            Composite composite = element instanceof Composite ? (Composite) element : null;
-            if (composite != null) {
-                builder.append(composite.toString(nextIndentation));
-            } else {
-                builder.append(element.toString());
+            // start formatting the collection
+            String nextIndentation = indentation + "    ";
+            StringBuilder builder = new StringBuilder();
+            builder.append("[");
+            if (isMultiline) {
+                addNewLine(builder, nextIndentation);
             }
-            if (iterator.hasNext()) {
-                builder.append(",");
-                if (isMultiline) {
-                    addNewLine(builder, nextIndentation);
+
+            // format each element in the collection
+            Iterator<E> iterator = this.createDefaultIterator();
+            do {
+                E element = iterator.getNextElement();
+                Composite composite = element instanceof Composite ? (Composite) element : null;
+                if (composite != null) {
+                    builder.append(composite.toString(nextIndentation));
                 } else {
-                    builder.append(" ");
+                    builder.append(element.toString());
                 }
+                if (iterator.hasNext()) {
+                    builder.append(",");
+                    if (isMultiline) {
+                        addNewLine(builder, nextIndentation);
+                    } else {
+                        builder.append(" ");
+                    }
+                }
+            } while (iterator.hasNext());
+
+            // finish formatting the collection
+            if (isMultiline) {
+                addNewLine(builder, indentation);
             }
-        } while (iterator.hasNext());
+            builder.append("]");
+            string = builder.toString();
 
-        // finish formatting the collection
-        if (isMultiline) {
-            addNewLine(builder, indentation);
         }
-        builder.append("]");
 
-        return builder.toString();
+        logger.exit(string);
+        return string;
     }
 
 
@@ -87,83 +100,146 @@ public abstract class Collection<E> implements Comparable<Collection<E>>, Access
 
     @Override
     public int hashCode() {
+        logger.entry();
         int hash = 5;
         for (E element : this) {
             hash = 11 * hash + element.hashCode();
         }
+        logger.exit(hash);
         return hash;
     }
 
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == null) return false;
-        if (getClass() != obj.getClass()) return false;
-        @SuppressWarnings("unchecked")
-        final Collection<E> that = (Collection<E>) obj;
-        if (this.getNumberOfElements() != that.getNumberOfElements()) return false;
-        Iterator<E> thisIterator = this.createDefaultIterator();
-        Iterator<E> thatIterator = that.createDefaultIterator();
-        while (thisIterator.hasNextElement()) {
-            E thisElement = thisIterator.getNextElement();
-            E thatElement = thatIterator.getNextElement();
-            if (!thisElement.equals(thatElement)) return false;
+    public boolean equals(Object object) {
+        logger.entry(object);
+        boolean result = false;
+        if (object != null && getClass() == object.getClass()) {
+            @SuppressWarnings("unchecked")
+            final Collection<E> that = (Collection<E>) object;
+            if (this.getNumberOfElements() == that.getNumberOfElements()) {
+                result = true;  // so far anyway...
+                Iterator<E> thisIterator = this.createDefaultIterator();
+                Iterator<E> thatIterator = that.createDefaultIterator();
+                while (thisIterator.hasNextElement()) {
+                    E thisElement = thisIterator.getNextElement();
+                    E thatElement = thatIterator.getNextElement();
+                    if (!thisElement.equals(thatElement)) {
+                        result = false;  // oops, found a difference
+                        break;
+                    }
+                }
+            }
         }
-        return true;
+        logger.exit(result);
+        return result;
     }
 
 
     @Override
     public int compareTo(Collection<E> that) {
+        logger.entry(that);
+        int result;
         Comparator<Object> comparator = new NaturalComparator<>();
         Iterator<E> thisIterator = this.createDefaultIterator();
         Iterator<E> thatIterator = that.createDefaultIterator();
         while (thisIterator.hasNextElement() && thatIterator.hasNextElement()) {
             E thisElement = thisIterator.getNextElement();
             E thatElement = thatIterator.getNextElement();
-            int result = comparator.compare(thisElement, thatElement);
-            if (result != 0) return result;
+            result = comparator.compare(thisElement, thatElement);
+            if (result != 0) break;
         }
-        return Integer.compare(this.getNumberOfElements(), that.getNumberOfElements());
+        result = Integer.compare(this.getNumberOfElements(), that.getNumberOfElements());
+        logger.exit(result);
+        return result;
     }
 
 
     @Override
-    public final boolean isEmpty() {
-        return getNumberOfElements() == 0;
+    public boolean isEmpty() {
+        logger.entry();
+        boolean result = getNumberOfElements() == 0;
+        logger.exit(result);
+        return result;
+    }
+
+
+    @Override
+    public boolean containsElement(E element) {
+        logger.entry(element);
+        int index = getIndexOfElement(element);
+        boolean result = index > 0;
+        logger.exit(result);
+        return result;
+    }
+
+
+    @Override
+    public boolean containsAnyElementsIn(Iterable<? extends E> collection) {
+        logger.entry(collection);
+        boolean result = false;
+        for (E element : collection) {
+            result = containsElement(element);
+            if (result) break;
+        }
+        logger.exit(result);
+        return result;
+    }
+
+
+    @Override
+    public boolean containsAllElementsIn(Iterable<? extends E> collection) {
+        logger.entry(collection);
+        boolean result = false;
+        for (E element : collection) {
+            result = containsElement(element);
+            if (!result) break;
+        }
+        logger.exit(result);
+        return result;
     }
 
 
     @Override
     @Deprecated
-    public final void toArray(E[] array) {
+    public void toArray(E[] array) {
+        logger.entry(array);
         int size = array.length;
         Iterator<E> iterator = createDefaultIterator();
         for (int index = 0; index < size && iterator.hasNextElement(); index++) {
             array[index] = iterator.getNextElement();
         }
+        logger.exit();
     }
 
 
     @SuppressWarnings("unchecked")
     @Override
-    public final E[] toArray() {
+    public E[] toArray() {
+        logger.entry();
+        E[] array = (E[]) new Object[0];  // OK to use type Object array since it is empty
         int size = this.getNumberOfElements();
-        if (size == 0) return (E[]) new Object[0];
-        Iterator<E> iterator = createDefaultIterator();
-        E template = iterator.getNextElement();  // TOTAL HACK but java requires a template to use for allocating a new array
-        E[] array = (E[]) Array.newInstance(template.getClass(), size);
-        array[0] = template;
-        for (int index = 1; index < size; index++) {
-            array[index] = iterator.getNextElement();
+        if (size > 0) {
+            // Requires a TOTAL HACK since we cannot instantiate a parameterized array explicitly!
+            Iterator<E> iterator = createDefaultIterator();
+            E template = iterator.getNextElement();  // we know there must be at least one element
+            array = (E[]) Array.newInstance(template.getClass(), size);
+            array[0] = template;  // copy in the first element
+            for (int index = 1; index < size; index++) {
+                array[index] = iterator.getNextElement();  // copy the rest of the elements
+            }
         }
+        logger.exit(array);
         return array;
     }
 
 
     @Override
     public final Iterator<E> iterator() {
-        return createDefaultIterator();
+        logger.entry();
+        Iterator<E> iterator = createDefaultIterator();
+        logger.exit(iterator);
+        return iterator;
     }
 
 

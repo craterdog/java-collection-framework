@@ -29,6 +29,32 @@ public interface Accessible<E> {
     Iterator<E> createDefaultIterator();
 
     /**
+     * This method determines if an element is contained in the collection.
+     *
+     * @param element The element to be checked for in the collection.
+     * @return Whether or not the specified element is contained in the collection.
+     */
+    boolean containsElement(E element);
+
+    /**
+     * This method determines whether any of the specified elements are contained in
+     * the collection.
+     *
+     * @param elements The elements to be checked for in the collection.
+     * @return Whether or not any of the specified elements are contained in the collection.
+     */
+    boolean containsAnyElementsIn(Iterable<? extends E> elements);
+
+    /**
+     * This method determines whether all of the specified elements are contained in
+     * the collection.
+     *
+     * @param elements The elements to be checked for in the collection.
+     * @return Whether or not all of the specified elements are contained in the collection.
+     */
+    boolean containsAllElementsIn(Iterable<? extends E> elements);
+
+    /**
      * This method return the index of the specified element, or zero if the element
      * is not found.
      *

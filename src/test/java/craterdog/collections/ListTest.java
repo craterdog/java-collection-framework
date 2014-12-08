@@ -116,6 +116,7 @@ public class ListTest {
 
         logger.info("  Populating the list with values...");
         List<Integer> list = new List<>();
+        assertArrayEquals(new Integer[0], list.toArray());
         list.addElement(0);
         int size = values.length;
         for (int i = 0; i < size; i++) {

@@ -9,6 +9,9 @@
  ************************************************************************/
 package craterdog.collections.abstractions;
 
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
+
 
 /**
  * This abstract class defines a framework for each concrete iterator class
@@ -24,6 +27,9 @@ package craterdog.collections.abstractions;
  * @param <E> The type of the element being iterated over.
  */
 public abstract class Iterator<E> implements java.util.Iterator<E> {
+
+    static private final XLogger logger = XLoggerFactory.getXLogger(Iterator.class);
+
 
     /**
      * This method moves the iterator to just before the first element in this collection.
@@ -81,19 +87,32 @@ public abstract class Iterator<E> implements java.util.Iterator<E> {
      */
     public abstract E getPreviousElement();
 
+
     @Override
     public final boolean hasNext() {
-        return hasNextElement();
+        logger.entry();
+        boolean result = hasNextElement();
+        logger.exit();
+        return result;
     }
+
 
     @Override
     public final E next() {
-        return getNextElement();
+        logger.entry();
+        E result = getNextElement();
+        logger.exit();
+        return result;
     }
+
 
     @Override
     public final void remove() {
-        throw new UnsupportedOperationException("Modifying a collection with an iterator is not allowed.");
+        logger.entry();
+        UnsupportedOperationException exception =
+                new UnsupportedOperationException("Modifying a collection with an iterator is not allowed.");
+        logger.throwing(exception);
+        throw exception;
     }
 
 }

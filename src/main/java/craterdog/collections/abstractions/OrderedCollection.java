@@ -40,7 +40,9 @@ public abstract class OrderedCollection<E> extends OpenCollection<E> implements 
      * @param duplicatesAllowed Whether or not duplicate elements are allowed.
      */
     protected OrderedCollection(boolean duplicatesAllowed) {
+        logger.entry(duplicatesAllowed);
         tree = new RandomizedTree<>(duplicatesAllowed);
+        logger.exit();
     }
 
 
@@ -75,7 +77,9 @@ public abstract class OrderedCollection<E> extends OpenCollection<E> implements 
      * @param comparator The comparator to be used to compare two elements during ordering.
      */
     protected OrderedCollection(boolean duplicatesAllowed, Comparator<? super E> comparator) {
+        logger.entry(duplicatesAllowed, comparator);
         tree = new RandomizedTree<>(duplicatesAllowed, comparator);
+        logger.exit();
     }
 
 
@@ -88,8 +92,10 @@ public abstract class OrderedCollection<E> extends OpenCollection<E> implements 
      * @param comparator The comparator to be used to compare two elements during ordering.
      */
     protected OrderedCollection(E[] elements, boolean duplicatesAllowed, Comparator<? super E> comparator) {
+        logger.entry(elements, duplicatesAllowed, comparator);
         tree = new RandomizedTree<>(duplicatesAllowed, comparator);
         tree.addAll(Arrays.asList(elements));
+        logger.exit();
     }
 
 
@@ -102,37 +108,35 @@ public abstract class OrderedCollection<E> extends OpenCollection<E> implements 
      * @param comparator The comparator to be used to compare two elements during ordering.
      */
     protected OrderedCollection(Iterable<? extends E> elements, boolean duplicatesAllowed, Comparator<? super E> comparator) {
+        logger.entry(elements, duplicatesAllowed, comparator);
         tree = new RandomizedTree<>(duplicatesAllowed, comparator);
         for (E element : elements) {
             tree.add(element);
         }
+        logger.exit();
     }
 
 
     @Override
-    public final int getNumberOfElements() {
-        return tree.size();
-    }
-
-
-    @Override
-    public final boolean containsElement(E element) {
-        logger.entry(element);
-        boolean result = tree.contains(element);
+    public int getNumberOfElements() {
+        logger.entry();
+        int result = tree.size();
         logger.exit(result);
         return result;
     }
 
 
     @Override
-    public final Iterator<E> createDefaultIterator() {
+    public Iterator<E> createDefaultIterator() {
+        logger.entry();
         Iterator<E> iterator = new OrderedIterator();
+        logger.exit(iterator);
         return iterator;
     }
 
 
     @Override
-    public final E getElementAtIndex(int index) {
+    public E getElementAtIndex(int index) {
         logger.entry(index);
         index = normalizedIndex(index);
         E element = tree.get(index - 1);  // convert to zero based indexing
@@ -142,7 +146,7 @@ public abstract class OrderedCollection<E> extends OpenCollection<E> implements 
 
 
     @Override
-    public final int getIndexOfElement(E element) {
+    public int getIndexOfElement(E element) {
         logger.entry(element);
         int index = tree.indexOf(element) + 1;  // convert to ordinal based indexing
         logger.exit(index);
@@ -151,7 +155,7 @@ public abstract class OrderedCollection<E> extends OpenCollection<E> implements 
 
 
     @Override
-    public final Collection<E> getElementsInRange(int firstIndex, int lastIndex) {
+    public Collection<E> getElementsInRange(int firstIndex, int lastIndex) {
         logger.entry(firstIndex, lastIndex);
         firstIndex = normalizedIndex(firstIndex);
         lastIndex = normalizedIndex(lastIndex);
@@ -170,7 +174,7 @@ public abstract class OrderedCollection<E> extends OpenCollection<E> implements 
 
 
     @Override
-    public final boolean addElement(E element) {
+    public boolean addElement(E element) {
         logger.entry(element);
         boolean result = tree.add(element);
         logger.exit(result);
@@ -179,7 +183,7 @@ public abstract class OrderedCollection<E> extends OpenCollection<E> implements 
 
 
     @Override
-    public final boolean removeElement(E element) {
+    public boolean removeElement(E element) {
         logger.entry(element);
         boolean result = tree.remove(element);
         logger.exit(result);
@@ -188,7 +192,7 @@ public abstract class OrderedCollection<E> extends OpenCollection<E> implements 
 
 
     @Override
-    public final void removeAllElements() {
+    public void removeAllElements() {
         logger.entry();
         tree.clear();
         logger.exit();
@@ -196,8 +200,11 @@ public abstract class OrderedCollection<E> extends OpenCollection<E> implements 
 
 
     @Override
-    public final Comparator<? super E> getComparator() {
-        return tree.comparator();
+    public Comparator<? super E> getComparator() {
+        logger.entry();
+        Comparator<? super E> comparator = tree.comparator();
+        logger.exit(comparator);
+        return comparator;
     }
 
 

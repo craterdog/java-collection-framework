@@ -10,6 +10,8 @@
 package craterdog.collections.abstractions;
 
 import craterdog.collections.interfaces.Dynamic;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 
 
 /**
@@ -20,69 +22,58 @@ import craterdog.collections.interfaces.Dynamic;
  */
 public abstract class OpenCollection<E> extends Collection<E> implements Dynamic<E> {
 
-    @Override
-    public final boolean containsAnyElementsIn(Iterable<? extends E> collection) {
-        boolean result = false;
-        for (E element : collection) {
-            result = containsElement(element);
-            if (result) break;
-        }
-        return result;
-    }
+    static private final XLogger logger = XLoggerFactory.getXLogger(OpenCollection.class);
 
 
     @Override
-    public final boolean containsAllElementsIn(Iterable<? extends E> collection) {
-        boolean result = false;
-        for (E element : collection) {
-            result = containsElement(element);
-            if (!result) break;
-        }
-        return result;
-    }
-
-
-    @Override
-    public final int addElements(E[] elements) {
+    public int addElements(E[] elements) {
+        logger.entry(elements);
         int count = 0;
         for (E element : elements) {
             if (addElement(element)) count++;
         }
+        logger.exit(count);
         return count;
     }
 
 
     @Override
-    public final int addElements(Iterable<? extends E> elements) {
+    public int addElements(Iterable<? extends E> elements) {
+        logger.entry(elements);
         int count = 0;
         for (E element : elements) {
             if (addElement(element)) count++;
         }
+        logger.exit(count);
         return count;
     }
 
 
     @Override
-    public final int removeElements(E[] elements) {
-        int counter = 0;
+    public int removeElements(E[] elements) {
+        logger.entry(elements);
+        int count = 0;
         for (E element : elements) {
             if (removeElement(element)) {
-                counter++;
+                count++;
             }
         }
-        return counter;
+        logger.exit(count);
+        return count;
     }
 
 
     @Override
-    public final int removeElements(Iterable<? extends E> elements) {
-        int counter = 0;
+    public int removeElements(Iterable<? extends E> elements) {
+        logger.entry(elements);
+        int count = 0;
         for (E element : elements) {
             if (removeElement(element)) {
-                counter++;
+                count++;
             }
         }
-        return counter;
+        logger.exit(count);
+        return count;
     }
 
 

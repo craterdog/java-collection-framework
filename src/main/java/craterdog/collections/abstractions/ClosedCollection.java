@@ -29,19 +29,25 @@ public abstract class ClosedCollection<E> extends Collection<E> {
 
 
     @Override
-    public final int getNumberOfElements() {
-        return list.getNumberOfElements();
-    }
-
-
-    @Override
     public Iterator<E> createDefaultIterator() {
-        return list.createDefaultIterator();
+        logger.entry();
+        Iterator<E> iterator = list.createDefaultIterator();
+        logger.exit(iterator);
+        return iterator;
     }
 
 
     @Override
-    public final E getElementAtIndex(int index) {
+    public int getNumberOfElements() {
+        logger.entry();
+        int count = list.getNumberOfElements();
+        logger.exit(count);
+        return count;
+    }
+
+
+    @Override
+    public E getElementAtIndex(int index) {
         logger.entry(index);
         E element = list.getElementAtIndex(index);
         logger.exit(element);
@@ -50,7 +56,7 @@ public abstract class ClosedCollection<E> extends Collection<E> {
 
 
     @Override
-    public final int getIndexOfElement(E element) {
+    public int getIndexOfElement(E element) {
         logger.entry(element);
         int index = list.getIndexOfElement(element);
         logger.exit(index);
@@ -59,7 +65,7 @@ public abstract class ClosedCollection<E> extends Collection<E> {
 
 
     @Override
-    public final Collection<E> getElementsInRange(int firstIndex, int lastIndex) {
+    public Collection<E> getElementsInRange(int firstIndex, int lastIndex) {
         logger.entry(firstIndex, lastIndex);
         Collection<E> result = list.getElementsInRange(firstIndex, lastIndex);
         logger.exit(result);
@@ -68,7 +74,7 @@ public abstract class ClosedCollection<E> extends Collection<E> {
 
 
     @Override
-    public final void removeAllElements() {
+    public void removeAllElements() {
         logger.entry();
         list.removeAllElements();
         logger.exit();

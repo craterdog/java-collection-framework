@@ -13,6 +13,8 @@ import craterdog.core.Composite;
 import craterdog.utils.NaturalComparator;
 import java.util.Comparator;
 import java.util.Objects;
+import org.slf4j.ext.XLogger;
+import org.slf4j.ext.XLoggerFactory;
 
 
 /**
@@ -23,6 +25,9 @@ import java.util.Objects;
  * @param <V> The type of the value in the association.
  */
 public class Association<K, V> implements Comparable<Association<K, V>>, Composite {
+
+    static private final XLogger logger = XLoggerFactory.getXLogger(Association.class);
+
 
     /**
      * The key in the association.
@@ -41,45 +46,59 @@ public class Association<K, V> implements Comparable<Association<K, V>>, Composi
      * @param value The value in the association.
      */
     public Association(K key, V value) {
+        logger.entry(key, value);
         this.key = key;
         this.value = value;
+        logger.exit();
     }
 
 
     @Override
-    public String toString() {
-        return toString("");
-    }
-
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) return false;
-        if (getClass() != obj.getClass()) return false;
-        final Association<?, ?> that = (Association<?, ?>) obj;
-        if (!Objects.equals(this.key, that.key)) return false;
-        return Objects.equals(this.value, that.value);
+    public boolean equals(Object object) {
+        logger.entry(object);
+        boolean result = false;
+        if (object != null && getClass() == object.getClass()) {
+            final Association<?, ?> that = (Association<?, ?>) object;
+            result = Objects.equals(this.key, that.key) && Objects.equals(this.value, that.value);
+        }
+        logger.exit(result);
+        return result;
     }
 
 
     @Override
     public int hashCode() {
+        logger.entry();
         int hash = 7;
         hash = 13 * hash + Objects.hashCode(this.key);
         hash = 13 * hash + Objects.hashCode(this.value);
+        logger.exit(hash);
         return hash;
     }
 
 
     @Override
     public int compareTo(Association<K, V> that) {
+        logger.entry(that);
         Comparator<K> comparator = new NaturalComparator<>();
-        return comparator.compare(this.key, that.key);
+        int result = comparator.compare(this.key, that.key);
+        logger.exit(result);
+        return result;
+    }
+
+
+    @Override
+    public String toString() {
+        logger.entry();
+        String string = toString("");
+        logger.exit(string);
+        return string;
     }
 
 
     @Override
     public String toString(String indentation) {
+        logger.entry(indentation);
         StringBuilder builder = new StringBuilder();
         builder.append(key);
         builder.append(": ");
@@ -89,7 +108,9 @@ public class Association<K, V> implements Comparable<Association<K, V>>, Composi
         } else {
             builder.append(value);
         }
-        return builder.toString();
+        String string = builder.toString();
+        logger.exit(string);
+        return string;
     }
 
 }
