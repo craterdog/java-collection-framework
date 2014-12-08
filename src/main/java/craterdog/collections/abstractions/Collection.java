@@ -11,6 +11,7 @@ package craterdog.collections.abstractions;
 
 import craterdog.collections.interfaces.Accessible;
 import craterdog.core.Composite;
+import craterdog.core.Sequential;
 import craterdog.utils.NaturalComparator;
 import java.lang.reflect.Array;
 import java.util.Comparator;
@@ -22,7 +23,7 @@ import java.util.Comparator;
  * @author Derk Norton
  * @param <E> The type of element managed by the collection.
  */
-public abstract class Collection<E> implements Comparable<Accessible<E>>, Accessible<E> {
+public abstract class Collection<E> implements Comparable<Collection<E>>, Accessible<E>, Sequential<E>, Composite {
 
     @Override
     public String toString() {
@@ -113,7 +114,7 @@ public abstract class Collection<E> implements Comparable<Accessible<E>>, Access
 
 
     @Override
-    public int compareTo(Accessible<E> that) {
+    public int compareTo(Collection<E> that) {
         Comparator<Object> comparator = new NaturalComparator<>();
         Iterator<E> thisIterator = this.createDefaultIterator();
         Iterator<E> thatIterator = that.createDefaultIterator();

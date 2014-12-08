@@ -9,7 +9,7 @@
  ************************************************************************/
 package craterdog.collections;
 
-import craterdog.collections.interfaces.Accessible;
+import craterdog.collections.abstractions.Collection;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 
@@ -54,7 +54,7 @@ public final class Dictionary<V> extends Map<String, V> {
      * @param keys The keys that should be used to create the dictionary.
      * @param values The values that should be used to create the dictionary.
      */
-    public Dictionary(Accessible<String> keys, Accessible<V> values) {
+    public Dictionary(Collection<String> keys, Collection<V> values) {
         super(keys, values);
     }
 

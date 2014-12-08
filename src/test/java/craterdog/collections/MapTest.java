@@ -9,6 +9,7 @@
  ************************************************************************/
 package craterdog.collections;
 
+import craterdog.collections.abstractions.Collection;
 import craterdog.collections.abstractions.OpenCollectionTestUtils;
 import craterdog.collections.abstractions.Iterator;
 import craterdog.collections.abstractions.OpenCollection;
@@ -263,7 +264,7 @@ public class MapTest {
             possibles[0] = a1;
             possibles[1] = a2;
             possibles[2] = a3;
-            Accessible<Association<Integer, Integer>> elements = new List<>(possibles);
+            Collection<Association<Integer, Integer>> elements = new List<>(possibles);
             collection.containsAnyElementsIn(elements);
             collection.containsAllElementsIn(elements);
 

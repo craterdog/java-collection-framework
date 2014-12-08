@@ -10,8 +10,6 @@
 package craterdog.collections.interfaces;
 
 import craterdog.collections.abstractions.Iterator;
-import craterdog.core.Composite;
-import craterdog.core.Sequential;
 
 
 /**
@@ -21,7 +19,7 @@ import craterdog.core.Sequential;
  * @author Derk Norton
  * @param <E> The type of element managed by the collection.
  */
-public interface Accessible<E> extends Sequential<E>, Composite {
+public interface Accessible<E> {
 
     /**
      * This method creates a new default iterator for the collection.
@@ -54,7 +52,7 @@ public interface Accessible<E> extends Sequential<E>, Composite {
      * @param lastIndex the index of the last element to be returned.
      * @return A collection of elements in the specified range.
      */
-    Indexed<E> getElementsInRange(int firstIndex, int lastIndex);
+    Accessible<E> getElementsInRange(int firstIndex, int lastIndex);
 
     /**
      * This method removes all elements from the collection.

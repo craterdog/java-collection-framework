@@ -151,7 +151,7 @@ public abstract class OrderedCollection<E> extends OpenCollection<E> implements 
 
 
     @Override
-    public final List<E> getElementsInRange(int firstIndex, int lastIndex) {
+    public final Collection<E> getElementsInRange(int firstIndex, int lastIndex) {
         logger.entry(firstIndex, lastIndex);
         firstIndex = normalizedIndex(firstIndex);
         lastIndex = normalizedIndex(lastIndex);

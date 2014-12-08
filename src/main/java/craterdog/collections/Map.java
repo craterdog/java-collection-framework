@@ -9,10 +9,10 @@
  ************************************************************************/
 package craterdog.collections;
 
+import craterdog.collections.abstractions.Collection;
 import craterdog.collections.abstractions.Iterator;
 import craterdog.collections.abstractions.Manipulator;
 import craterdog.collections.abstractions.SortableCollection;
-import craterdog.collections.interfaces.Accessible;
 import craterdog.collections.interfaces.Associative;
 import craterdog.collections.primitives.HashTable;
 import craterdog.collections.primitives.Link;
@@ -76,7 +76,7 @@ public class Map<K, V> extends SortableCollection<Association<K, V>> implements 
      * @param keys The keys that should be used to create the map.
      * @param values The values that should be used to create the map.
      */
-    public Map(Accessible<K> keys, Accessible<V> values) {
+    public Map(Collection<K> keys, Collection<V> values) {
         logger.entry(keys, values);
         int size = keys.getNumberOfElements();
         if (values.getNumberOfElements() != size) throw new IllegalArgumentException("The number of keys is different than the number of values.");
@@ -99,7 +99,7 @@ public class Map<K, V> extends SortableCollection<Association<K, V>> implements 
      */
     public Map(Map<K, V> elements) {
         logger.entry(elements);
-        Accessible<Association<K, V>> entries = elements.getAssociations();
+        Collection<Association<K, V>> entries = elements.getAssociations();
         for (Association<K, V> association : entries) {
             K key = association.key;
             V value = association.value;

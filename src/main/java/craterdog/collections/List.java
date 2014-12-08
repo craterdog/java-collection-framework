@@ -9,11 +9,11 @@
  ************************************************************************/
 package craterdog.collections;
 
+import craterdog.collections.abstractions.Collection;
 import craterdog.collections.abstractions.Iterator;
 import craterdog.collections.abstractions.Manipulator;
 import craterdog.collections.abstractions.SortableCollection;
 import craterdog.collections.interfaces.Indexed;
-import craterdog.collections.interfaces.Accessible;
 import craterdog.collections.primitives.DynamicArray;
 import java.util.Arrays;
 import org.slf4j.ext.XLogger;
@@ -64,7 +64,7 @@ public class List<E> extends SortableCollection<E> implements Indexed<E> {
      *
      * @param elements The elements that should be used to seed the list.
      */
-    public List(Accessible<? extends E> elements) {
+    public List(Collection<? extends E> elements) {
         logger.entry(elements);
         int size = elements.getNumberOfElements();
         this.array = new DynamicArray<>(size);

@@ -59,9 +59,9 @@ public abstract class ClosedCollection<E> extends Collection<E> {
 
 
     @Override
-    public final List<E> getElementsInRange(int firstIndex, int lastIndex) {
+    public final Collection<E> getElementsInRange(int firstIndex, int lastIndex) {
         logger.entry(firstIndex, lastIndex);
-        List<E> result = list.getElementsInRange(firstIndex, lastIndex);
+        Collection<E> result = list.getElementsInRange(firstIndex, lastIndex);
         logger.exit(result);
         return result;
     }
