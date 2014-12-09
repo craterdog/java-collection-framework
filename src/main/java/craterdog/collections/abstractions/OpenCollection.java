@@ -15,7 +15,8 @@ import org.slf4j.ext.XLoggerFactory;
 
 
 /**
- * This abstract class defines the invariant methods that all collections must inherit.
+ * This abstract class implements a collection that allows its internal structure to be
+ * directly manipulated.
  *
  * @author Derk Norton
  * @param <E> The type of element managed by the collection.
@@ -74,27 +75,6 @@ public abstract class OpenCollection<E> extends Collection<E> implements Dynamic
         }
         logger.exit(count);
         return count;
-    }
-
-
-    /**
-     * This method converts negative indexes into their corresponding positive indexes and
-     * then checks to make sure the index is in the range [1..size].
-     *
-     * The mapping between indexes is as follows:
-     * <pre>
-     * Negative Indexes:   -N      -N + 1     -N + 2     -N + 3   ...   -1
-     * Positive Indexes:    1         2          3          4     ...    N
-     * </pre>
-     *
-     * @param index The index to be normalized.
-     * @return The normalized [1..N] index.
-     */
-    protected final int normalizedIndex(int index) {
-        int size = getNumberOfElements();
-        if (index < 0) index = index + size + 1;
-        if (index < 1 || index > size) throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
-        return index;
     }
 
 }

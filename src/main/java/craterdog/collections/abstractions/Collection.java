@@ -243,6 +243,27 @@ public abstract class Collection<E> implements Comparable<Collection<E>>, Access
     }
 
 
+    /**
+     * This method converts negative indexes into their corresponding positive indexes and
+     * then checks to make sure the index is in the range [1..size].
+     *
+     * The mapping between indexes is as follows:
+     * <pre>
+     * Negative Indexes:   -N      -N + 1     -N + 2     -N + 3   ...   -1
+     * Positive Indexes:    1         2          3          4     ...    N
+     * </pre>
+     *
+     * @param index The index to be normalized.
+     * @return The normalized [1..N] index.
+     */
+    protected final int normalizedIndex(int index) {
+        int size = getNumberOfElements();
+        if (index < 0) index = index + size + 1;
+        if (index < 1 || index > size) throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        return index;
+    }
+
+
     private boolean checkForMultiline() {
         boolean isMultiline = false;
         for (E element : this) {
