@@ -9,7 +9,7 @@
  ************************************************************************/
 package craterdog.collections.abstractions;
 
-import craterdog.collections.List;
+import craterdog.collections.Bag;
 import craterdog.collections.interfaces.Ordered;
 import craterdog.collections.primitives.RandomizedTree;
 import java.util.Arrays;
@@ -118,20 +118,20 @@ public abstract class OrderedCollection<E> extends OpenCollection<E> implements 
 
 
     @Override
-    public int getNumberOfElements() {
-        logger.entry();
-        int result = tree.size();
-        logger.exit(result);
-        return result;
-    }
-
-
-    @Override
     public Iterator<E> createDefaultIterator() {
         logger.entry();
         Iterator<E> iterator = new OrderedIterator();
         logger.exit(iterator);
         return iterator;
+    }
+
+
+    @Override
+    public int getNumberOfElements() {
+        logger.entry();
+        int result = tree.size();
+        logger.exit(result);
+        return result;
     }
 
 
@@ -155,11 +155,11 @@ public abstract class OrderedCollection<E> extends OpenCollection<E> implements 
 
 
     @Override
-    public Collection<E> getElementsInRange(int firstIndex, int lastIndex) {
+    public OrderedCollection<E> getElementsInRange(int firstIndex, int lastIndex) {
         logger.entry(firstIndex, lastIndex);
         firstIndex = normalizedIndex(firstIndex);
         lastIndex = normalizedIndex(lastIndex);
-        List<E> result = new List<>();
+        Bag<E> result = new Bag<>();
         Iterator<E> iterator = createDefaultIterator();
         iterator.goToIndex(firstIndex);
         int numberOfElements = lastIndex - firstIndex + 1;

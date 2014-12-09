@@ -9,7 +9,7 @@
  ************************************************************************/
 package craterdog.collections;
 
-import craterdog.collections.abstractions.Collection;
+import java.net.URL;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -42,44 +42,6 @@ public class CollectionExamplesTest {
     @AfterClass
     static public void tearDownClass() {
         logger.info("Completed Example Code Unit Tests.\n");
-    }
-
-
-    /**
-     * This method tests the general collection code examples.
-     */
-    @Test
-    public void testCollectionCodeExamples() {
-        logger.info("Beginning testCollectionCodeExamples()...");
-
-        // add one element to a list
-        Collection<Integer> collection = new List<>();
-        collection.addElement(2);
-        logger.info("collection: {}", collection);
-
-        // add more elements
-        Integer[] integers = { 3, 1, 5, 4, 1};
-        Collection<Integer> subcollection = new List<>(integers);
-        collection.addElements(subcollection);
-        assert collection.containsAllElementsIn(subcollection);
-        logger.info("collection: {}", collection);
-
-        // remove an element
-        collection.removeElement(5);
-        assert collection.containsAnyElementsIn(subcollection);
-        logger.info("collection: {}", collection);
-
-        // order the elements and removed the duplicates
-        collection = new Set<>(collection);
-        assert collection.getNumberOfElements() == 4;
-        logger.info("collection: {}", collection);
-
-        // remove all the elements
-        collection.removeAllElements();
-        assert collection.isEmpty();
-        logger.info("collection: {}", collection);
-
-        logger.info("Completed testCollectionCodeExamples().\n");
     }
 
 
@@ -204,7 +166,7 @@ public class CollectionExamplesTest {
         // create a list with items in it
         Integer[] fib = { 1, 1, 2, 3, 5, 8, 13, 21 };
         List<Integer> list = new List<>(fib);
-        logger.info("list: {}", list);
+        logger.info("A list of the fibonacci numbers: {}", list);
 
         // retrieve an element from the list
         int index = 6;
@@ -225,7 +187,7 @@ public class CollectionExamplesTest {
         // append an element to the list
         element = list.getElementAtIndex(-1) + list.getElementAtIndex(-2);  // add the last two
         list.addElement(element);
-        logger.info("Appended a new element to the list: {}", list);
+        logger.info("Appended a new fibonacci number to the list: {}", list);
 
         // replace the last element in the list
         element = 144;
@@ -270,29 +232,55 @@ public class CollectionExamplesTest {
     public void testDictionaryCodeExamples() {
         logger.info("Beginning testDictionaryCodeExamples()...");
 
+        // create a dictionary with items in it
+        String[] keys = { "bravo", "charlie", "delta" };
+        Integer[] values = { 2, 3, 4 };
+        Dictionary<Integer> dictionary = new Dictionary<>(keys, values);
+        logger.info("A dictionary of numbers: {}", dictionary);
+
+        dictionary.associateKeyWithValue("alpha", 1);
+        logger.info("Appended a \"alpha-1\" key-value pair: {}", dictionary);
+
+        dictionary.sortElements();
+        logger.info("The list now sorted: {}", dictionary);
+
+        int value = dictionary.getValueForKey("charlie");
+        logger.info("The value for key \"charlie\" is: {}", value);
+
+        dictionary.removeValueForKey("charlie");
+        logger.info("With the value for key \"charlie\" removed: {}", dictionary);
+
         logger.info("Completed testDictionaryCodeExamples().\n");
     }
 
 
     /**
      * This method tests the map code examples.
+     * @throws java.lang.Exception
      */
     @Test
-    public void testMapCodeExamples() {
+    public void testMapCodeExamples() throws Exception {
         logger.info("Beginning testMapCodeExamples()...");
 
+        Map<URL, Double> stocks = new Map<>();
+        logger.info("Start with an empty map of stock prices: {}", stocks);
+
+        URL apple = new URL("http://apple.com");
+        URL google = new URL("http://google.com");
+        URL amazon = new URL("http://amazon.com");
+
+        stocks.associateKeyWithValue(apple, 112.40);
+        stocks.associateKeyWithValue(google, 526.98);
+        stocks.associateKeyWithValue(amazon, 306.64);
+        logger.info("Add some closing stock prices: {}", stocks);
+
+        double price = stocks.getValueForKey(google);
+        logger.info("Google's closing stock price is {}", price);
+
+        stocks.sortElements();
+        logger.info("The stock prices sorted by company web site: {}", stocks);
+
         logger.info("Completed testMapCodeExamples().\n");
-    }
-
-
-    /**
-     * This method tests the queue code examples.
-     */
-    @Test
-    public void testQueueCodeExamples() {
-        logger.info("Beginning testQueueCodeExamples()...");
-
-        logger.info("Completed testQueueCodeExamples().\n");
     }
 
 
@@ -303,7 +291,108 @@ public class CollectionExamplesTest {
     public void testStackCodeExamples() {
         logger.info("Beginning testStackCodeExamples()...");
 
+        Stack<String> stack = new Stack<>();
+        logger.info("Start with an empty stack: {}", stack);
+
+        String rock = "rock";
+        String paper = "paper";
+        String scissors = "scissors";
+
+        stack.pushElementOnTop(rock);
+        assert stack.getTopElement().equals(rock);
+        logger.info("Push a rock on it: {}", stack);
+
+        stack.pushElementOnTop(paper);
+        assert stack.getTopElement().equals(paper);
+        logger.info("Push paper on it: {}", stack);
+
+        stack.pushElementOnTop(scissors);
+        assert stack.getTopElement().equals(scissors);
+        assert stack.getNumberOfElements() == 3;
+        logger.info("Push scissors on it: {}", stack);
+
+        assert stack.popElementOffTop().equals(scissors);
+        assert stack.getNumberOfElements() == 2;
+        logger.info("Pop scissors from it: {}", stack);
+
+        assert stack.popElementOffTop().equals(paper);
+        assert stack.getNumberOfElements() == 1;
+        logger.info("Pop paper from it: {}", stack);
+
+        assert stack.popElementOffTop().equals(rock);
+        assert stack.isEmpty();
+        logger.info("Pop rock from it: {}", stack);
+
         logger.info("Completed testStackCodeExamples().\n");
     }
 
+
+    /**
+     * This method tests the queue code examples.
+     */
+    @Test
+    public void testQueueCodeExamples() throws Exception {
+        logger.info("Beginning testQueueCodeExamples()...");
+
+        Queue<Integer> queue = new Queue<>(256);  // capacity of 256 elements
+
+        // start up some consumers
+        Consumer consumer1 = new Consumer(queue);
+        new Thread(consumer1).start();
+        Consumer consumer2 = new Consumer(queue);
+        new Thread(consumer2).start();
+
+        // start up a producer
+        Producer producer = new Producer(queue);
+        new Thread(producer).start();
+
+        // wait for them to process the messages
+        Thread.sleep(200);
+
+        logger.info("Completed testQueueCodeExamples().\n");
+    }
+
+
+    private class Producer implements Runnable {
+        private final Queue<Integer> queue;
+
+        private Producer(Queue<Integer> queue) {
+            this.queue = queue;
+        }
+
+        @Override
+        public void run() {
+            logger.info("  The producer thread has started...");
+            try {
+                for (int i = 0; i < 100; i++) {
+                    queue.addElementToTail(i);
+                }
+            } catch (InterruptedException ex) {
+                logger.info("  The producer thread was interrupted.");
+            }
+            logger.info("  The producer thread has completed.");
+        }
+    }
+
+
+    private class Consumer implements Runnable {
+        private final Queue<Integer> queue;
+
+        private Consumer(Queue<Integer> queue) {
+            this.queue = queue;
+        }
+
+        @Override
+        public void run() {
+            logger.info("  A consumer thread has started...");
+            try {
+                for (int i = 0; i < 50; i++) {
+                    queue.removeElementFromHead();
+                }
+            } catch (InterruptedException ex) {
+                logger.info("  A consumer thread was interrupted.");
+            }
+            logger.info("  A consumer thread has completed.");
+        }
+    }
 }

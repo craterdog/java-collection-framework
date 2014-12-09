@@ -60,12 +60,12 @@ public class Queue<E> extends ClosedCollection<E> implements FIFO<E> {
         while (true) {  // do this in a loop in case there are spurious wakeups (see Object.wait() javadoc)
             int size = list.getNumberOfElements();
             if (size < capacity) {
-                logger.info("Adding the element: " + element);
+                logger.debug("Adding the element: " + element);
                 list.addElement(element);
                 notify();  // waiting removeElement() calls
                 break;
             } else {
-                logger.info("Waiting for the queue to drop from maximum capacity...");
+                logger.debug("Waiting for the queue to drop from maximum capacity...");
                 wait();  // for a removeElement() call
             }
         }
@@ -81,11 +81,11 @@ public class Queue<E> extends ClosedCollection<E> implements FIFO<E> {
             int size = list.getNumberOfElements();
             if (size > 0) {
                 element = list.removeElementAtIndex(1);
-                logger.info("Removed the element: " + element);
+                logger.debug("Removed the element: " + element);
                 notify();  // waiting addElement() calls
                 break;
             } else {
-                logger.info("Waiting for an element to be added to the empty queue...");
+                logger.debug("Waiting for an element to be added to the empty queue...");
                 wait();  // for an addElement() call
             }
         }
