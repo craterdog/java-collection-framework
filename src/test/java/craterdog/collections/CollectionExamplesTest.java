@@ -52,41 +52,42 @@ public class CollectionExamplesTest {
     public void testBagCodeExamples() {
         logger.info("Beginning testBagCodeExamples()...");
 
-        // create an empty bag
+        // Create an empty bag
         Bag<Integer> emptyBag = new Bag<>();
 
-        // create a bag with items in it
+        // Create a bag with items in it
         Integer[] first = { 1, 5, 3 };
         Bag<Integer> firstBag = new Bag<>(first);
 
-        // create a second bag with items in it
+        // Create a second bag with items in it
         Integer[] second = { 4, 2, 6, 4 };
         Bag<Integer> secondBag = new Bag<>(second);
 
-        // create a third bag with all the items in it
+        // Create a third bag with all the items in it
         Integer[] third = { 1, 2, 3, 4, 4, 5, 6 };
         Bag<Integer> thirdBag = new Bag<>(third);
 
-        // merge a bag with the empty bag
+        // Merge a bag with the empty bag
         Bag<Integer> bag = Bag.merge(emptyBag, firstBag);
         assert bag.equals(firstBag);
         logger.info("{} merged with {} yields {}", emptyBag, firstBag, bag);
 
-        // merge two bags with items in them
+        // Merge two bags with items in them
         bag = Bag.merge(firstBag, secondBag);
         assert bag.equals(thirdBag);
         logger.info("{} merged with {} yields {}", firstBag, secondBag, bag);
 
-        // find the difference between an empty bag and one with items
+        // Find the difference between an empty bag and one with items in it
         bag = Bag.difference(emptyBag, firstBag);
         assert bag.isEmpty();
         logger.info("The difference between {} and {} is {}", emptyBag, firstBag, bag);
 
+        // Find the difference between a bag with items in it and an empty one
         bag = Bag.difference(firstBag, emptyBag);
         assert bag.equals(firstBag);
-        logger.info("bag: {}", bag);
         logger.info("The difference between {} and {} is {}", firstBag, emptyBag, bag);
 
+        // Find the difference between two bags with items in them
         bag = Bag.difference(thirdBag, firstBag);
         assert bag.equals(secondBag);
         logger.info("The difference between {} and {} is {}", thirdBag, firstBag, bag);
@@ -102,6 +103,7 @@ public class CollectionExamplesTest {
     public void testSetCodeExamples() {
         logger.info("Beginning testSetCodeExamples()...");
 
+        // Create some sets
         Set<Integer> emptySet = new Set<>();
 
         Integer[] first = { 1, 2, 3, 4 };
@@ -122,32 +124,32 @@ public class CollectionExamplesTest {
         Integer[] sixth = { 1, 2, 5, 6 };
         Set<Integer> sixthSet = new Set<>(sixth);
 
-        // logical "and" with empty set
+        // Find the logical "and" with an empty set
         Set<Integer> set = Set.and(emptySet, firstSet);
         assert set.isEmpty();
         logger.info("{} and {} yields {}", emptySet, firstSet, set);
 
-        // logical "and" with non-empty sets
+        // Find the logical "and" with non-empty sets
         set = Set.and(firstSet, secondSet);
         assert set.equals(thirdSet);
         logger.info("{} and {} yields {}", firstSet, secondSet, set);
 
-        // logical "sans" (same as "a and not b")
+        // Find the logical "sans" (same as "a and not b")
         set = Set.sans(firstSet, secondSet);
         assert set.equals(fourthSet);
         logger.info("{} sans {} yields {}", firstSet, secondSet, set);
 
-        // logical "or" with empty set
+        // Find the logical "or" with an empty set
         set = Set.or(emptySet, firstSet);
         assert !set.isEmpty();
         logger.info("{} or {} yields {}", emptySet, firstSet, set);
 
-        // logical "or" with non-empty sets
+        // Find the logical "or" with non-empty sets
         set = Set.or(firstSet, secondSet);
         assert set.equals(fifthSet);
         logger.info("{} or {} yields {}", firstSet, secondSet, set);
 
-        // logical "xor" (same as "(a and not b) or (not a and b)")
+        // Find the logical "xor" (same as "(a and not b) or (not a and b)")
         set = Set.xor(firstSet, secondSet);
         assert set.equals(sixthSet);
         logger.info("{} xor {} yields {}", firstSet, secondSet, set);
@@ -163,59 +165,60 @@ public class CollectionExamplesTest {
     public void testListCodeExamples() {
         logger.info("Beginning testListCodeExamples()...");
 
-        // create a list with items in it
+        // Create a list with items in it
         Integer[] fib = { 1, 1, 2, 3, 5, 8, 13, 21 };
         List<Integer> list = new List<>(fib);
         logger.info("A list of the fibonacci numbers: {}", list);
 
-        // retrieve an element from the list
+        // Retrieve an element from the list
         int index = 6;
         int element = list.getElementAtIndex(index);
         assert element == 8;
-        logger.info("The sixth element in {} is {}.", list, element);
+        logger.info("The sixth element in {} is {}", list, element);
 
-        // retrieve a range of elements from the list
+        // Retrieve a range of elements from the list
         List<Integer> sublist = list.getElementsInRange(2, 4);
-        logger.info("The elements from {} in the index range [2..4] are {}.", list, sublist);
+        logger.info("The elements from {} in the index range [2..4] are {}", list, sublist);
 
-        // lookup the index of the first matching element in the list
+        // Lookup the index of the first matching element in the list
         element = 1;
         index = list.getIndexOfElement(element);  // finds the first instance of the element
         assert index == 1;
-        logger.info("The index of the first element in {} with value 1 is {}.", list, index);
+        logger.info("The index of the first element in {} with value 1 is {}", list, index);
 
-        // append an element to the list
+        // Append an element to the list
         element = list.getElementAtIndex(-1) + list.getElementAtIndex(-2);  // add the last two
         list.addElement(element);
         logger.info("Appended a new fibonacci number to the list: {}", list);
 
-        // replace the last element in the list
+        // Replace the last element in the list
         element = 144;
         index = -1;  // last element
         list.replaceElementAtIndex(element, index);
         logger.info("Replaced the last element with 144: {}", list);
 
-        // insert an element at the beginning of the list
+        // Insert an element at the beginning of the list
         element = 0;
         index = 1;
         list.insertElementBeforeIndex(element, index);
         assert list.getElementAtIndex(index) == element;
         logger.info("Inserted zero as the first element in the list: {}", list);
 
-        // insert new elements before the tenth element in the list
+        // Insert new elements before the tenth element in the list
         index = 10;
         Integer[] moreFibs = { 34, 55, 89 };
         sublist = new List<>(moreFibs);
         list.insertElementsBeforeIndex(sublist, index);
         assert list.getElementAtIndex(index).equals(sublist.getElementAtIndex(1));
-        logger.info("Inserted {} before the tenth element: {}", list);
+        logger.info("Inserted {} before the tenth element: {}", sublist, list);
 
-        // remove the first element from the list
+        // Remove the first element from the list
         index = 1;
         element = 0;
         assert element == list.removeElementAtIndex(index);
+        logger.info("Removed the first element from the list: {}", list);
 
-        // remove the last four elements from the list
+        // Remove the last four elements from the list
         sublist.addElement(144);
         List<Integer> removedElements = list.removeElementsInRange(-1, -4);
         assert sublist.equals(removedElements);
@@ -232,21 +235,25 @@ public class CollectionExamplesTest {
     public void testDictionaryCodeExamples() {
         logger.info("Beginning testDictionaryCodeExamples()...");
 
-        // create a dictionary with items in it
-        String[] keys = { "bravo", "charlie", "delta" };
-        Integer[] values = { 2, 3, 4 };
+        // Create a dictionary with some associations in it
+        String[] keys = { "charlie", "bravo", "delta" };
+        Integer[] values = { 3, 2, 4 };
         Dictionary<Integer> dictionary = new Dictionary<>(keys, values);
         logger.info("A dictionary of numbers: {}", dictionary);
 
+        // Add a new association
         dictionary.associateKeyWithValue("alpha", 1);
         logger.info("Appended a \"alpha-1\" key-value pair: {}", dictionary);
 
+        // Sort the dictionary
         dictionary.sortElements();
         logger.info("The list now sorted: {}", dictionary);
 
+        // Retrieve the value for a key
         int value = dictionary.getValueForKey("charlie");
         logger.info("The value for key \"charlie\" is: {}", value);
 
+        // Remove an association
         dictionary.removeValueForKey("charlie");
         logger.info("With the value for key \"charlie\" removed: {}", dictionary);
 
@@ -262,21 +269,24 @@ public class CollectionExamplesTest {
     public void testMapCodeExamples() throws Exception {
         logger.info("Beginning testMapCodeExamples()...");
 
+        // Create an empty map
         Map<URL, Double> stocks = new Map<>();
         logger.info("Start with an empty map of stock prices: {}", stocks);
 
+        // Add some closing stock prices to it
         URL apple = new URL("http://apple.com");
-        URL google = new URL("http://google.com");
-        URL amazon = new URL("http://amazon.com");
-
         stocks.associateKeyWithValue(apple, 112.40);
+        URL google = new URL("http://google.com");
         stocks.associateKeyWithValue(google, 526.98);
+        URL amazon = new URL("http://amazon.com");
         stocks.associateKeyWithValue(amazon, 306.64);
         logger.info("Add some closing stock prices: {}", stocks);
 
+        // Retrieve the closing price for Google
         double price = stocks.getValueForKey(google);
         logger.info("Google's closing stock price is {}", price);
 
+        // Sort the stock prices by company URL
         stocks.sortElements();
         logger.info("The stock prices sorted by company web site: {}", stocks);
 
@@ -291,34 +301,40 @@ public class CollectionExamplesTest {
     public void testStackCodeExamples() {
         logger.info("Beginning testStackCodeExamples()...");
 
+        // Allocate an empty stack
         Stack<String> stack = new Stack<>();
         logger.info("Start with an empty stack: {}", stack);
 
+        // Push a rock onto it
         String rock = "rock";
-        String paper = "paper";
-        String scissors = "scissors";
-
         stack.pushElementOnTop(rock);
         assert stack.getTopElement().equals(rock);
         logger.info("Push a rock on it: {}", stack);
 
+        // Push paper onto it
+        String paper = "paper";
         stack.pushElementOnTop(paper);
         assert stack.getTopElement().equals(paper);
         logger.info("Push paper on it: {}", stack);
 
+        // Push scissors onto it
+        String scissors = "scissors";
         stack.pushElementOnTop(scissors);
         assert stack.getTopElement().equals(scissors);
         assert stack.getNumberOfElements() == 3;
         logger.info("Push scissors on it: {}", stack);
 
+        // Pop off the scissors
         assert stack.popElementOffTop().equals(scissors);
         assert stack.getNumberOfElements() == 2;
         logger.info("Pop scissors from it: {}", stack);
 
+        // Pop off the paper
         assert stack.popElementOffTop().equals(paper);
         assert stack.getNumberOfElements() == 1;
         logger.info("Pop paper from it: {}", stack);
 
+        // Pop off the rock
         assert stack.popElementOffTop().equals(rock);
         assert stack.isEmpty();
         logger.info("Pop rock from it: {}", stack);
@@ -334,19 +350,20 @@ public class CollectionExamplesTest {
     public void testQueueCodeExamples() throws Exception {
         logger.info("Beginning testQueueCodeExamples()...");
 
+        // Allocate an empty queue
         Queue<Integer> queue = new Queue<>(256);  // capacity of 256 elements
 
-        // start up some consumers
+        // Start up some consumers
         Consumer consumer1 = new Consumer(queue);
         new Thread(consumer1).start();
         Consumer consumer2 = new Consumer(queue);
         new Thread(consumer2).start();
 
-        // start up a producer
+        // Start up a producer
         Producer producer = new Producer(queue);
         new Thread(producer).start();
 
-        // wait for them to process the messages
+        // Wait for them to process the messages
         Thread.sleep(200);
 
         logger.info("Completed testQueueCodeExamples().\n");
