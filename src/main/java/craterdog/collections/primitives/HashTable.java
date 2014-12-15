@@ -270,7 +270,7 @@ public final class HashTable<K, V> extends AbstractMap<K, V> implements Map<K, V
             if (!(object instanceof Entry)) return false;
             @SuppressWarnings("unchecked")
             Entry<K,V> entry = (Entry<K,V>) object;
-            V value = HashTable.this.get(entry.getKey());
+            V value = get(entry.getKey());
             return value != null && value.equals(entry.getValue());
         }
 

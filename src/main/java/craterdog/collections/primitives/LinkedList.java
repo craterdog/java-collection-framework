@@ -294,7 +294,7 @@ public final class LinkedList<E> extends AbstractCollection<E> implements List<E
 
         private LinkedListIterator(int index) {
             this.index = index;
-            this.link = LinkedList.this.getLinkAtIndex(index);
+            this.link = getLinkAtIndex(index);
             this.lastLink = null;
         }
 

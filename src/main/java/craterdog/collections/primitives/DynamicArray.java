@@ -338,7 +338,7 @@ public final class DynamicArray<E> extends AbstractCollection<E> implements List
         @Override
         public E next() {
             if (index == size) throw new NoSuchElementException();
-            E element = DynamicArray.this.get(lastIndex = index++);
+            E element = get(lastIndex = index++);
             return element;
         }
 
@@ -355,7 +355,7 @@ public final class DynamicArray<E> extends AbstractCollection<E> implements List
         @Override
         public E previous() {
             if (index == 0) throw new NoSuchElementException();
-            E element = DynamicArray.this.get(lastIndex = --index);
+            E element = get(lastIndex = --index);
             return element;
         }
 

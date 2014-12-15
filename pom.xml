@@ -77,7 +77,8 @@
                          the difference between Java collections and Crater Dog collections. -->
                     <detectJavaApiLink>false</detectJavaApiLink>
                     <links>
-                        <link>http://craterdog.github.io/java-core-interfaces/3.0/package-list</link>
+                        <link>http://craterdog.github.io/java-general-utilities/${general-utilities-version}/package-list</link>
+                        <link>http://craterdog.github.io/java-core-interfaces/${core-interfaces-version}/package-list</link>
                     </links>
                 </configuration>
             </plugin>
