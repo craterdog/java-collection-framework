@@ -139,7 +139,9 @@ public abstract class Collection<E> implements Comparable<Collection<E>>, Access
     @Override
     public int compareTo(Collection<E> that) {
         logger.entry(that);
-        int result;
+        if (that == null) return 1;
+        if (this == that) return 0;  // same object
+        int result = 0;
         Comparator<Object> comparator = new NaturalComparator<>();
         Iterator<E> thisIterator = this.createDefaultIterator();
         Iterator<E> thatIterator = that.createDefaultIterator();
@@ -149,7 +151,10 @@ public abstract class Collection<E> implements Comparable<Collection<E>>, Access
             result = comparator.compare(thisElement, thatElement);
             if (result != 0) break;
         }
-        result = Integer.compare(this.getNumberOfElements(), that.getNumberOfElements());
+        if (result == 0) {
+            // same so far, check for different lengths
+            result = Integer.compare(this.getNumberOfElements(), that.getNumberOfElements());
+        }
         logger.exit(result);
         return result;
     }

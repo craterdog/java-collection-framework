@@ -56,11 +56,25 @@ public class ListTest {
     @Test
     public void testListComparison() {
         logger.info("Beginning testListComparison()...");
-        Integer[] values = { 1, 1, 2, 3, 5, 8, 13 };
-        List<Integer> firstList = new List<>(values);
-        List<Integer> secondList = new List<>(values);
-        int comparison = firstList.compareTo(secondList);
-        assertEquals(0, comparison);
+        Integer[] lowerValues = { 0, 1, 1, 2, 3, 5, 8, 13 };
+        Integer[] middleValues = { 1, 1, 2, 3, 5, 8, 13 };
+        Integer[] subsetValues = { 1, 1, 2, 3, 5, 8 };
+        Integer[] higherValues = { 1, 1, 3, 3, 5, 8 };
+        List<Integer> emptyList = new List<>();
+        List<Integer> lowerList = new List<>(lowerValues);
+        List<Integer> middleList = new List<>(middleValues);
+        List<Integer> duplicateList = new List<>(middleValues);
+        List<Integer> subsetList = new List<>(subsetValues);
+        List<Integer> higherList = new List<>(higherValues);
+        assert emptyList.compareTo(null) > 0;
+        assert emptyList.compareTo(emptyList) == 0;
+        assert lowerList.compareTo(emptyList) > 0;
+        assert lowerList.compareTo(middleList) < 0;
+        assert middleList.compareTo(duplicateList) == 0;
+        assert middleList.compareTo(subsetList) > 0;
+        assert lowerList.compareTo(higherList) < 0;
+        assert higherList.compareTo(middleList) > 0;
+        assert subsetList.compareTo(higherList) < 0;
         logger.info("Completed testListComparison().\n");
     }
 
