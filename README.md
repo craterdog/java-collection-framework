@@ -1,6 +1,6 @@
 ![Java Collection Framework](https://github.com/craterdog/java-collection-framework/blob/master/docs/images/MarbleBag.jpg)
 
-## A Better Java Collection Framework
+### A Better Java Collection Framework
 The Java language development team that created the original `java.util` collection classes was fairly new
 to object oriented design and collection frameworks and therefore made some common mistakes:
  * using implementation inheritance instead of delegation (a `Stack` is **not** a `Vector`!)
@@ -12,7 +12,7 @@ We forgive them, however, since they got a lot of things right :wink:.
 Subsequent additions to the `java.util` package helped address some of these issues, but the designers were
 somewhat constrained by the original mistakes to maintain backward compatibility.
 
-## A Clean Slate
+### A Clean Slate
 This project starts with a clean slate. It defines a set of Java collection classes that are independent
 of the `java.util` collection classes but that still interoperate with them and also integrate with the
 built-in Java language features that depend on the `java.lang.Iterable` interface. These classes provide
@@ -22,7 +22,7 @@ the following nice features:
  * *self-optimizing* implementations
  * a well designed *framework* in which to work
 
-## Highlighted Components
+### Highlighted Components
 The following highlights the main types of collections that this project provides:
 
  * *Bag* - an ordered collection where duplicates are allowed
@@ -32,7 +32,7 @@ The following highlights the main types of collections that this project provide
  * *Stack* - a collection that supports last in first out (LIFO)
  * *Queue* - a collection that supports first in first out (FIFO)
 
-## Quick Links
+### Quick Links
 For more detail on this project click on the following links:
 
  * [javadocs](http://craterdog.github.io/java-collection-framework/latest/index.html)
@@ -40,7 +40,7 @@ For more detail on this project click on the following links:
  * [release notes](https://github.com/craterdog/java-collection-framework/wiki/releases)
  * [website](http://craterdog.com)
 
-## Getting Started
+### Getting Started
 To get started using these classes, include the following dependency in your maven pom.xml file:
 
 ```xml
@@ -55,7 +55,7 @@ The source code, javadocs and jar file artifacts for this project are available 
 *Maven Central Repository*. If your project doesn't currently use maven and you would like to,
 click [here](https://github.com/craterdog/maven-parent-poms) to get started down that path quickly.
 
-## Choosing a Collection
+### Choosing a Collection
 The following flow chart provides a way to easily choose which collection type is right for your
 needs:
 
