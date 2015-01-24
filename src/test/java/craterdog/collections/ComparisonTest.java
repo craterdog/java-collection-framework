@@ -13,6 +13,7 @@ import craterdog.collections.abstractions.OpenCollection;
 import craterdog.collections.abstractions.OpenCollectionTestUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Test;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 
@@ -46,7 +47,7 @@ public class ComparisonTest {
 
 
     /**
-     * This method runs the standard time test each of the common Java and Craterdog
+     * This method runs the standard time test each of the common Java and Crater Dog Technologies
      * collection types.
      */
     //@Test - turned off until needed since it takes a long time to run
@@ -82,7 +83,7 @@ public class ComparisonTest {
 
 
     /**
-     * This method runs the standard time test each of the common Java and Craterdog
+     * This method runs the standard time test each of the common Java and Crater Dog Technologies
      * collection types.
      */
     //@Test - turned off until needed since it takes a long time to run

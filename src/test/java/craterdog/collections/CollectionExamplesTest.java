@@ -345,6 +345,7 @@ public class CollectionExamplesTest {
 
     /**
      * This method tests the queue code examples.
+     * @throws java.lang.Exception
      */
     @Test
     public void testQueueCodeExamples() throws Exception {

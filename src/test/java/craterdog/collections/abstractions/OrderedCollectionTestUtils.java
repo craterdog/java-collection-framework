@@ -35,26 +35,26 @@ public class OrderedCollectionTestUtils {
         Integer[] inOrder = { 1, 2, 3, 4, 5 };
         Integer[] reverseOrder = { 5, 4, 3, 2, 1 };
 
-        logger.info("  Adding entries to the collection...");
+        logger.debug("  Adding entries to the collection...");
         collection.addElements(inOrder);
 
-        logger.info("  Confirming that the entries are in order...");
+        logger.debug("  Confirming that the entries are in order...");
         Integer[] elements = collection.toArray();
         Assert.assertArrayEquals(inOrder, elements);
 
-        logger.info("  Reversing the entries in the collection...");
+        logger.debug("  Reversing the entries in the collection...");
         OpenCollectionTestUtils.ReverseOrderIntegerComparator reverseComparator = new OpenCollectionTestUtils.ReverseOrderIntegerComparator();
         collection = new Bag<>(collection, reverseComparator);
 
-        logger.info("  Confirming that the entries are in reverse order...");
+        logger.debug("  Confirming that the entries are in reverse order...");
         elements = collection.toArray();
         Assert.assertArrayEquals(reverseOrder, elements);
 
-        logger.info("  Re-reversing the entries in the collection...");
+        logger.debug("  Re-reversing the entries in the collection...");
         OpenCollectionTestUtils.InOrderIntegerComparator inOrderComparator = new OpenCollectionTestUtils.InOrderIntegerComparator();
         collection = new Set<>(collection, inOrderComparator);
 
-        logger.info("  Confirming that the entries are back in order...");
+        logger.debug("  Confirming that the entries are back in order...");
         elements = collection.toArray();
         Assert.assertArrayEquals(inOrder, elements);
 

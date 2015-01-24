@@ -56,11 +56,13 @@ public class ListTest {
      */
     @Test
     public void testMethods() throws InstantiationException, IllegalAccessException {
+        logger.info("Beginning testMethods()...");
+
         Class<?>[] classes = {java.util.ArrayList.class, java.util.LinkedList.class, DynamicArray.class, LinkedList.class};
 
         for (Class<?> clazz : classes) {
             String classname = clazz.getName();
-            logger.info("Testing list class: {}", classname);
+            logger.info("  Testing list class: {}", classname);
             long startTime = System.currentTimeMillis();
 
             int count = 1000;
@@ -190,9 +192,10 @@ public class ListTest {
             }
 
             long duration = System.currentTimeMillis() - startTime;
-            logger.info("Testing of list class: {} completed in {} milliseconds.\n", classname, duration);
+            logger.info("  Testing of list class: {} completed in {} milliseconds.\n", classname, duration);
         }
 
+        logger.info("Completed testMethods().\n");
     }
 
 }

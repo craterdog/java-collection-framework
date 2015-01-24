@@ -46,6 +46,7 @@ public class MapTest {
      */
     @BeforeClass
     public static void setUpClass() {
+        logger.info("Running Various Map Class Unit Tests...\n");
     }
 
 
@@ -54,6 +55,7 @@ public class MapTest {
      */
     @AfterClass
     public static void tearDownClass() {
+        logger.info("Completed Various Map Class Unit Tests.\n");
     }
 
 
@@ -66,8 +68,9 @@ public class MapTest {
      */
     @Test
     public void testMethods() throws InstantiationException, IllegalAccessException {
+        logger.info("Beginning testMethods()...");
+
         Class<?>[] classes = {
-            java.util.Hashtable.class,
             java.util.HashMap.class,
             java.util.LinkedHashMap.class,
             HashTable.class
@@ -75,7 +78,7 @@ public class MapTest {
 
         for (Class<?> clazz : classes) {
             String classname = clazz.getName();
-            logger.info("Testing map class: {}", classname);
+            logger.info("  Testing map class: {}", classname);
             long startTime = System.currentTimeMillis();
 
             int count = 1000;
@@ -124,8 +127,10 @@ public class MapTest {
             }
 
             long duration = System.currentTimeMillis() - startTime;
-            logger.info("Testing of map class: {} completed in {} milliseconds.\n", classname, duration);
+            logger.info("  Testing of map class: {} completed in {} milliseconds.\n", classname, duration);
         }
+
+        logger.info("Completed testMethods().\n");
     }
 
 }

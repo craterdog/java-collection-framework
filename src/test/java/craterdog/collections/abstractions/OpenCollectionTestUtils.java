@@ -36,6 +36,7 @@ public class OpenCollectionTestUtils {
      * @return The duration of the test in milliseconds.
      */
     static public long runCDTimeTest(OpenCollection<Integer> collection) {
+        System.gc();  // cleanup first
         long startInMillis = System.currentTimeMillis();
 
         for (int j = 0; j < 1000; j++) {
@@ -107,6 +108,7 @@ public class OpenCollectionTestUtils {
      * @return The duration of the test in milliseconds.
      */
     static public long runJavaTimeTest(java.util.Collection<Integer> collection) {
+        System.gc();  // cleanup first
         long startInMillis = System.currentTimeMillis();
 
         for (int j = 0; j < 1000; j++) {
