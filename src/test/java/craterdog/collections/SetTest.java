@@ -55,7 +55,7 @@ public class SetTest {
         logger.info("Beginning testSetComparison()...");
         Integer[] values = { 1, 1, 2, 3, 5, 8, 13 };
         Set<Integer> firstSet = new Set<>(values);
-        Set<Integer> secondSet = new Set<>(values);
+        Set<Integer> secondSet = firstSet.copy();
         int comparison = firstSet.compareTo(secondSet);
         assertEquals(0, comparison);
         logger.info("Completed testSetComparison().\n");
@@ -71,28 +71,28 @@ public class SetTest {
         Integer[] empty = { };
         Set<Integer> emptySet = new Set<>(empty);
         String actual = emptySet.toString();
-        String expectedEmpty = "[]";
+        String expectedEmpty = "[ ]";
         assertEquals(expectedEmpty, actual);
         logger.info("  The empty set is: {}", actual);
 
         Integer[] first = { 1 };
         Set<Integer> firstSet = new Set<>(first);
         actual = firstSet.toString();
-        String expectedFirst = "[1]";
+        String expectedFirst = "[ 1 ]";
         assertEquals(expectedFirst, actual);
         logger.info("  The first set is: {}", actual);
 
         Integer[] second = { 1, 2, 3 };
         Set<Integer> secondSet = new Set<>(second);
         actual = secondSet.toString();
-        String expectedSecond = "[1, 2, 3]";
+        String expectedSecond = "[ 1, 2, 3 ]";
         assertEquals(expectedSecond, actual);
         logger.info("  The second set is: {}", actual);
 
         Integer[] third = { 1, 2, 3, 4, 5, 6 };
         Set<Integer> thirdSet = new Set<>(third);
         actual = thirdSet.toString();
-        String expectedThird = "[1, 2, 3, 4, 5, 6]";
+        String expectedThird = "[ 1, 2, 3, 4, 5, 6 ]";
         assertEquals(expectedThird, actual);
         logger.info("  The third set is: {}", actual);
 

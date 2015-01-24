@@ -10,6 +10,7 @@
 package craterdog.collections;
 
 import craterdog.collections.abstractions.OpenCollectionTestUtils;
+import craterdog.smart.SmartObject;
 import java.util.Random;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -63,7 +64,7 @@ public class ListTest {
         List<Integer> emptyList = new List<>();
         List<Integer> lowerList = new List<>(lowerValues);
         List<Integer> middleList = new List<>(middleValues);
-        List<Integer> duplicateList = new List<>(middleValues);
+        List<Integer> duplicateList = middleList.copy();
         List<Integer> subsetList = new List<>(subsetValues);
         List<Integer> higherList = new List<>(higherValues);
         assert emptyList.compareTo(null) > 0;
@@ -89,28 +90,28 @@ public class ListTest {
         Integer[] empty = { };
         List<Integer> emptyList = new List<>(empty);
         String actual = emptyList.toString();
-        String expectedEmpty = "[]";
+        String expectedEmpty = "[ ]";
         assertEquals(expectedEmpty, actual);
         logger.info("  The empty list is: {}", actual);
 
         Integer[] first = { 1 };
         List<Integer> firstList = new List<>(first);
         actual = firstList.toString();
-        String expectedFirst = "[1]";
+        String expectedFirst = "[ 1 ]";
         assertEquals(expectedFirst, actual);
         logger.info("  The first list is: {}", actual);
 
         Integer[] second = { 1, 2, 3 };
         List<Integer> secondList = new List<>(second);
         actual = secondList.toString();
-        String expectedSecond = "[1, 2, 3]";
+        String expectedSecond = "[ 1, 2, 3 ]";
         assertEquals(expectedSecond, actual);
         logger.info("  The second list is: {}", actual);
 
         Integer[] third = { 1, 2, 3, 4, 5, 6 };
         List<Integer> thirdList = new List<>(third);
         actual = thirdList.toString();
-        String expectedThird = "[1, 2, 3, 4, 5, 6]";
+        String expectedThird = "[ 1, 2, 3, 4, 5, 6 ]";
         assertEquals(expectedThird, actual);
         logger.info("  The third list is: {}", actual);
 
@@ -302,19 +303,15 @@ public class ListTest {
         logger.info("Completed testSortingAndShufflingOfAList().\n");
     }
 
-    static private class SimpleElement implements Comparable<SimpleElement> {
-        private final String foo;
-        private final int bar;
+    static private class SimpleElement extends SmartObject<SimpleElement> implements Comparable<SimpleElement> {
+        public final String foo;
+        public final int bar;
 
         SimpleElement(String foo, int bar) {
             this.foo = foo;
             this.bar = bar;
         }
 
-        @Override
-        public String toString() {
-            return "[" + "foo: " + foo + ", bar: " + bar + "]";
-        }
 
         @Override
         public int compareTo(SimpleElement that) {

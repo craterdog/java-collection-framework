@@ -9,6 +9,7 @@
  ************************************************************************/
 package craterdog.collections;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import craterdog.collections.abstractions.ClosedCollection;
 import craterdog.collections.interfaces.FIFO;
 import org.slf4j.ext.XLogger;
@@ -51,6 +52,20 @@ public class Queue<E> extends ClosedCollection<E> implements FIFO<E> {
         logger.entry(capacity);
         this.capacity = capacity;
         logger.exit();
+    }
+
+
+    @JsonValue
+    @Override
+    public E[] toArray() {
+        return super.toArray();
+    }
+
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public Queue<E> copy() {
+        return (Queue<E>) super.copy();
     }
 
 

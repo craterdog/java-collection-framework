@@ -9,6 +9,8 @@
  ************************************************************************/
 package craterdog.collections;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import craterdog.collections.abstractions.Collection;
 import craterdog.collections.abstractions.Iterator;
 import craterdog.collections.abstractions.Manipulator;
@@ -117,6 +119,7 @@ public class Map<K, V> extends SortableCollection<Association<K, V>> implements 
      *
      * @param elements The java map containing the key-value pairs to be mapped.
      */
+    @JsonCreator
     public Map(java.util.Map<K, V> elements) {
         logger.entry(elements);
         java.util.Set<? extends java.util.Map.Entry<K, V>> entries = elements.entrySet();
@@ -127,6 +130,25 @@ public class Map<K, V> extends SortableCollection<Association<K, V>> implements 
             associateKeyWithValue(key, value);
         }
         logger.exit();
+    }
+
+
+    @JsonValue
+    public java.util.LinkedHashMap<K, V> toMap() {
+        java.util.LinkedHashMap<K, V> map = new java.util.LinkedHashMap<>();
+        for (Association<K, V> association : this) {
+            K key = association.key;
+            V value = association.value;
+            map.put(key, value);
+        }
+        return map;
+    }
+
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public Map<K, V> copy() {
+        return (Map<K, V>) super.copy();
     }
 
 

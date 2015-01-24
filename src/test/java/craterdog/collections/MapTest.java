@@ -64,7 +64,7 @@ public class MapTest {
         String[] keys = { "1", "1", "2", "3", "5", "8", "13" };
         Integer[] values = { 1, 1, 2, 3, 5, 8, 13 };
         Map<String, Integer> firstMap = new Map<>(keys, values);
-        Map<String, Integer> secondMap = new Map<>(keys, values);
+        Map<String, Integer> secondMap = firstMap.copy();
         int comparison = firstMap.compareTo(secondMap);
         assertEquals(0, comparison);
         logger.info("Completed testMapComparison().\n");
@@ -80,7 +80,7 @@ public class MapTest {
 
         Map<String, Object> emptyMap = new Map<>();
         String actual = emptyMap.toString();
-        String expectedEmpty = "[]";
+        String expectedEmpty = "{ }";
         assertEquals(expectedEmpty, actual);
         logger.info("  The empty map is: {}", actual);
 
@@ -88,9 +88,9 @@ public class MapTest {
         tinyMap.associateKeyWithValue("singleton", 1);
         actual = tinyMap.toString();
         String expectedTiny =
-                "[\n" +
-                "    singleton: 1\n" +
-                "]";
+                "{\n" +
+                "  \"singleton\" : 1\n" +
+                "}";
         assertEquals(expectedTiny, actual);
         logger.info("  The tiny map is: {}", actual);
 
@@ -100,11 +100,11 @@ public class MapTest {
         smallMap.associateKeyWithValue("third", 3);
         actual = smallMap.toString();
         String expectedSmall =
-                "[\n" +
-                "    first: 1,\n" +
-                "    second: 2,\n" +
-                "    third: 3\n" +
-                "]";
+                "{\n" +
+                "  \"first\" : 1,\n" +
+                "  \"second\" : 2,\n" +
+                "  \"third\" : 3\n" +
+                "}";
         assertEquals(expectedSmall, actual);
         logger.info("  The small map is: {}", actual);
 
@@ -118,17 +118,17 @@ public class MapTest {
         compositeMap.associateKeyWithValue("fifth", emptyMap);
         actual = compositeMap.toString();
         String expectedComposite =
-                "[\n" +
-                "    first: 1,\n" +
-                "    second: B,\n" +
-                "    third: [1, 2, 3],\n" +
-                "    fourth: [\n" +
-                "        first: 1,\n" +
-                "        second: 2,\n" +
-                "        third: 3\n" +
-                "    ],\n" +
-                "    fifth: []\n" +
-                "]";
+                "{\n" +
+                "  \"first\" : 1,\n" +
+                "  \"second\" : \"B\",\n" +
+                "  \"third\" : [ 1, 2, 3 ],\n" +
+                "  \"fourth\" : {\n" +
+                "    \"first\" : 1,\n" +
+                "    \"second\" : 2,\n" +
+                "    \"third\" : 3\n" +
+                "  },\n" +
+                "  \"fifth\" : { }\n" +
+                "}";
         assertEquals(expectedComposite, actual);
         logger.info("  The composite map is: {}", actual);
 

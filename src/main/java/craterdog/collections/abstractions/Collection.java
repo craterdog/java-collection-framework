@@ -10,8 +10,8 @@
 package craterdog.collections.abstractions;
 
 import craterdog.collections.interfaces.Accessible;
-import craterdog.core.Composite;
 import craterdog.core.Sequential;
+import craterdog.smart.SmartObject;
 import craterdog.utils.NaturalComparator;
 import java.lang.reflect.Array;
 import java.util.Comparator;
@@ -25,77 +25,10 @@ import org.slf4j.ext.XLoggerFactory;
  * @author Derk Norton
  * @param <E> The type of element managed by the collection.
  */
-public abstract class Collection<E> implements Comparable<Collection<E>>, Accessible<E>, Sequential<E>, Composite {
+public abstract class Collection<E> extends SmartObject<Collection<E>>
+        implements Comparable<Collection<E>>, Accessible<E>, Sequential<E> {
 
     static private final XLogger logger = XLoggerFactory.getXLogger(Collection.class);
-
-
-    @Override
-    public String toString() {
-        logger.entry();
-        String string = toString("");
-        logger.exit(string);
-        return string;
-    }
-
-
-    @Override
-    public String toString(String indentation) {
-        logger.entry(indentation);
-        String string = "[]";  // empty collection
-
-        // check for an empty collection
-        if (!isEmpty()) {
-
-            // see if the collection should be formatted across multiple lines
-            boolean isMultiline = checkForMultiline();
-
-            // start formatting the collection
-            String nextIndentation = indentation + "    ";
-            StringBuilder builder = new StringBuilder();
-            builder.append("[");
-            if (isMultiline) {
-                addNewLine(builder, nextIndentation);
-            }
-
-            // format each element in the collection
-            Iterator<E> iterator = this.createDefaultIterator();
-            do {
-                E element = iterator.getNextElement();
-                Composite composite = element instanceof Composite ? (Composite) element : null;
-                if (composite != null) {
-                    builder.append(composite.toString(nextIndentation));
-                } else {
-                    builder.append(element.toString());
-                }
-                if (iterator.hasNext()) {
-                    builder.append(",");
-                    if (isMultiline) {
-                        addNewLine(builder, nextIndentation);
-                    } else {
-                        builder.append(" ");
-                    }
-                }
-            } while (iterator.hasNext());
-
-            // finish formatting the collection
-            if (isMultiline) {
-                addNewLine(builder, indentation);
-            }
-            builder.append("]");
-            string = builder.toString();
-
-        }
-
-        logger.exit(string);
-        return string;
-    }
-
-
-    static private void addNewLine(StringBuilder builder, String indentation) {
-            builder.append("\n");
-            builder.append(indentation);
-    }
 
 
     @Override
@@ -205,19 +138,6 @@ public abstract class Collection<E> implements Comparable<Collection<E>>, Access
     }
 
 
-    @Override
-    @Deprecated
-    public void toArray(E[] array) {
-        logger.entry(array);
-        int size = array.length;
-        Iterator<E> iterator = createDefaultIterator();
-        for (int index = 0; index < size && iterator.hasNextElement(); index++) {
-            array[index] = iterator.getNextElement();
-        }
-        logger.exit();
-    }
-
-
     @SuppressWarnings("unchecked")
     @Override
     public E[] toArray() {
@@ -266,21 +186,6 @@ public abstract class Collection<E> implements Comparable<Collection<E>>, Access
         if (index < 0) index = index + size + 1;
         if (index < 1 || index > size) throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         return index;
-    }
-
-
-    private boolean checkForMultiline() {
-        boolean isMultiline = false;
-        for (E element : this) {
-            if (element instanceof String && getNumberOfElements() > 3 ||
-                    ! (element instanceof Number ||
-                       element instanceof Boolean ||
-                       element instanceof Character)) {
-                isMultiline = true;
-                break;
-            }
-        }
-        return isMultiline;
     }
 
 }

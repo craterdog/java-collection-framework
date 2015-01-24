@@ -9,6 +9,8 @@
  ************************************************************************/
 package craterdog.collections;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import craterdog.collections.abstractions.Collection;
 import craterdog.collections.abstractions.Iterator;
 import craterdog.collections.abstractions.Manipulator;
@@ -50,12 +52,20 @@ public class List<E> extends SortableCollection<E> implements Indexed<E> {
      *
      * @param elements The elements that should be used to seed the list.
      */
+    @JsonCreator
     public List(E[] elements) {
         logger.entry(elements);
         int size = elements.length;
         this.array = new DynamicArray<>(size);
         this.array.addAll(Arrays.asList(elements));
         logger.exit();
+    }
+
+
+    @JsonValue
+    @Override
+    public E[] toArray() {
+        return super.toArray();
     }
 
 
@@ -88,6 +98,13 @@ public class List<E> extends SortableCollection<E> implements Indexed<E> {
         logger.entry(elements);
         this.array = new DynamicArray<>(elements);
         logger.exit();
+    }
+
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<E> copy() {
+        return (List<E>) super.copy();
     }
 
 

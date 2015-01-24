@@ -79,6 +79,13 @@ public final class Dictionary<V> extends Map<String, V> {
     }
 
 
+    @Override
+    @SuppressWarnings("unchecked")
+    public Dictionary<V> copy() {
+        return (Dictionary<V>) super.copy();
+    }
+
+
     /**
      * This function returns a new dictionary that contains the all the associations from
      * both the specified dictionaries.

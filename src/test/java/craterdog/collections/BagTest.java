@@ -55,7 +55,7 @@ public class BagTest {
         logger.info("Beginning testBagComparison()...");
         Integer[] values = { 1, 1, 2, 3, 5, 8, 13 };
         Bag<Integer> firstBag = new Bag<>(values);
-        Bag<Integer> secondBag = new Bag<>(values);
+        Bag<Integer> secondBag = firstBag.copy();
         int comparison = firstBag.compareTo(secondBag);
         assertEquals(0, comparison);
         logger.info("Completed testBagComparison().\n");
@@ -72,28 +72,28 @@ public class BagTest {
         Integer[] empty = { };
         Bag<Integer> emptyBag = new Bag<>(empty);
         String actual = emptyBag.toString();
-        String expectedEmpty = "[]";
+        String expectedEmpty = "[ ]";
         assertEquals(expectedEmpty, actual);
         logger.info("  The empty bag is: {}", actual);
 
         Integer[] first = { 1 };
         Bag<Integer> firstBag = new Bag<>(first);
         actual = firstBag.toString();
-        String expectedFirst = "[1]";
+        String expectedFirst = "[ 1 ]";
         assertEquals(expectedFirst, actual);
         logger.info("  The first bag is: {}", actual);
 
         Integer[] second = { 1, 2, 3 };
         Bag<Integer> secondBag = new Bag<>(second);
         actual = secondBag.toString();
-        String expectedSecond = "[1, 2, 3]";
+        String expectedSecond = "[ 1, 2, 3 ]";
         assertEquals(expectedSecond, actual);
         logger.info("  The second bag is: {}", actual);
 
         Integer[] third = { 1, 2, 3, 4, 5, 6 };
         Bag<Integer> thirdBag = new Bag<>(third);
         actual = thirdBag.toString();
-        String expectedThird = "[1, 2, 3, 4, 5, 6]";
+        String expectedThird = "[ 1, 2, 3, 4, 5, 6 ]";
         assertEquals(expectedThird, actual);
         logger.info("  The third bag is: {}", actual);
 

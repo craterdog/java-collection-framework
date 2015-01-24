@@ -9,6 +9,7 @@
  ************************************************************************/
 package craterdog.collections;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import craterdog.collections.abstractions.ClosedCollection;
 import craterdog.collections.interfaces.LIFO;
 import org.slf4j.ext.XLogger;
@@ -51,6 +52,20 @@ public class Stack<E> extends ClosedCollection<E> implements LIFO<E> {
         logger.entry(capacity);
         this.capacity = capacity;
         logger.exit();
+    }
+
+
+    @JsonValue
+    @Override
+    public E[] toArray() {
+        return super.toArray();
+    }
+
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public Stack<E> copy() {
+        return (Stack<E>) super.copy();
     }
 
 

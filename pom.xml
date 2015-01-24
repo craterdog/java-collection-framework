@@ -15,7 +15,7 @@
     <parent>
         <groupId>com.craterdog.maven-parent-poms</groupId>
         <artifactId>java-pojo</artifactId>
-        <version>3.7</version>
+        <version>3.9</version>
     </parent>
 
     <organization>
@@ -49,8 +49,9 @@
     </developers>
 
     <properties>
-        <java-core-interfaces-version>3.1</java-core-interfaces-version>
-        <java-general-utilities-version>3.5</java-general-utilities-version>
+        <java-core-interfaces-version>3.2</java-core-interfaces-version>
+        <java-general-utilities-version>3.6</java-general-utilities-version>
+        <java-smart-objects-version>3.2-SNAPSHOT</java-smart-objects-version>
     </properties>
 
     <dependencies>
@@ -63,6 +64,11 @@
             <groupId>com.craterdog</groupId>
             <artifactId>java-general-utilities</artifactId>
             <version>${java-general-utilities-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.craterdog</groupId>
+            <artifactId>java-smart-objects</artifactId>
+            <version>${java-smart-objects-version}</version>
         </dependency>
     </dependencies>
 

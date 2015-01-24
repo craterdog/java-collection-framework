@@ -9,6 +9,8 @@
  ************************************************************************/
 package craterdog.collections;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import craterdog.collections.abstractions.*;
 import java.util.Comparator;
 import org.slf4j.ext.XLogger;
@@ -42,8 +44,16 @@ public class Set<E> extends OrderedCollection<E> {
      *
      * @param elements The elements to be used to seed the new set.
      */
+    @JsonCreator
     public Set(E[] elements) {
         this(elements, null);
+    }
+
+
+    @JsonValue
+    @Override
+    public E[] toArray() {
+        return super.toArray();
     }
 
 
@@ -89,6 +99,13 @@ public class Set<E> extends OrderedCollection<E> {
      */
     public Set(Iterable<? extends E> elements, Comparator<? super E> comparator) {
         super(elements, false, comparator);
+    }
+
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public Set<E> copy() {
+        return (Set<E>) super.copy();
     }
 
 
