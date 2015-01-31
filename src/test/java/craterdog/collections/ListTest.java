@@ -97,21 +97,21 @@ public class ListTest {
         Integer[] first = { 1 };
         List<Integer> firstList = new List<>(first);
         actual = firstList.toString();
-        String expectedFirst = "[ 1 ]";
+        String expectedFirst = "[\n  1\n]";
         assertEquals(expectedFirst, actual);
         logger.info("  The first list is: {}", actual);
 
         Integer[] second = { 1, 2, 3 };
         List<Integer> secondList = new List<>(second);
         actual = secondList.toString();
-        String expectedSecond = "[ 1, 2, 3 ]";
+        String expectedSecond = "[\n  1,\n  2,\n  3\n]";
         assertEquals(expectedSecond, actual);
         logger.info("  The second list is: {}", actual);
 
         Integer[] third = { 1, 2, 3, 4, 5, 6 };
         List<Integer> thirdList = new List<>(third);
         actual = thirdList.toString();
-        String expectedThird = "[ 1, 2, 3, 4, 5, 6 ]";
+        String expectedThird = "[\n  1,\n  2,\n  3,\n  4,\n  5,\n  6\n]";
         assertEquals(expectedThird, actual);
         logger.info("  The third list is: {}", actual);
 

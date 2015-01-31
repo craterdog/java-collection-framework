@@ -121,7 +121,7 @@ public class MapTest {
                 "{\n" +
                 "  \"first\" : 1,\n" +
                 "  \"second\" : \"B\",\n" +
-                "  \"third\" : [ 1, 2, 3 ],\n" +
+                "  \"third\" : [\n    1,\n    2,\n    3\n  ],\n" +
                 "  \"fourth\" : {\n" +
                 "    \"first\" : 1,\n" +
                 "    \"second\" : 2,\n" +

@@ -78,21 +78,21 @@ public class SetTest {
         Integer[] first = { 1 };
         Set<Integer> firstSet = new Set<>(first);
         actual = firstSet.toString();
-        String expectedFirst = "[ 1 ]";
+        String expectedFirst = "[\n  1\n]";
         assertEquals(expectedFirst, actual);
         logger.info("  The first set is: {}", actual);
 
         Integer[] second = { 1, 2, 3 };
         Set<Integer> secondSet = new Set<>(second);
         actual = secondSet.toString();
-        String expectedSecond = "[ 1, 2, 3 ]";
+        String expectedSecond = "[\n  1,\n  2,\n  3\n]";
         assertEquals(expectedSecond, actual);
         logger.info("  The second set is: {}", actual);
 
         Integer[] third = { 1, 2, 3, 4, 5, 6 };
         Set<Integer> thirdSet = new Set<>(third);
         actual = thirdSet.toString();
-        String expectedThird = "[ 1, 2, 3, 4, 5, 6 ]";
+        String expectedThird = "[\n  1,\n  2,\n  3,\n  4,\n  5,\n  6\n]";
         assertEquals(expectedThird, actual);
         logger.info("  The third set is: {}", actual);
 

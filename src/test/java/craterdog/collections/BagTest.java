@@ -79,21 +79,21 @@ public class BagTest {
         Integer[] first = { 1 };
         Bag<Integer> firstBag = new Bag<>(first);
         actual = firstBag.toString();
-        String expectedFirst = "[ 1 ]";
+        String expectedFirst = "[\n  1\n]";
         assertEquals(expectedFirst, actual);
         logger.info("  The first bag is: {}", actual);
 
         Integer[] second = { 1, 2, 3 };
         Bag<Integer> secondBag = new Bag<>(second);
         actual = secondBag.toString();
-        String expectedSecond = "[ 1, 2, 3 ]";
+        String expectedSecond = "[\n  1,\n  2,\n  3\n]";
         assertEquals(expectedSecond, actual);
         logger.info("  The second bag is: {}", actual);
 
         Integer[] third = { 1, 2, 3, 4, 5, 6 };
         Bag<Integer> thirdBag = new Bag<>(third);
         actual = thirdBag.toString();
-        String expectedThird = "[ 1, 2, 3, 4, 5, 6 ]";
+        String expectedThird = "[\n  1,\n  2,\n  3,\n  4,\n  5,\n  6\n]";
         assertEquals(expectedThird, actual);
         logger.info("  The third bag is: {}", actual);
 
