@@ -328,6 +328,10 @@ public final class RandomizedTree<E> extends AbstractCollection<E> implements Cl
     }
 
 
+    /*
+     * Compare the specified elements using the comparator for the tree if one
+     * exists, or using the compareTo() method if not.
+     */
     private int compareElements(E firstElement, E secondElement) {
         int comparison;
         if (comparator != null) {
@@ -341,6 +345,11 @@ public final class RandomizedTree<E> extends AbstractCollection<E> implements Cl
     }
 
 
+    /*
+    Recursively search the tree to find the node at the specified
+    index.  The nodes in the tree are indexed using the standard
+    Java list indexing [0..size).
+    */
     private TreeNode findNode(TreeNode tree, int index) {
         int leftSubtreeSize = tree.getLeftSubtreeSize();
         if (index < leftSubtreeSize) {
@@ -356,16 +365,25 @@ public final class RandomizedTree<E> extends AbstractCollection<E> implements Cl
     }
 
 
+    /*
+     * Insert the new element into a random place in the tree but preserving
+     * ordering of the elements.  If the specified element is already in the
+     * tree and duplicates are allowed, another copy of the element will be
+     * added.  Otherwise, the request is ignored.
+     */
     private TreeNode insertNode(TreeNode tree, E newElement) {
-        // handle a null tree
-        if (tree == null) return new TreeNode(newElement);
+        TreeNode newNode = new TreeNode(newElement);
 
-        // randomly insert the new node here with a probability of 1 / (treeSize + 1)
-        int random = RandomUtils.nextInt(tree.size + 1);
+        // if the tree is null, then the new element is the tree
+        if (tree == null) return newNode;
+
+        // randomly insert the new node here with a probability of 1 / treeSize
+        // NOTE: if duplicates are not allowed, any duplicate will be removed
+        // by the splitTree() method.
+        int random = RandomUtils.nextInt(tree.size);
         if (random == 0) {
             // split the current tree into two subtrees and make them the children of the new node
             TreeNode[] subtrees = splitTree(tree, newElement);
-            TreeNode newNode = new TreeNode(newElement);
             newNode.setLeftSubtree(subtrees[LEFT]);
             newNode.setRightSubtree(subtrees[RIGHT]);
             return newNode;
@@ -374,8 +392,9 @@ public final class RandomizedTree<E> extends AbstractCollection<E> implements Cl
         // recursively look for a place to insert the new node
         int comparison = compareElements(newElement, tree.element);
         if (comparison == 0 && !duplicatesAllowed) {
-            // when duplicates are not allowed we need to push a matching node further down in the tree to maintain random ordering
-            tree = pushTreeDown(tree);
+            // when duplicates are not allowed we need to push a matching node
+            // further down in the tree to maintain random ordering
+            tree = pushNodeDown(tree);
         } else if (comparison < 0) {
             // insert the new node somewhere in the left subtree
             tree.setLeftSubtree(insertNode(tree.left, newElement));
@@ -389,6 +408,13 @@ public final class RandomizedTree<E> extends AbstractCollection<E> implements Cl
     }
 
 
+    /*
+     * Split the specified tree into two separate trees.  The first contains all
+     * elements from the tree that are comparatively less than the specified
+     * value, and the second contains all elements that are comparatively greater
+     * than the specified value.  If the specified value is in the tree and
+     * duplicates are not allowed, it will be removed.
+     */
     private TreeNode[] splitTree(TreeNode tree, E value) {
         @SuppressWarnings("unchecked")
         TreeNode[] subtrees = (TreeNode[]) Array.newInstance(root.getClass(), 2);
@@ -398,7 +424,9 @@ public final class RandomizedTree<E> extends AbstractCollection<E> implements Cl
 
         int comparison = compareElements(value, tree.element);
         if (comparison == 0 && !duplicatesAllowed) {
-            // since duplicates are not allowed we need to remove the matching node and split its children
+            // since duplicates are not allowed we need to remove the matching
+            // node and split its children.  NOTE: if duplicates are allowed
+            // we do nothing
             subtrees[LEFT] = tree.left;
             subtrees[RIGHT] = tree.right;
         } else if (comparison < 0) {
@@ -406,20 +434,25 @@ public final class RandomizedTree<E> extends AbstractCollection<E> implements Cl
             subtrees[RIGHT] = tree;
             TreeNode[] leftSubtrees = splitTree(tree.left, value);
             subtrees[LEFT] = leftSubtrees[LEFT];
-            subtrees[RIGHT].setLeftSubtree(leftSubtrees[RIGHT]);
+            tree.setLeftSubtree(leftSubtrees[RIGHT]);
         } else {
             // recursively split between the tree and its right subtree
             subtrees[LEFT] = tree;
             TreeNode[] rightSubtrees = splitTree(tree.right, value);
             subtrees[RIGHT] = rightSubtrees[RIGHT];
-            subtrees[LEFT].setRightSubtree(rightSubtrees[LEFT]);
+            tree.setRightSubtree(rightSubtrees[LEFT]);
         }
 
         return subtrees;
     }
 
 
-    private TreeNode pushTreeDown(TreeNode tree) {
+    /*
+     * Push the root node for the specified tree further down into the tree
+     * a random amount.  This is used to make sure that nodes done purculate
+     * up to the root and stay there.
+     */
+    private TreeNode pushNodeDown(TreeNode tree) {
         // calculate the total number of nodes in the tree
         int leftSubtreeSize = tree.getLeftSubtreeSize();
         int rightSubtreeSize = tree.getRightSubtreeSize();
@@ -427,25 +460,32 @@ public final class RandomizedTree<E> extends AbstractCollection<E> implements Cl
 
         // randomly select the new position of the root node
         int random = RandomUtils.nextInt(totalSize);
-        if (random < leftSubtreeSize) {  // with a probability of leftSubtreeSize / totalSize
-            // rotate node right
+        if (random < leftSubtreeSize) {
+            // recursively rotate node right
+            // with a probability of leftSubtreeSize / totalSize
             TreeNode newTree = tree.left;
             tree.setLeftSubtree(newTree.right);
-            newTree.setRightSubtree(tree);
+            newTree.setRightSubtree(pushNodeDown(tree));
             return newTree;
-        } else if (random < totalSize - 1) {  // with a probability of rightSubtreeSize / totalSize
-            // rotate node left
+        } else if (random < leftSubtreeSize + rightSubtreeSize) {
+            // recursively rotate node left
+            // with a probability of rightSubtreeSize / totalSize
             TreeNode newTree = tree.right;
             tree.setRightSubtree(newTree.left);
-            newTree.setLeftSubtree(tree);
+            newTree.setLeftSubtree(pushNodeDown(tree));
             return newTree;
-        } else {  // random == totalSize with a probability of 1 / totalSize
+        } else {
             // leave node where it is
+            // with a probability of 1 / totalSize
             return tree;
         }
     }
 
 
+    /*
+     * Recursively search the tree for the specified element.  If it exists remove
+     * it from the tree by randomly joining its subtrees.  Otherwise do nothing.
+     */
     private TreeNode deleteNode(TreeNode tree, E oldElement) {
         // handle the case when the current tree is null
         if (tree == null) return null;
@@ -471,6 +511,11 @@ public final class RandomizedTree<E> extends AbstractCollection<E> implements Cl
     }
 
 
+    /*
+     * Join two random subtrees into a single random binary search tree.  The joins
+     * are done recursively based on the weighted probability of each side of the
+     * subtrees.
+     */
     private TreeNode joinSubtrees(TreeNode leftSubtree, TreeNode rightSubtree) {
         // handle when the subtrees are null
         if (leftSubtree == null) return rightSubtree;
