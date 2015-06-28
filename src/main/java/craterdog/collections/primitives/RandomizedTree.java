@@ -243,6 +243,27 @@ public final class RandomizedTree<E> extends AbstractCollection<E> implements Cl
 
 
     @Override
+    public boolean removeAll(Collection<?> collection) {
+        boolean modified = false;
+        for (Object object : collection) {
+            modified = remove(object);
+        }
+        return modified;
+    }
+
+
+    @Override
+    public boolean retainAll(Collection<?> collection) {
+        boolean modified = false;
+        for (E element : this) {
+            if (!collection.contains(element))
+            modified = remove(element);
+        }
+        return modified;
+    }
+
+
+    @Override
     public ListIterator<E> iterator() {
         return new TreeIterator();
     }
@@ -377,10 +398,17 @@ public final class RandomizedTree<E> extends AbstractCollection<E> implements Cl
         // if the tree is null, then the new element is the tree
         if (tree == null) return newNode;
 
+        int random = RandomUtils.nextInt(tree.size);
+        int delta = Math.abs(tree.getRightSubtreeSize() - tree.getLeftSubtreeSize());
+        if (random < delta) {
+            // the tree is out of balance so push the current root down
+            tree = pushNodeDown(tree);
+        }
+
         // randomly insert the new node here with a probability of 1 / treeSize
         // NOTE: if duplicates are not allowed, any duplicate will be removed
         // by the splitTree() method.
-        int random = RandomUtils.nextInt(tree.size);
+        /*
         if (random == 0) {
             // split the current tree into two subtrees and make them the children of the new node
             TreeNode[] subtrees = splitTree(tree, newElement);
@@ -388,6 +416,7 @@ public final class RandomizedTree<E> extends AbstractCollection<E> implements Cl
             newNode.setRightSubtree(subtrees[RIGHT]);
             return newNode;
         }
+        */
 
         // recursively look for a place to insert the new node
         int comparison = compareElements(newElement, tree.element);
@@ -396,9 +425,11 @@ public final class RandomizedTree<E> extends AbstractCollection<E> implements Cl
             // further down in the tree to maintain random ordering
             tree = pushNodeDown(tree);
         } else if (comparison < 0) {
+            // the value is less than the tree value
             // insert the new node somewhere in the left subtree
             tree.setLeftSubtree(insertNode(tree.left, newElement));
         } else {
+            // the value is greater than OR EQUAL TO the tree value
             // insert the new node somewhere in the right subtree
             tree.setRightSubtree(insertNode(tree.right, newElement));
         }
@@ -414,7 +445,6 @@ public final class RandomizedTree<E> extends AbstractCollection<E> implements Cl
      * value, and the second contains all elements that are comparatively greater
      * than the specified value.  If the specified value is in the tree and
      * duplicates are not allowed, it will be removed.
-     */
     private TreeNode[] splitTree(TreeNode tree, E value) {
         @SuppressWarnings("unchecked")
         TreeNode[] subtrees = (TreeNode[]) Array.newInstance(root.getClass(), 2);
@@ -424,18 +454,19 @@ public final class RandomizedTree<E> extends AbstractCollection<E> implements Cl
 
         int comparison = compareElements(value, tree.element);
         if (comparison == 0 && !duplicatesAllowed) {
-            // since duplicates are not allowed we need to remove the matching
-            // node and split its children.  NOTE: if duplicates are allowed
-            // we do nothing
+            // when duplicates are not allowed we need to remove the matching
+            // node and split its children.
             subtrees[LEFT] = tree.left;
             subtrees[RIGHT] = tree.right;
         } else if (comparison < 0) {
+            // the value is less than the tree value
             // recursively split between the tree and its left subtree
             subtrees[RIGHT] = tree;
             TreeNode[] leftSubtrees = splitTree(tree.left, value);
             subtrees[LEFT] = leftSubtrees[LEFT];
             tree.setLeftSubtree(leftSubtrees[RIGHT]);
         } else {
+            // the value is greater than OR EQUAL TO the tree value
             // recursively split between the tree and its right subtree
             subtrees[LEFT] = tree;
             TreeNode[] rightSubtrees = splitTree(tree.right, value);
@@ -445,6 +476,7 @@ public final class RandomizedTree<E> extends AbstractCollection<E> implements Cl
 
         return subtrees;
     }
+     */
 
 
     /*
@@ -624,7 +656,7 @@ public final class RandomizedTree<E> extends AbstractCollection<E> implements Cl
 
         @Override
         public void set(E element) {
-            throw new UnsupportedOperationException("Removing an element from a specific position in an ordered collection is not allowed.");
+            throw new UnsupportedOperationException("Setting the value of an element at a specific position in an ordered collection is not allowed.");
         }
 
     }

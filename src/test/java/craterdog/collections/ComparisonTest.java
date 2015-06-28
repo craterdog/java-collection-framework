@@ -86,7 +86,7 @@ public class ComparisonTest {
      * This method runs the standard time test each of the common Java and Crater Dog Technologies
      * collection types.
      */
-    //@Test - turned off until needed since it takes a long time to run
+    @Test //- turned off until needed since it takes a long time to run
     public void testJavaCollectionPerformance() {
 
         logger.info("  Testing the performance of a java.util.HashSet...");
@@ -104,12 +104,24 @@ public class ComparisonTest {
         durationInMilliseconds = OpenCollectionTestUtils.runJavaTimeTest(collection);
         logger.info("  The test took {} milliseconds to run.\n", durationInMilliseconds);
 
+        logger.info("  Testing the performance of a craterdog.collections.primitives.RandomizedTree with default comparator...");
+        collection = new craterdog.collections.primitives.RandomizedTree<>();
+        durationInMilliseconds = OpenCollectionTestUtils.runJavaTimeTest(collection);
+        logger.info("  The test took {} milliseconds to run.\n", durationInMilliseconds);
+
         logger.info("  Testing the performance of a java.util.TreeSet with custom comparator...");
         OpenCollectionTestUtils.InOrderIntegerComparator comparator = new OpenCollectionTestUtils.InOrderIntegerComparator();
         collection = new java.util.TreeSet<>(comparator);
         durationInMilliseconds = OpenCollectionTestUtils.runJavaTimeTest(collection);
         logger.info("  The test took {} milliseconds to run.\n", durationInMilliseconds);
 
+        logger.info("  Testing the performance of a craterdog.collections.primitives.RandomizedTree with custom comparator...");
+        comparator = new OpenCollectionTestUtils.InOrderIntegerComparator();
+        collection = new craterdog.collections.primitives.RandomizedTree<>(comparator);
+        durationInMilliseconds = OpenCollectionTestUtils.runJavaTimeTest(collection);
+        logger.info("  The test took {} milliseconds to run.\n", durationInMilliseconds);
+
+        /*
         logger.info("  Testing the performance of a java.util.ArrayList...");
         collection = new java.util.ArrayList<>();
         durationInMilliseconds = OpenCollectionTestUtils.runJavaTimeTest(collection);
@@ -119,6 +131,7 @@ public class ComparisonTest {
         collection = new java.util.LinkedList<>();
         durationInMilliseconds = OpenCollectionTestUtils.runJavaTimeTest(collection);
         logger.info("  The test took {} milliseconds to run.\n", durationInMilliseconds);
+        */
 
     }
 

@@ -111,6 +111,16 @@ public class TreeTest {
     }
 
 
+    @Test
+    public void test100() {
+        for (int j = 0; j < 100; j++) {
+            RandomizedTree<Integer> tree = new RandomizedTree<>();
+            for (int i = 0; i < 100; i++) {
+                tree.add(i);
+            }
+        }
+    }
+
     private void performTest(int[] source, int[] expected, boolean duplicatesAllowed) {
 
         logger.info("  Building the tree...");

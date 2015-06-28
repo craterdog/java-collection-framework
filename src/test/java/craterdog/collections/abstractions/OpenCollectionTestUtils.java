@@ -45,8 +45,8 @@ public class OpenCollectionTestUtils {
             int size = collection.getNumberOfElements();
             assert collection.isEmpty() || size > 0;
             for (int i = 0; i < 1000; i++) {
-                int value = generator.nextInt(100);
-                if (collection.addElement(value)) size++;
+                //int value = generator.nextInt(100);
+                if (collection.addElement(i)) size++;
             }
             assert collection.getNumberOfElements() == size;
 
