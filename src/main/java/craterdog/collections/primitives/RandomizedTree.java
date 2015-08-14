@@ -15,7 +15,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.ListIterator;
-import org.apache.commons.lang.math.RandomUtils;
+import org.apache.commons.lang3.RandomUtils;
 
 
 /**
@@ -398,7 +398,7 @@ public final class RandomizedTree<E> extends AbstractCollection<E> implements Cl
         // if the tree is null, then the new element is the tree
         if (tree == null) return newNode;
 
-        int random = RandomUtils.nextInt(tree.size);
+        int random = RandomUtils.nextInt(0, tree.size);
         int delta = Math.abs(tree.getRightSubtreeSize() - tree.getLeftSubtreeSize());
         if (random < delta) {
             // the tree is out of balance so push the current root down
@@ -491,7 +491,7 @@ public final class RandomizedTree<E> extends AbstractCollection<E> implements Cl
         int totalSize = leftSubtreeSize + rightSubtreeSize + 1;
 
         // randomly select the new position of the root node
-        int random = RandomUtils.nextInt(totalSize);
+        int random = RandomUtils.nextInt(0, totalSize);
         if (random < leftSubtreeSize) {
             // recursively rotate node right
             // with a probability of leftSubtreeSize / totalSize
@@ -559,7 +559,7 @@ public final class RandomizedTree<E> extends AbstractCollection<E> implements Cl
         int totalSize = leftSubtreeSize + rightSubtreeSize;
 
         // randomly select the new root of the joined subtrees
-        int random = RandomUtils.nextInt(totalSize);
+        int random = RandomUtils.nextInt(0, totalSize);
         if (random < leftSubtreeSize) {  // with a probability of leftSubtreeSize / totalSize
             // join the right branch of the left subtree with the right subtree
             leftSubtree.setRightSubtree(joinSubtrees(leftSubtree.right, rightSubtree));

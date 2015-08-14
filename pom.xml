@@ -49,22 +49,10 @@
     </developers>
 
     <properties>
-        <java-core-interfaces-version>3.2</java-core-interfaces-version>
-        <java-general-utilities-version>3.6</java-general-utilities-version>
-        <java-smart-objects-version>3.6</java-smart-objects-version>
+        <java-smart-objects-version>3.7</java-smart-objects-version>
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>com.craterdog</groupId>
-            <artifactId>java-core-interfaces</artifactId>
-            <version>${java-core-interfaces-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.craterdog</groupId>
-            <artifactId>java-general-utilities</artifactId>
-            <version>${java-general-utilities-version}</version>
-        </dependency>
         <dependency>
             <groupId>com.craterdog</groupId>
             <artifactId>java-smart-objects</artifactId>
