@@ -12,8 +12,8 @@ package craterdog.collections;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import craterdog.collections.abstractions.Collection;
-import craterdog.collections.abstractions.Iterator;
-import craterdog.collections.abstractions.Manipulator;
+import craterdog.core.Iterator;
+import craterdog.core.Manipulator;
 import craterdog.collections.abstractions.SortableCollection;
 import craterdog.collections.interfaces.Indexed;
 import craterdog.collections.primitives.DynamicArray;
@@ -76,7 +76,7 @@ public class List<E> extends SortableCollection<E> implements Indexed<E> {
      */
     public List(Collection<? extends E> elements) {
         logger.entry(elements);
-        int size = elements.getNumberOfElements();
+        int size = elements.getSize();
         this.array = new DynamicArray<>(size);
         for (E element : elements) {
             this.array.add(element);
@@ -109,7 +109,7 @@ public class List<E> extends SortableCollection<E> implements Indexed<E> {
 
 
     @Override
-    public final int getNumberOfElements() {
+    public final int getSize() {
         logger.entry();
         int size = array.size();
         logger.exit(size);
@@ -118,7 +118,7 @@ public class List<E> extends SortableCollection<E> implements Indexed<E> {
 
 
     @Override
-    public Iterator<E> createDefaultIterator() {
+    public Iterator<E> createIterator() {
         logger.entry();
         Iterator<E> iterator = new ListManipulator();
         logger.exit(iterator);
@@ -127,7 +127,7 @@ public class List<E> extends SortableCollection<E> implements Indexed<E> {
 
 
     @Override
-    public final E getElementAtIndex(int index) {
+    public final E getElement(int index) {
         logger.entry(index);
         index = normalizedIndex(index);
         E element = array.get(index - 1);  // convert to zero based indexing
@@ -137,7 +137,7 @@ public class List<E> extends SortableCollection<E> implements Indexed<E> {
 
 
     @Override
-    public final int getIndexOfElement(E element) {
+    public final int getIndex(E element) {
         logger.entry(element);
         int index = array.indexOf(element) + 1;  // convert to ordinal based indexing
         logger.exit(index);
@@ -146,16 +146,16 @@ public class List<E> extends SortableCollection<E> implements Indexed<E> {
 
 
     @Override
-    public final List<E> getElementsInRange(int firstIndex, int lastIndex) {
+    public final List<E> getElements(int firstIndex, int lastIndex) {
         logger.entry(firstIndex, lastIndex);
         firstIndex = normalizedIndex(firstIndex);
         lastIndex = normalizedIndex(lastIndex);
         List<E> result = new List<>();
-        Iterator<E> iterator = createDefaultIterator();
-        iterator.goToIndex(firstIndex);
+        Iterator<E> iterator = createIterator();
+        iterator.toIndex(firstIndex);
         int numberOfElements = lastIndex - firstIndex + 1;
         while (numberOfElements-- > 0) {
-            E element = iterator.getNextElement();
+            E element = iterator.getNext();
             logger.debug("Including element: {}", element);
             result.addElement(element);
         }
@@ -183,7 +183,7 @@ public class List<E> extends SortableCollection<E> implements Indexed<E> {
 
 
     @Override
-    public final void removeAllElements() {
+    public final void removeAll() {
         logger.entry();
         array.clear();
         logger.exit();
@@ -191,7 +191,7 @@ public class List<E> extends SortableCollection<E> implements Indexed<E> {
 
 
     @Override
-    public final void insertElementBeforeIndex(E element, int index) {
+    public final void insertElement(E element, int index) {
         logger.entry(element, index);
         index = normalizedIndex(index);
         array.add(index - 1, element);  // convert to zero based indexing
@@ -200,11 +200,11 @@ public class List<E> extends SortableCollection<E> implements Indexed<E> {
 
 
     @Override
-    public final void insertElementsBeforeIndex(Iterable<? extends E> elements, int index) {
+    public final void insertElements(Iterable<? extends E> elements, int index) {
         logger.entry(elements, index);
         index = normalizedIndex(index);
-        Manipulator<E> manipulator = createDefaultManipulator();
-        manipulator.goToIndex(index);
+        Manipulator<E> manipulator = createManipulator();
+        manipulator.toIndex(index);
         for (E element : elements) {
             logger.debug("Inserting element: {}", element);
             manipulator.insertElement(element);
@@ -214,7 +214,7 @@ public class List<E> extends SortableCollection<E> implements Indexed<E> {
 
 
     @Override
-    public final E replaceElementAtIndex(E element, int index) {
+    public final E replaceElement(E element, int index) {
         logger.entry(element, index);
         index = normalizedIndex(index);
         E result = array.set(index - 1, element);  // convert to zero based indexing
@@ -224,7 +224,7 @@ public class List<E> extends SortableCollection<E> implements Indexed<E> {
 
 
     @Override
-    public final E removeElementAtIndex(int index) {
+    public final E removeElement(int index) {
         logger.entry(index);
         index = normalizedIndex(index);
         E result = array.remove(index - 1);  // convert to zero based indexing
@@ -234,7 +234,7 @@ public class List<E> extends SortableCollection<E> implements Indexed<E> {
 
 
     @Override
-    public final List<E> removeElementsInRange(int firstIndex, int lastIndex) {
+    public final List<E> removeElements(int firstIndex, int lastIndex) {
         logger.entry(firstIndex, lastIndex);
         firstIndex = normalizedIndex(firstIndex);
         lastIndex = normalizedIndex(lastIndex);
@@ -251,7 +251,7 @@ public class List<E> extends SortableCollection<E> implements Indexed<E> {
 
 
     @Override
-    public Manipulator<E> createDefaultManipulator() {
+    public Manipulator<E> createManipulator() {
         logger.entry();
         Manipulator<E> manipulator = new ListManipulator();
         logger.exit(manipulator);
@@ -268,7 +268,7 @@ public class List<E> extends SortableCollection<E> implements Indexed<E> {
      * @param list2 The second list whose elements are to be added.
      * @return The resulting list.
      */
-    static public <E> List<E> concatenate(List<E> list1, List<E> list2) {
+    static public <E> List<E> concatenation(List<E> list1, List<E> list2) {
         logger.entry(list1, list2);
         List<E> result = new List<>(list1);
         result.addElements(list2);
@@ -292,14 +292,14 @@ public class List<E> extends SortableCollection<E> implements Indexed<E> {
         private java.util.ListIterator<E> iterator = array.iterator();
 
         @Override
-        public void goToStart() {
+        public void toStart() {
             logger.entry();
             iterator = array.iterator();
             logger.exit();
         }
 
         @Override
-        public void goToIndex(int index) {
+        public void toIndex(int index) {
             logger.entry(index);
             index = normalizedIndex(index);
             iterator = array.listIterator(index - 1);  // convert to zero based indexing
@@ -307,14 +307,14 @@ public class List<E> extends SortableCollection<E> implements Indexed<E> {
         }
 
         @Override
-        public void goToEnd() {
+        public void toEnd() {
             logger.entry();
             iterator = array.listIterator(array.size());  // convert to zero based indexing
             logger.exit();
         }
 
         @Override
-        public boolean hasPreviousElement() {
+        public boolean hasPrevious() {
             logger.entry();
             boolean result = iterator.nextIndex() > 0;
             logger.exit(result);
@@ -322,7 +322,7 @@ public class List<E> extends SortableCollection<E> implements Indexed<E> {
         }
 
         @Override
-        public boolean hasNextElement() {
+        public boolean hasNext() {
             logger.entry();
             boolean result = iterator.nextIndex() < array.size();
             logger.exit(result);
@@ -330,12 +330,11 @@ public class List<E> extends SortableCollection<E> implements Indexed<E> {
         }
 
         @Override
-        public E getNextElement() {
+        public E getNext() {
             logger.entry();
-            if (!hasNextElement()) {
+            if (!hasNext()) {
                 IllegalStateException exception = new IllegalStateException("The iterator is at the end of the list.");
-                logger.throwing(exception);
-                throw exception;
+                throw logger.throwing(exception);
             }
             E result = iterator.next();
             logger.exit(result);
@@ -343,12 +342,11 @@ public class List<E> extends SortableCollection<E> implements Indexed<E> {
         }
 
         @Override
-        public E getPreviousElement() {
+        public E getPrevious() {
             logger.entry();
-            if (!hasPreviousElement()) {
+            if (!hasPrevious()) {
                 IllegalStateException exception = new IllegalStateException("The iterator is at the beginning of the list.");
-                logger.throwing(exception);
-                throw exception;
+                throw logger.throwing(exception);
             }
             E result = iterator.previous();
             logger.exit(result);
@@ -363,12 +361,11 @@ public class List<E> extends SortableCollection<E> implements Indexed<E> {
         }
 
         @Override
-        public E removeNextElement() {
+        public E removeNext() {
             logger.entry();
-            if (!hasNextElement()) {
+            if (!hasNext()) {
                 IllegalStateException exception = new IllegalStateException("The iterator is at the end of the list.");
-                logger.throwing(exception);
-                throw exception;
+                throw logger.throwing(exception);
             }
             E result = iterator.next();
             iterator.remove();
@@ -377,12 +374,11 @@ public class List<E> extends SortableCollection<E> implements Indexed<E> {
         }
 
         @Override
-        public E removePreviousElement() {
+        public E removePrevious() {
             logger.entry();
-            if (!hasPreviousElement()) {
+            if (!hasPrevious()) {
                 IllegalStateException exception = new IllegalStateException("The iterator is at the beginning of the list.");
-                logger.throwing(exception);
-                throw exception;
+                throw logger.throwing(exception);
             }
             E result = iterator.previous();
             iterator.remove();

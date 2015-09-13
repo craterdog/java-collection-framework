@@ -33,7 +33,7 @@ public interface Indexed<E> {
      * @param element The element to be checked for in the collection.
      * @return The index of the element of zero if the element was not found.
      */
-    int getIndexOfElement(E element);
+    int getIndex(E element);
 
     /**
      * This method returns the element at the specified index.
@@ -41,7 +41,7 @@ public interface Indexed<E> {
      * @param index The index of the element to be returned.
      * @return The element at the specified index.
      */
-    E getElementAtIndex(int index);
+    E getElement(int index);
 
     /**
      * This method returns a collection of the elements in the specified index range.
@@ -50,7 +50,7 @@ public interface Indexed<E> {
      * @param lastIndex the index of the last element to be returned.
      * @return A collection of elements in the specified range.
      */
-    Indexed<E> getElementsInRange(int firstIndex, int lastIndex);
+    Indexed<E> getElements(int firstIndex, int lastIndex);
 
     /**
      * This method inserts the specified element into the collection before the element
@@ -59,7 +59,7 @@ public interface Indexed<E> {
      * @param element The new element to be inserted into the collection.
      * @param index The index of the element before which the new element is to be inserted.
      */
-    void insertElementBeforeIndex(E element, int index);
+    void insertElement(E element, int index);
 
     /**
      * This method inserts the specified elements into the collection before the element
@@ -69,7 +69,7 @@ public interface Indexed<E> {
      * @param elements The new elements to be inserted into the collection.
      * @param index The index of the element before which the new element is to be inserted.
      */
-    void insertElementsBeforeIndex(Iterable<? extends E> elements, int index);
+    void insertElements(Iterable<? extends E> elements, int index);
 
     /**
      * This method replaces an existing element in the collection with a new one.  The new
@@ -80,7 +80,7 @@ public interface Indexed<E> {
      *
      * @return The element that was at the specified index.
      */
-    E replaceElementAtIndex(E element, int index);
+    E replaceElement(E element, int index);
 
     /**
      * This method removes from the collection the element associated with the specified
@@ -89,7 +89,7 @@ public interface Indexed<E> {
      * @param index The index of the element to be removed.
      * @return The element at the specified index.
      */
-    E removeElementAtIndex(int index);
+    E removeElement(int index);
 
     /**
      * This method removes from the collection the elements associated with the specified
@@ -99,6 +99,6 @@ public interface Indexed<E> {
      * @param lastIndex The index of the last element to be removed.
      * @return The list of the elements that were removed from the collection.
      */
-    Indexed<E> removeElementsInRange(int firstIndex, int lastIndex);
+    Indexed<E> removeElements(int firstIndex, int lastIndex);
 
 }

@@ -9,6 +9,7 @@
  ************************************************************************/
 package craterdog.collections.abstractions;
 
+import craterdog.core.Iterator;
 import craterdog.collections.Bag;
 import craterdog.collections.interfaces.Ordered;
 import craterdog.collections.primitives.RandomizedTree;
@@ -118,7 +119,7 @@ public abstract class OrderedCollection<E> extends OpenCollection<E> implements 
 
 
     @Override
-    public Iterator<E> createDefaultIterator() {
+    public Iterator<E> createIterator() {
         logger.entry();
         Iterator<E> iterator = new OrderedIterator();
         logger.exit(iterator);
@@ -127,7 +128,7 @@ public abstract class OrderedCollection<E> extends OpenCollection<E> implements 
 
 
     @Override
-    public int getNumberOfElements() {
+    public int getSize() {
         logger.entry();
         int result = tree.size();
         logger.exit(result);
@@ -136,7 +137,7 @@ public abstract class OrderedCollection<E> extends OpenCollection<E> implements 
 
 
     @Override
-    public E getElementAtIndex(int index) {
+    public E getElement(int index) {
         logger.entry(index);
         index = normalizedIndex(index);
         E element = tree.get(index - 1);  // convert to zero based indexing
@@ -146,7 +147,7 @@ public abstract class OrderedCollection<E> extends OpenCollection<E> implements 
 
 
     @Override
-    public int getIndexOfElement(E element) {
+    public int getIndex(E element) {
         logger.entry(element);
         int index = tree.indexOf(element) + 1;  // convert to ordinal based indexing
         logger.exit(index);
@@ -155,16 +156,16 @@ public abstract class OrderedCollection<E> extends OpenCollection<E> implements 
 
 
     @Override
-    public OrderedCollection<E> getElementsInRange(int firstIndex, int lastIndex) {
+    public OrderedCollection<E> getElements(int firstIndex, int lastIndex) {
         logger.entry(firstIndex, lastIndex);
         firstIndex = normalizedIndex(firstIndex);
         lastIndex = normalizedIndex(lastIndex);
         Bag<E> result = new Bag<>();
-        Iterator<E> iterator = createDefaultIterator();
-        iterator.goToIndex(firstIndex);
+        Iterator<E> iterator = createIterator();
+        iterator.toIndex(firstIndex);
         int numberOfElements = lastIndex - firstIndex + 1;
         while (numberOfElements-- > 0) {
-            E element = iterator.getNextElement();
+            E element = iterator.getNext();
             logger.debug("Including element: {}", element);
             result.addElement(element);
         }
@@ -192,7 +193,7 @@ public abstract class OrderedCollection<E> extends OpenCollection<E> implements 
 
 
     @Override
-    public void removeAllElements() {
+    public void removeAll() {
         logger.entry();
         tree.clear();
         logger.exit();
@@ -219,40 +220,40 @@ public abstract class OrderedCollection<E> extends OpenCollection<E> implements 
         private java.util.ListIterator<E> iterator = tree.listIterator();
 
         @Override
-        public void goToStart() {
+        public void toStart() {
             iterator = tree.iterator();
         }
 
         @Override
-        public void goToIndex(int index) {
+        public void toIndex(int index) {
             index = normalizedIndex(index);
             iterator = tree.listIterator(index - 1);
         }
 
         @Override
-        public void goToEnd() {
+        public void toEnd() {
             iterator = tree.listIterator(tree.size());
         }
 
         @Override
-        public boolean hasPreviousElement() {
+        public boolean hasPrevious() {
             return iterator.nextIndex() > 0;
         }
 
         @Override
-        public boolean hasNextElement() {
+        public boolean hasNext() {
             return iterator.nextIndex() < tree.size();
         }
 
         @Override
-        public E getNextElement() {
-            if (!hasNextElement()) throw new IllegalStateException("The iterator is at the end of the ordered collection.");
+        public E getNext() {
+            if (!hasNext()) throw new IllegalStateException("The iterator is at the end of the ordered collection.");
             return iterator.next();
         }
 
         @Override
-        public E getPreviousElement() {
-            if (!hasPreviousElement()) throw new IllegalStateException("The iterator is at the beginning of the ordered collection.");
+        public E getPrevious() {
+            if (!hasPrevious()) throw new IllegalStateException("The iterator is at the beginning of the ordered collection.");
             return iterator.previous();
         }
 

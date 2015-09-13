@@ -119,11 +119,11 @@ public class BagTest {
         Bag<Integer> thirdBag = new Bag<>(third);
 
         logger.info("  Testing the merge operation...");
-        Bag<Integer> bag = Bag.merge(emptyBag, firstBag);
+        Bag<Integer> bag = Bag.aggregation(emptyBag, firstBag);
         assertEquals("  The resulting bag from the merge is incorrect.", firstBag, bag);
-        bag = Bag.merge(firstBag, emptyBag);
+        bag = Bag.aggregation(firstBag, emptyBag);
         assertEquals("  The resulting bag from the merge is incorrect.", firstBag, bag);
-        bag = Bag.merge(firstBag, secondBag);
+        bag = Bag.aggregation(firstBag, secondBag);
         assertEquals("  The resulting bag from the merge is incorrect.", thirdBag, bag);
 
         logger.info("  Testing the difference operation...");

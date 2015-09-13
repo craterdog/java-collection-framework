@@ -10,6 +10,7 @@
 package craterdog.collections.abstractions;
 
 import craterdog.collections.interfaces.Accessible;
+import craterdog.core.Iterator;
 import craterdog.core.Sequential;
 import craterdog.smart.SmartObject;
 import craterdog.utils.NaturalComparator;
@@ -50,13 +51,13 @@ public abstract class Collection<E> extends SmartObject<Collection<E>>
         if (object != null && getClass() == object.getClass()) {
             @SuppressWarnings("unchecked")
             final Collection<E> that = (Collection<E>) object;
-            if (this.getNumberOfElements() == that.getNumberOfElements()) {
+            if (this.getSize() == that.getSize()) {
                 result = true;  // so far anyway...
-                Iterator<E> thisIterator = this.createDefaultIterator();
-                Iterator<E> thatIterator = that.createDefaultIterator();
-                while (thisIterator.hasNextElement()) {
-                    E thisElement = thisIterator.getNextElement();
-                    E thatElement = thatIterator.getNextElement();
+                Iterator<E> thisIterator = this.createIterator();
+                Iterator<E> thatIterator = that.createIterator();
+                while (thisIterator.hasNext()) {
+                    E thisElement = thisIterator.getNext();
+                    E thatElement = thatIterator.getNext();
                     if (!thisElement.equals(thatElement)) {
                         result = false;  // oops, found a difference
                         break;
@@ -76,27 +77,18 @@ public abstract class Collection<E> extends SmartObject<Collection<E>>
         if (this == that) return 0;  // same object
         int result = 0;
         Comparator<Object> comparator = new NaturalComparator<>();
-        Iterator<E> thisIterator = this.createDefaultIterator();
-        Iterator<E> thatIterator = that.createDefaultIterator();
-        while (thisIterator.hasNextElement() && thatIterator.hasNextElement()) {
-            E thisElement = thisIterator.getNextElement();
-            E thatElement = thatIterator.getNextElement();
+        Iterator<E> thisIterator = this.createIterator();
+        Iterator<E> thatIterator = that.createIterator();
+        while (thisIterator.hasNext() && thatIterator.hasNext()) {
+            E thisElement = thisIterator.getNext();
+            E thatElement = thatIterator.getNext();
             result = comparator.compare(thisElement, thatElement);
             if (result != 0) break;
         }
         if (result == 0) {
             // same so far, check for different lengths
-            result = Integer.compare(this.getNumberOfElements(), that.getNumberOfElements());
+            result = Integer.compare(this.getSize(), that.getSize());
         }
-        logger.exit(result);
-        return result;
-    }
-
-
-    @Override
-    public boolean isEmpty() {
-        logger.entry();
-        boolean result = getNumberOfElements() == 0;
         logger.exit(result);
         return result;
     }
@@ -105,7 +97,7 @@ public abstract class Collection<E> extends SmartObject<Collection<E>>
     @Override
     public boolean containsElement(E element) {
         logger.entry(element);
-        int index = getIndexOfElement(element);
+        int index = getIndex(element);
         boolean result = index > 0;
         logger.exit(result);
         return result;
@@ -113,7 +105,7 @@ public abstract class Collection<E> extends SmartObject<Collection<E>>
 
 
     @Override
-    public boolean containsAnyElementsIn(Iterable<? extends E> collection) {
+    public boolean containsAny(Iterable<? extends E> collection) {
         logger.entry(collection);
         boolean result = false;
         for (E element : collection) {
@@ -126,7 +118,7 @@ public abstract class Collection<E> extends SmartObject<Collection<E>>
 
 
     @Override
-    public boolean containsAllElementsIn(Iterable<? extends E> collection) {
+    public boolean containsAll(Iterable<? extends E> collection) {
         logger.entry(collection);
         boolean result = false;
         for (E element : collection) {
@@ -143,28 +135,19 @@ public abstract class Collection<E> extends SmartObject<Collection<E>>
     public E[] toArray() {
         logger.entry();
         E[] array = (E[]) new Object[0];  // OK to use type Object array since it is empty
-        int size = this.getNumberOfElements();
+        int size = this.getSize();
         if (size > 0) {
             // Requires a TOTAL HACK since we cannot instantiate a parameterized array explicitly!
-            Iterator<E> iterator = createDefaultIterator();
-            E template = iterator.getNextElement();  // we know there must be at least one element
+            Iterator<E> iterator = createIterator();
+            E template = iterator.getNext();  // we know there must be at least one element
             array = (E[]) Array.newInstance(template.getClass(), size);
             array[0] = template;  // copy in the first element
             for (int index = 1; index < size; index++) {
-                array[index] = iterator.getNextElement();  // copy the rest of the elements
+                array[index] = iterator.getNext();  // copy the rest of the elements
             }
         }
         logger.exit(array);
         return array;
-    }
-
-
-    @Override
-    public final Iterator<E> iterator() {
-        logger.entry();
-        Iterator<E> iterator = createDefaultIterator();
-        logger.exit(iterator);
-        return iterator;
     }
 
 
@@ -182,7 +165,7 @@ public abstract class Collection<E> extends SmartObject<Collection<E>>
      * @return The normalized [1..N] index.
      */
     protected final int normalizedIndex(int index) {
-        int size = getNumberOfElements();
+        int size = getSize();
         if (index < 0) index = index + size + 1;
         if (index < 1 || index > size) throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         return index;

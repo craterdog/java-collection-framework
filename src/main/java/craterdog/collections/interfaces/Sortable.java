@@ -9,8 +9,8 @@
  ************************************************************************/
 package craterdog.collections.interfaces;
 
-import craterdog.collections.abstractions.Manipulator;
 import craterdog.collections.abstractions.Sorter;
+import craterdog.core.Manipulator;
 import java.util.Comparator;
 
 
@@ -59,6 +59,6 @@ public interface Sortable<E> {
      *
      * @return The new manipulator.
      */
-    Manipulator<E> createDefaultManipulator();
+    Manipulator<E> createManipulator();
 
 }

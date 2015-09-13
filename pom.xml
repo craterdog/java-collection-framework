@@ -49,10 +49,16 @@
     </developers>
 
     <properties>
-        <java-smart-objects-version>3.7</java-smart-objects-version>
+        <java-core-interfaces-version>3.5</java-core-interfaces-version>
+        <java-smart-objects-version>3.9</java-smart-objects-version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.craterdog</groupId>
+            <artifactId>java-core-interfaces</artifactId>
+            <version>${java-core-interfaces-version}</version>
+        </dependency>
         <dependency>
             <groupId>com.craterdog</groupId>
             <artifactId>java-smart-objects</artifactId>
@@ -71,8 +77,9 @@
                          the difference between Java collections and Crater Dog collections. -->
                     <detectJavaApiLink>false</detectJavaApiLink>
                     <links>
-                        <link>http://craterdog.github.io/java-general-utilities/${java-general-utilities-version}/package-list</link>
-                        <link>http://craterdog.github.io/java-core-interfaces/${java-core-interfaces-version}/package-list</link>
+                        <link>http://craterdog.github.io/java-core-interfaces/latest</link>
+                        <link>http://craterdog.github.io/java-general-utilities/latest</link>
+                        <link>http://craterdog.github.io/java-smart-objects/latest</link>
                     </links>
                 </configuration>
             </plugin>

@@ -95,7 +95,7 @@ public final class Dictionary<V> extends Map<String, V> {
      * @param dictionary2 The second dictionary whose elements are to be added.
      * @return The resulting dictionary.
      */
-    static public <V> Dictionary<V> concatenate(Dictionary<V> dictionary1, Dictionary<V> dictionary2) {
+    static public <V> Dictionary<V> concatenation(Dictionary<V> dictionary1, Dictionary<V> dictionary2) {
         logger.entry(dictionary1, dictionary2);
         Dictionary<V> result = new Dictionary<>(dictionary1);
         result.addElements(dictionary2);
@@ -113,11 +113,11 @@ public final class Dictionary<V> extends Map<String, V> {
      * @param keys The set of keys for the associates to be saved.
      * @return The resulting dictionary.
      */
-    static public <V> Dictionary<V> reduce(Dictionary<V> dictionary, Set<String> keys) {
+    static public <V> Dictionary<V> reduction(Dictionary<V> dictionary, Set<String> keys) {
         logger.entry(dictionary, keys);
         Dictionary<V> result = new Dictionary<>();
         for (String key : keys) {
-            V value = dictionary.getValueForKey(key);
+            V value = dictionary.getValue(key);
             if (value != null) {
                 logger.debug("Associating key: {} with value: {}", key, value);
                 Association<String, V> association = new Association<>(key, value);

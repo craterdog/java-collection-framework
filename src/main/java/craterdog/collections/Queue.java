@@ -70,10 +70,10 @@ public class Queue<E> extends ClosedCollection<E> implements FIFO<E> {
 
 
     @Override
-    public final synchronized void addElementToTail(E element) throws InterruptedException {
+    public final synchronized void addElement(E element) throws InterruptedException {
         logger.entry();
         while (true) {  // do this in a loop in case there are spurious wakeups (see Object.wait() javadoc)
-            int size = list.getNumberOfElements();
+            int size = list.getSize();
             if (size < capacity) {
                 logger.debug("Adding the element: " + element);
                 list.addElement(element);
@@ -89,13 +89,13 @@ public class Queue<E> extends ClosedCollection<E> implements FIFO<E> {
 
 
     @Override
-    public final synchronized E removeElementFromHead() throws InterruptedException {
+    public final synchronized E removeElement() throws InterruptedException {
         logger.entry();
         E element = null;
         while (true) {  // do this in a loop in case there are spurious wakeups (see Object.wait() javadoc)
-            int size = list.getNumberOfElements();
+            int size = list.getSize();
             if (size > 0) {
-                element = list.removeElementAtIndex(1);
+                element = list.removeElement(1);
                 logger.debug("Removed the element: " + element);
                 notify();  // waiting addElement() calls
                 break;
@@ -110,12 +110,12 @@ public class Queue<E> extends ClosedCollection<E> implements FIFO<E> {
 
 
     @Override
-    public final synchronized E getHeadElement() {
+    public final synchronized E getHead() {
         logger.entry();
         E element = null;
-        int size = list.getNumberOfElements();
+        int size = list.getSize();
         if (size > 0) {
-            element = list.getElementAtIndex(1);
+            element = list.getElement(1);
         }
         logger.exit();
         return element;
