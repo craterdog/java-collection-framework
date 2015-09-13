@@ -49,7 +49,7 @@ public interface Associative<K, V> {
      * @param key The key for the value to be retrieved.
      * @return The value associated with the key.
      */
-    V getValueForKey(K key);
+    V getValue(K key);
 
     /**
      * This method associates in this collection a new value with a key.  If there is already
@@ -58,7 +58,7 @@ public interface Associative<K, V> {
      * @param key The key for the new value.
      * @param value The new value to be associated with the key.
      */
-    void associateKeyWithValue(K key, V value);
+    void setValue(K key, V value);
 
     /**
      * This method removes from this collection the value associated with a key.  If no value
@@ -67,6 +67,6 @@ public interface Associative<K, V> {
      * @param key The key for the value to be removed.
      * @return The value associated with the key.
      */
-    V removeValueForKey(K key);
+    V removeValue(K key);
 
 }

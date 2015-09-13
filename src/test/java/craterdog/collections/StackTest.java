@@ -56,7 +56,7 @@ public class StackTest {
 
         try {
             logger.info("  Attempting to access the top element of an empty stack...");
-            stack.getTopElement();
+            stack.getTop();
             fail("  An empty stack exception should have been thrown.");
         } catch (RuntimeException e) {
             logger.info("  Empty stack exception thrown.");
@@ -64,24 +64,24 @@ public class StackTest {
 
         logger.info("  Pushing elements onto the stack: {}", stack);
         for (int i = 1; i <= 5; i++) {
-            stack.pushElementOnTop(i);
-            int size = stack.getNumberOfElements();
+            stack.pushElement(i);
+            int size = stack.getSize();
             assertEquals("  The stack size is incorrect.", i, size);
-            int element = stack.getTopElement();
+            int element = stack.getTop();
             assertEquals("  The top element is incorrect.", i, element);
         }
 
         logger.info("  Popping elements off the stack: {}", stack);
         for (int i = 5; i >= 1; i--) {
-            int element = stack.popElementOffTop();
+            int element = stack.popElement();
             assertEquals("  The popped element is incorrect.", i, element);
-            int size = stack.getNumberOfElements();
+            int size = stack.getSize();
             assertEquals("  The stack size is incorrect.", i - 1, size);
         }
 
         try {
             logger.info("  Attempting to pop the top element off of an empty stack...");
-            stack.popElementOffTop();
+            stack.popElement();
             fail("  An empty stack exception should have been thrown.");
         } catch (RuntimeException e) {
             logger.info("  Empty stack exception thrown.");

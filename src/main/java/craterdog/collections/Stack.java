@@ -70,9 +70,9 @@ public class Stack<E> extends ClosedCollection<E> implements LIFO<E> {
 
 
     @Override
-    public final void pushElementOnTop(E element) {
+    public final void pushElement(E element) {
         logger.entry(element);
-        if (list.getNumberOfElements() < capacity) {
+        if (list.getSize() < capacity) {
             list.addElement(element);
         } else {
             IllegalStateException exception = new IllegalStateException("Attempted to push an element onto a full stack.");
@@ -84,12 +84,12 @@ public class Stack<E> extends ClosedCollection<E> implements LIFO<E> {
 
 
     @Override
-    public final E popElementOffTop() {
+    public final E popElement() {
         logger.entry();
         E element = null;
-        int size = list.getNumberOfElements();
+        int size = list.getSize();
         if (size > 0) {
-            element = list.removeElementAtIndex(size);
+            element = list.removeElement(size);
             logger.debug("The top element is: {}", element);
         } else {
             IllegalStateException exception = new IllegalStateException("Attempted to pop the top element of an empty stack.");
@@ -102,12 +102,12 @@ public class Stack<E> extends ClosedCollection<E> implements LIFO<E> {
 
 
     @Override
-    public final E getTopElement() {
+    public final E getTop() {
         logger.entry();
         E element = null;
-        int size = list.getNumberOfElements();
+        int size = list.getSize();
         if (size > 0) {
-            element = list.getElementAtIndex(size);
+            element = list.getElement(size);
             logger.debug("The top element is: {}", element);
         } else {
             IllegalStateException exception = new IllegalStateException("Attempted to access the top element of an empty stack.");

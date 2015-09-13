@@ -27,13 +27,13 @@ public class RandomSorter<E> extends Sorter<E> {
     @Override
     public void sortCollection(SortableCollection<E> collection, Comparator<? super E> comparator) {
         // see if any sorting is really required
-        if (collection != null && collection.getNumberOfElements() > 1) {
+        if (collection != null && collection.getSize() > 1) {
             if (collection instanceof Indexed) {
                 // randomize it in place
                 @SuppressWarnings("unchecked")
                 Indexed<E> indexedCollection = (Indexed<E>) collection;
-                int size = collection.getNumberOfElements();
-                randomizeIndexedCollection(indexedCollection, size);
+                int size = collection.getSize();
+                randomizeCollection(indexedCollection, size);
             } else {
                 // convert the collection to an array
                 E[] array = collection.toArray();
@@ -42,18 +42,18 @@ public class RandomSorter<E> extends Sorter<E> {
                 randomizeArray(array);
 
                 // convert it back to a collection
-                collection.removeAllElements();
+                collection.removeAll();
                 collection.addElements(array);
             }
         }
     }
 
-    private void randomizeIndexedCollection(Indexed<E> indexedCollection, int size) {
+    private void randomizeCollection(Indexed<E> indexedCollection, int size) {
         for (int index = size; index > 1; index--) {
             int randomIndex = RandomUtils.pickRandomIndex(index) + 1;  // use ordinal based indexing
-            E swap = indexedCollection.getElementAtIndex(index);
-            swap = indexedCollection.replaceElementAtIndex(swap, randomIndex);
-            indexedCollection.replaceElementAtIndex(swap, index);
+            E swap = indexedCollection.getElement(index);
+            swap = indexedCollection.replaceElement(swap, randomIndex);
+            indexedCollection.replaceElement(swap, index);
         }
     }
 

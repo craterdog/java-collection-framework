@@ -85,7 +85,7 @@ public class MapTest {
         logger.info("  The empty map is: {}", actual);
 
         Map<String, Integer> tinyMap = new Map<>();
-        tinyMap.associateKeyWithValue("singleton", 1);
+        tinyMap.setValue("singleton", 1);
         actual = tinyMap.toString();
         String expectedTiny =
                 "{\n" +
@@ -95,9 +95,9 @@ public class MapTest {
         logger.info("  The tiny map is: {}", actual);
 
         Map<String, Integer> smallMap = new Map<>();
-        smallMap.associateKeyWithValue("first", 1);
-        smallMap.associateKeyWithValue("second", 2);
-        smallMap.associateKeyWithValue("third", 3);
+        smallMap.setValue("first", 1);
+        smallMap.setValue("second", 2);
+        smallMap.setValue("third", 3);
         actual = smallMap.toString();
         String expectedSmall =
                 "{\n" +
@@ -111,11 +111,11 @@ public class MapTest {
         Integer[] array = { 1, 2, 3 };
         List<Integer> list = new List<>(array);
         Map<String, Object> compositeMap = new Map<>();
-        compositeMap.associateKeyWithValue("first", 1);
-        compositeMap.associateKeyWithValue("second", "B");
-        compositeMap.associateKeyWithValue("third", list);
-        compositeMap.associateKeyWithValue("fourth", smallMap);
-        compositeMap.associateKeyWithValue("fifth", emptyMap);
+        compositeMap.setValue("first", 1);
+        compositeMap.setValue("second", "B");
+        compositeMap.setValue("third", list);
+        compositeMap.setValue("fourth", smallMap);
+        compositeMap.setValue("fifth", emptyMap);
         actual = compositeMap.toString();
         String expectedComposite =
                 "{\n" +
@@ -152,7 +152,7 @@ public class MapTest {
         for (int i = 0; i < size; i++) {
             int key = keys[i];
             int value = values[i];
-            map.associateKeyWithValue(key, value);
+            map.setValue(key, value);
         }
 
         logger.info("  Checking the keys are in the right order...");
@@ -165,7 +165,7 @@ public class MapTest {
 
         logger.info("  Checking the associations are correct and in the right order...");
         Accessible<Association<Integer, Integer>> associations = map.getAssociations();
-        Iterator<Association<Integer, Integer>> iterator = associations.createDefaultIterator();
+        Iterator<Association<Integer, Integer>> iterator = associations.createIterator();
         for (int i = 0; i < size && iterator.hasNext(); i++) {
             Association<Integer, Integer> association = iterator.next();
             Integer key = keys[i];
@@ -175,15 +175,15 @@ public class MapTest {
         }
 
         logger.info("  Retrieving the value for a key...");
-        Integer value = map.getValueForKey(5);
+        Integer value = map.getValue(5);
         assertEquals(new Integer(3), value);
 
         logger.info("  Removing the value for a key...");
-        value = map.removeValueForKey(2);
+        value = map.removeValue(2);
         assertEquals(new Integer(8), value);
 
         logger.info("  Attempting to retrieve the value of a nonexistent key...");
-        value = map.getValueForKey(12);
+        value = map.getValue(12);
         assertNull(value);
 
         logger.info("Completed testMap().\n");
@@ -246,14 +246,14 @@ public class MapTest {
         for (int j = 0; j < 100; j++) {
 
             logger.debug("  Adding random elements to the collection...");
-            int size = collection.getNumberOfElements();
+            int size = collection.getSize();
             assert collection.isEmpty() || size > 0;
             for (int i = 0; i < 100; i++) {
                 int value = generator.nextInt(10);
                 Association<Integer, Integer> association = new Association<>(value, value);
                 if (collection.addElement(association)) size++;
             }
-            assert collection.getNumberOfElements() == size;
+            assert collection.getSize() == size;
 
             logger.debug("  Looking for subsets of the collection...");
             Association<Integer, Integer> a1 = new Association<>(1, 1);
@@ -265,8 +265,8 @@ public class MapTest {
             possibles[1] = a2;
             possibles[2] = a3;
             Collection<Association<Integer, Integer>> elements = new List<>(possibles);
-            collection.containsAnyElementsIn(elements);
-            collection.containsAllElementsIn(elements);
+            collection.containsAny(elements);
+            collection.containsAll(elements);
 
             logger.debug("  Adding multiple elements to the collection...");
             size += collection.addElements(elements);
@@ -279,7 +279,7 @@ public class MapTest {
             array[1] = a2;
             array[2] = a3;
             size += collection.addElements(array);
-            assert collection.getNumberOfElements() == size;
+            assert collection.getSize() == size;
 
             logger.debug("  Performing random searches on the collection...");
             for (int i = 0; i < 10; i++) {
@@ -289,14 +289,14 @@ public class MapTest {
             }
 
             logger.debug("  Iterating over the elements in the collection in order...");
-            Iterator<Association<Integer, Integer>> iterator = collection.createDefaultIterator();
+            Iterator<Association<Integer, Integer>> iterator = collection.createIterator();
             while (iterator.hasNext()) {
-                iterator.getNextElement();
+                iterator.getNext();
             }
 
             logger.debug("  Iterating over the elements in the collection in reverse order...");
-            while (iterator.hasPreviousElement()) {
-                iterator.getPreviousElement();
+            while (iterator.hasPrevious()) {
+                iterator.getPrevious();
             }
 
             logger.debug("  Removing random elements from the collection...");
@@ -305,17 +305,17 @@ public class MapTest {
                 Association<Integer, Integer> association = new Association<>(value, value);
                 if (collection.removeElement(association)) size--;
             }
-            assert size == collection.getNumberOfElements();
+            assert size == collection.getSize();
 
             logger.debug("  Removing multiple elements from the collection...");
             size -= collection.removeElements(array);
             size -= collection.removeElements(elements);
-            assert collection.getNumberOfElements() == size;
+            assert collection.getSize() == size;
 
         }
 
         logger.debug("  Removing all the elements from the collection...");
-        collection.removeAllElements();
+        collection.removeAll();
 
         long stopInMillis = System.currentTimeMillis();
         long durationInMillis = stopInMillis - startInMillis;

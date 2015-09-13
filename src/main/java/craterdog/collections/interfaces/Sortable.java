@@ -59,6 +59,6 @@ public interface Sortable<E> {
      *
      * @return The new manipulator.
      */
-    Manipulator<E> createDefaultManipulator();
+    Manipulator<E> createManipulator();
 
 }

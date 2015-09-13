@@ -25,7 +25,7 @@ public interface LIFO<E> {
      *
      * @param element The new element to be added.
      */
-    void pushElementOnTop(E element);
+    void pushElement(E element);
 
     /**
      * This method pops the top element off of the stack.  If the stack is empty
@@ -33,7 +33,7 @@ public interface LIFO<E> {
      *
      * @return The top element from the stack.
      */
-    E popElementOffTop();
+    E popElement();
 
     /**
      * This method returns a reference to the top element on the stack without
@@ -41,6 +41,6 @@ public interface LIFO<E> {
      *
      * @return The top element on the stack.
      */
-    E getTopElement();
+    E getTop();
 
 }

@@ -140,7 +140,7 @@ public class ListTest {
         int size = values.length;
         for (int i = 0; i < size; i++) {
             int value = values[i];
-            list.insertElementBeforeIndex(value, 1);
+            list.insertElement(value, 1);
         }
 
         logger.info("  Checking the values are in the right order...");
@@ -149,26 +149,26 @@ public class ListTest {
 
         logger.info("  Inserting a list of values...");
         List<Integer> additionalValues = new List<>(values);
-        list.insertElementsBeforeIndex(additionalValues, 1);
+        list.insertElements(additionalValues, 1);
 
         logger.info("  Performing random accesses on the collection...");
         for (int i = 0; i < 7; i++) {
             int index = generator.nextInt(size) + 1;  // convert to unit based index
-            list.getElementAtIndex(index);
+            list.getElement(index);
             int first = generator.nextInt(size) + 1;  // convert to unit based index
             int last = first + generator.nextInt(size - first + 1);
-            list.getElementsInRange(first, last);
+            list.getElements(first, last);
         }
 
         logger.info("  Replacing a value...");
-        list.replaceElementAtIndex(9, 9);
-        assertEquals(new Integer(9), list.getElementAtIndex(9));
+        list.replaceElement(9, 9);
+        assertEquals(new Integer(9), list.getElement(9));
 
         logger.info("  Removing elements in a range...");
-        list.removeElementsInRange(8, 14);
+        list.removeElements(8, 14);
 
         logger.info("  Removing elements at an index...");
-        list.removeElementAtIndex(size + 1);
+        list.removeElement(size + 1);
         listValues = list.toArray();
         assertArrayEquals(values, listValues);
 
@@ -257,27 +257,27 @@ public class ListTest {
         list.addElements(original);
 
         logger.info("  Testing the insertion of an element...");
-        list.insertElementBeforeIndex(0, 1);
-        Assert.assertEquals("  The inserted element is not correct.", 0, (int) list.getElementAtIndex(1));
+        list.insertElement(0, 1);
+        Assert.assertEquals("  The inserted element is not correct.", 0, (int) list.getElement(1));
 
         logger.info("  Testing the insertion of a collection of elements...");
         Integer[] negatives = { -3, -2, -1 };
         List<Integer> negativesList = new List<>(negatives);
-        list.insertElementsBeforeIndex(negativesList, 1);
+        list.insertElements(negativesList, 1);
         Integer[] fullList = { -3, -2, -1, 0, 1, 2, 3, 4, 5 };
         Integer[] elements = list.toArray();
         Assert.assertArrayEquals(fullList, elements);
 
         logger.info("  Testing the replacement of an element...");
-        int value = list.replaceElementAtIndex(7, 4);
+        int value = list.replaceElement(7, 4);
         Assert.assertEquals("  The replaced element is not correct.", 0, value);
 
         logger.info("  Testing the removal of an element...");
-        value = list.removeElementAtIndex(4);
+        value = list.removeElement(4);
         Assert.assertEquals("  The removed element is not correct.", 7, value);
 
         logger.info("  Testing the removal of a collection of elements...");
-        list.removeElementsInRange(1, 3);
+        list.removeElements(1, 3);
         elements = list.toArray();
         Assert.assertArrayEquals(original, elements);
 

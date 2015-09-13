@@ -29,7 +29,7 @@ public interface FIFO<E> {
      * @throws java.lang.InterruptedException The thread that was waiting to add an element
      * was interrupted.
      */
-    void addElementToTail(E element) throws InterruptedException;
+    void addElement(E element) throws InterruptedException;
 
     /**
      * This method removes the next element from the head of the queue.  If
@@ -39,7 +39,7 @@ public interface FIFO<E> {
      * @throws java.lang.InterruptedException The thread that was waiting to remove an element
      * was interrupted.
      */
-    E removeElementFromHead() throws InterruptedException;
+    E removeElement() throws InterruptedException;
 
     /**
      * This method returns a reference to the element at the head of the queue
@@ -47,6 +47,6 @@ public interface FIFO<E> {
      *
      * @return The head element in the queue, or null if the queue is empty.
      */
-    E getHeadElement();
+    E getHead();
 
 }

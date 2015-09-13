@@ -172,55 +172,55 @@ public class CollectionExamplesTest {
 
         // Retrieve an element from the list
         int index = 6;
-        int element = list.getElementAtIndex(index);
+        int element = list.getElement(index);
         assert element == 8;
         logger.info("The sixth element in {} is {}", list, element);
 
         // Retrieve a range of elements from the list
-        List<Integer> sublist = list.getElementsInRange(2, 4);
+        List<Integer> sublist = list.getElements(2, 4);
         logger.info("The elements from {} in the index range [2..4] are {}", list, sublist);
 
         // Lookup the index of the first matching element in the list
         element = 1;
-        index = list.getIndexOfElement(element);  // finds the first instance of the element
+        index = list.getIndex(element);  // finds the first instance of the element
         assert index == 1;
         logger.info("The index of the first element in {} with value 1 is {}", list, index);
 
         // Append an element to the list
-        element = list.getElementAtIndex(-1) + list.getElementAtIndex(-2);  // add the last two
+        element = list.getElement(-1) + list.getElement(-2);  // add the last two
         list.addElement(element);
         logger.info("Appended a new fibonacci number to the list: {}", list);
 
         // Replace the last element in the list
         element = 144;
         index = -1;  // last element
-        list.replaceElementAtIndex(element, index);
+        list.replaceElement(element, index);
         logger.info("Replaced the last element with 144: {}", list);
 
         // Insert an element at the beginning of the list
         element = 0;
         index = 1;
-        list.insertElementBeforeIndex(element, index);
-        assert list.getElementAtIndex(index) == element;
+        list.insertElement(element, index);
+        assert list.getElement(index) == element;
         logger.info("Inserted zero as the first element in the list: {}", list);
 
         // Insert new elements before the tenth element in the list
         index = 10;
         Integer[] moreFibs = { 34, 55, 89 };
         sublist = new List<>(moreFibs);
-        list.insertElementsBeforeIndex(sublist, index);
-        assert list.getElementAtIndex(index).equals(sublist.getElementAtIndex(1));
+        list.insertElements(sublist, index);
+        assert list.getElement(index).equals(sublist.getElement(1));
         logger.info("Inserted {} before the tenth element: {}", sublist, list);
 
         // Remove the first element from the list
         index = 1;
         element = 0;
-        assert element == list.removeElementAtIndex(index);
+        assert element == list.removeElement(index);
         logger.info("Removed the first element from the list: {}", list);
 
         // Remove the last four elements from the list
         sublist.addElement(144);
-        List<Integer> removedElements = list.removeElementsInRange(-1, -4);
+        List<Integer> removedElements = list.removeElements(-1, -4);
         assert sublist.equals(removedElements);
         logger.info("Removed {} from the list: {}", removedElements, list);
 
@@ -242,7 +242,7 @@ public class CollectionExamplesTest {
         logger.info("A dictionary of numbers: {}", dictionary);
 
         // Add a new association
-        dictionary.associateKeyWithValue("alpha", 1);
+        dictionary.setValue("alpha", 1);
         logger.info("Appended a \"alpha-1\" key-value pair: {}", dictionary);
 
         // Sort the dictionary
@@ -250,11 +250,11 @@ public class CollectionExamplesTest {
         logger.info("The list now sorted: {}", dictionary);
 
         // Retrieve the value for a key
-        int value = dictionary.getValueForKey("charlie");
+        int value = dictionary.getValue("charlie");
         logger.info("The value for key \"charlie\" is: {}", value);
 
         // Remove an association
-        dictionary.removeValueForKey("charlie");
+        dictionary.removeValue("charlie");
         logger.info("With the value for key \"charlie\" removed: {}", dictionary);
 
         logger.info("Completed testDictionaryCodeExamples().\n");
@@ -275,15 +275,15 @@ public class CollectionExamplesTest {
 
         // Add some closing stock prices to it
         URL apple = new URL("http://apple.com");
-        stocks.associateKeyWithValue(apple, 112.40);
+        stocks.setValue(apple, 112.40);
         URL google = new URL("http://google.com");
-        stocks.associateKeyWithValue(google, 526.98);
+        stocks.setValue(google, 526.98);
         URL amazon = new URL("http://amazon.com");
-        stocks.associateKeyWithValue(amazon, 306.64);
+        stocks.setValue(amazon, 306.64);
         logger.info("Add some closing stock prices: {}", stocks);
 
         // Retrieve the closing price for Google
-        double price = stocks.getValueForKey(google);
+        double price = stocks.getValue(google);
         logger.info("Google's closing stock price is {}", price);
 
         // Sort the stock prices by company URL
@@ -307,35 +307,35 @@ public class CollectionExamplesTest {
 
         // Push a rock onto it
         String rock = "rock";
-        stack.pushElementOnTop(rock);
-        assert stack.getTopElement().equals(rock);
+        stack.pushElement(rock);
+        assert stack.getTop().equals(rock);
         logger.info("Push a rock on it: {}", stack);
 
         // Push paper onto it
         String paper = "paper";
-        stack.pushElementOnTop(paper);
-        assert stack.getTopElement().equals(paper);
+        stack.pushElement(paper);
+        assert stack.getTop().equals(paper);
         logger.info("Push paper on it: {}", stack);
 
         // Push scissors onto it
         String scissors = "scissors";
-        stack.pushElementOnTop(scissors);
-        assert stack.getTopElement().equals(scissors);
-        assert stack.getNumberOfElements() == 3;
+        stack.pushElement(scissors);
+        assert stack.getTop().equals(scissors);
+        assert stack.getSize() == 3;
         logger.info("Push scissors on it: {}", stack);
 
         // Pop off the scissors
-        assert stack.popElementOffTop().equals(scissors);
-        assert stack.getNumberOfElements() == 2;
+        assert stack.popElement().equals(scissors);
+        assert stack.getSize() == 2;
         logger.info("Pop scissors from it: {}", stack);
 
         // Pop off the paper
-        assert stack.popElementOffTop().equals(paper);
-        assert stack.getNumberOfElements() == 1;
+        assert stack.popElement().equals(paper);
+        assert stack.getSize() == 1;
         logger.info("Pop paper from it: {}", stack);
 
         // Pop off the rock
-        assert stack.popElementOffTop().equals(rock);
+        assert stack.popElement().equals(rock);
         assert stack.isEmpty();
         logger.info("Pop rock from it: {}", stack);
 
@@ -383,7 +383,7 @@ public class CollectionExamplesTest {
             logger.info("  The producer thread has started...");
             try {
                 for (int i = 0; i < 100; i++) {
-                    queue.addElementToTail(i);
+                    queue.addElement(i);
                 }
             } catch (InterruptedException ex) {
                 logger.info("  The producer thread was interrupted.");
@@ -405,7 +405,7 @@ public class CollectionExamplesTest {
             logger.info("  A consumer thread has started...");
             try {
                 for (int i = 0; i < 50; i++) {
-                    queue.removeElementFromHead();
+                    queue.removeElement();
                 }
             } catch (InterruptedException ex) {
                 logger.info("  A consumer thread was interrupted.");

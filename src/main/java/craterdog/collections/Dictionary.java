@@ -117,7 +117,7 @@ public final class Dictionary<V> extends Map<String, V> {
         logger.entry(dictionary, keys);
         Dictionary<V> result = new Dictionary<>();
         for (String key : keys) {
-            V value = dictionary.getValueForKey(key);
+            V value = dictionary.getValue(key);
             if (value != null) {
                 logger.debug("Associating key: {} with value: {}", key, value);
                 Association<String, V> association = new Association<>(key, value);

@@ -40,7 +40,7 @@ public abstract class Manipulator<E> extends Iterator<E> {
      *
      * @return The removed next element.
      */
-    public abstract E removeNextElement();
+    public abstract E removeNext();
 
     /**
      * This method removes the element before the slot where the manipulator is currently
@@ -48,6 +48,6 @@ public abstract class Manipulator<E> extends Iterator<E> {
      *
      * @return The removed previous element.
      */
-    public abstract E removePreviousElement();
+    public abstract E removePrevious();
 
 }

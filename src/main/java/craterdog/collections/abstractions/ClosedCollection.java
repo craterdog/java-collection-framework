@@ -29,54 +29,54 @@ public abstract class ClosedCollection<E> extends Collection<E> {
 
 
     @Override
-    public Iterator<E> createDefaultIterator() {
+    public Iterator<E> createIterator() {
         logger.entry();
-        Iterator<E> iterator = list.createDefaultIterator();
+        Iterator<E> iterator = list.createIterator();
         logger.exit(iterator);
         return iterator;
     }
 
 
     @Override
-    public int getNumberOfElements() {
+    public int getSize() {
         logger.entry();
-        int count = list.getNumberOfElements();
+        int count = list.getSize();
         logger.exit(count);
         return count;
     }
 
 
     @Override
-    public E getElementAtIndex(int index) {
+    public E getElement(int index) {
         logger.entry(index);
-        E element = list.getElementAtIndex(index);
+        E element = list.getElement(index);
         logger.exit(element);
         return element;
     }
 
 
     @Override
-    public int getIndexOfElement(E element) {
+    public int getIndex(E element) {
         logger.entry(element);
-        int index = list.getIndexOfElement(element);
+        int index = list.getIndex(element);
         logger.exit(index);
         return index;
     }
 
 
     @Override
-    public Collection<E> getElementsInRange(int firstIndex, int lastIndex) {
+    public Collection<E> getElements(int firstIndex, int lastIndex) {
         logger.entry(firstIndex, lastIndex);
-        Collection<E> result = list.getElementsInRange(firstIndex, lastIndex);
+        Collection<E> result = list.getElements(firstIndex, lastIndex);
         logger.exit(result);
         return result;
     }
 
 
     @Override
-    public void removeAllElements() {
+    public void removeAll() {
         logger.entry();
-        list.removeAllElements();
+        list.removeAll();
         logger.exit();
     }
 

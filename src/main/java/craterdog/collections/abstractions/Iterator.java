@@ -35,7 +35,7 @@ public abstract class Iterator<E> implements java.util.Iterator<E> {
      * This method moves the iterator to just before the first element in this collection.
      * The next element to be returned will the first element in this collection.
      */
-    public abstract void goToStart();
+    public abstract void toStart();
 
     /**
      * This method moves the iterator to the slot just before the specified index.  The
@@ -43,13 +43,13 @@ public abstract class Iterator<E> implements java.util.Iterator<E> {
      *
      * @param index This index of element to be returned next by the iterator.
      */
-    public abstract void goToIndex(int index);
+    public abstract void toIndex(int index);
 
     /**
      * This method moves the iterator to the slot just past the last element in this
      * collection.  There is no next element that can be returned from this position.
      */
-    public abstract void goToEnd();
+    public abstract void toEnd();
 
     /**
      * This method determines if the iterator is currently pointing at a slot just after
@@ -59,7 +59,15 @@ public abstract class Iterator<E> implements java.util.Iterator<E> {
      * @return Whether or not there is an element just before the current position of
      * the iterator.
      */
-    public abstract boolean hasPreviousElement();
+    public abstract boolean hasPrevious();
+
+    /**
+     * This method returns the element before the slot where the iterator is currently
+     * pointing.  If the iterator is at the start of this collection an exception is thrown.
+     *
+     * @return The previous element in this collection.
+     */
+    public abstract E getPrevious();
 
     /**
      * This method determines if the iterator is currently pointing at a slot just before
@@ -69,7 +77,8 @@ public abstract class Iterator<E> implements java.util.Iterator<E> {
      * @return Whether or not there is an element just after the current position of
      * the iterator.
      */
-    public abstract boolean hasNextElement();
+    @Override
+    public abstract boolean hasNext();
 
     /**
      * This method returns the element after the slot where the iterator is currently
@@ -77,30 +86,15 @@ public abstract class Iterator<E> implements java.util.Iterator<E> {
      *
      * @return The next element in this collection.
      */
-    public abstract E getNextElement();
-
-    /**
-     * This method returns the element before the slot where the iterator is currently
-     * pointing.  If the iterator is at the start of this collection an exception is thrown.
-     *
-     * @return The previous element in this collection.
-     */
-    public abstract E getPreviousElement();
+    public abstract E getNext();
 
 
-    @Override
-    public final boolean hasNext() {
-        logger.entry();
-        boolean result = hasNextElement();
-        logger.exit();
-        return result;
-    }
-
+    // The following methods are here to support the java.util.Iterator<E> interface.
 
     @Override
     public final E next() {
         logger.entry();
-        E result = getNextElement();
+        E result = getNext();
         logger.exit();
         return result;
     }
@@ -111,8 +105,7 @@ public abstract class Iterator<E> implements java.util.Iterator<E> {
         logger.entry();
         UnsupportedOperationException exception =
                 new UnsupportedOperationException("Modifying a collection with an iterator is not allowed.");
-        logger.throwing(exception);
-        throw exception;
+        throw logger.throwing(exception);
     }
 
 }

@@ -28,7 +28,7 @@ public class MergeSorter<E> extends Sorter<E> {
     @Override
     public void sortCollection(SortableCollection<E> collection, Comparator<? super E> comparator) {
         // see if any sorting is needed
-        if (collection != null && collection.getNumberOfElements() > 1) {
+        if (collection != null && collection.getSize() > 1) {
 
             // make sure the comparator exists
             if (comparator == null) comparator = new NaturalComparator<>();
@@ -40,7 +40,7 @@ public class MergeSorter<E> extends Sorter<E> {
             sortArray(array, comparator);
 
             // convert it back to a collection
-            collection.removeAllElements();
+            collection.removeAll();
             collection.addElements(array);
 
         }

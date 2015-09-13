@@ -42,24 +42,24 @@ public class OpenCollectionTestUtils {
         for (int j = 0; j < 1000; j++) {
 
             logger.debug("  Adding random elements to the collection...");
-            int size = collection.getNumberOfElements();
+            int size = collection.getSize();
             assert collection.isEmpty() || size > 0;
             for (int i = 0; i < 1000; i++) {
                 //int value = generator.nextInt(100);
                 if (collection.addElement(i)) size++;
             }
-            assert collection.getNumberOfElements() == size;
+            assert collection.getSize() == size;
 
             logger.debug("  Looking for subsets of the collection...");
             Integer[] array = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
             Collection<Integer> elements = new List<>(array);
-            collection.containsAnyElementsIn(elements);
-            collection.containsAllElementsIn(elements);
+            collection.containsAny(elements);
+            collection.containsAll(elements);
 
             logger.debug("  Adding multiple elements to the collection...");
             size += collection.addElements(elements);
             size += collection.addElements(array);
-            assert collection.getNumberOfElements() == size;
+            assert collection.getSize() == size;
 
             logger.debug("  Performing random searches on the collection...");
             for (int i = 0; i < 1000; i++) {
@@ -68,14 +68,14 @@ public class OpenCollectionTestUtils {
             }
 
             logger.debug("  Iterating over the elements in the collection in order...");
-            Iterator<Integer> iterator = collection.createDefaultIterator();
+            Iterator<Integer> iterator = collection.createIterator();
             while (iterator.hasNext()) {
-                iterator.getNextElement();
+                iterator.getNext();
             }
 
             logger.debug("  Iterating over the elements in the collection in reverse order...");
-            while (iterator.hasPreviousElement()) {
-                iterator.getPreviousElement();
+            while (iterator.hasPrevious()) {
+                iterator.getPrevious();
             }
 
             logger.debug("  Removing random elements from the collection...");
@@ -83,17 +83,17 @@ public class OpenCollectionTestUtils {
                 int value = generator.nextInt(100);
                 if (collection.removeElement(value)) size--;
             }
-            assert size == collection.getNumberOfElements();
+            assert size == collection.getSize();
 
             logger.debug("  Removing multiple elements from the collection...");
             size -= collection.removeElements(array);
             size -= collection.removeElements(elements);
-            assert collection.getNumberOfElements() == size;
+            assert collection.getSize() == size;
 
         }
 
         logger.debug("  Removing all the elements from the collection...");
-        collection.removeAllElements();
+        collection.removeAll();
 
         long stopInMillis = System.currentTimeMillis();
         long durationInMillis = stopInMillis - startInMillis;
@@ -125,7 +125,7 @@ public class OpenCollectionTestUtils {
             logger.debug("  Looking for subsets of the collection...");
             Integer[] array = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
             java.util.Collection<Integer> elements = java.util.Arrays.asList(array);
-            //no similar method for "collection.containsAnyElementsIn(elements);" so fake it
+            //no similar method for "collection.containsAny(elements);" so fake it
             for (Integer integer : elements) {
                 if (collection.contains(integer)) break;
             }
