@@ -118,7 +118,7 @@ public class Bag<E> extends OrderedCollection<E> {
      * @param bag2 The second bag whose elements are to be added.
      * @return The resulting bag.
      */
-    static public <E> Bag<E> aggregation(Bag<E> bag1, Bag<E> bag2) {
+    static public <E> Bag<E> aggregate(Bag<E> bag1, Bag<E> bag2) {
         logger.entry(bag1, bag2);
         Bag<E> result = new Bag<>(bag1);
         result.addElements(bag2);

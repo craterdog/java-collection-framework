@@ -68,12 +68,12 @@ public class CollectionExamplesTest {
         Bag<Integer> thirdBag = new Bag<>(third);
 
         // Merge a bag with the empty bag
-        Bag<Integer> bag = Bag.aggregation(emptyBag, firstBag);
+        Bag<Integer> bag = Bag.aggregate(emptyBag, firstBag);
         assert bag.equals(firstBag);
         logger.info("{} merged with {} yields {}", emptyBag, firstBag, bag);
 
         // Merge two bags with items in them
-        bag = Bag.aggregation(firstBag, secondBag);
+        bag = Bag.aggregate(firstBag, secondBag);
         assert bag.equals(thirdBag);
         logger.info("{} merged with {} yields {}", firstBag, secondBag, bag);
 
