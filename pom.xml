@@ -15,7 +15,7 @@
     <parent>
         <groupId>com.craterdog.maven-parent-poms</groupId>
         <artifactId>java-pojo</artifactId>
-        <version>3.12</version>
+        <version>3.17</version>
     </parent>
 
     <organization>
@@ -49,8 +49,8 @@
     </developers>
 
     <properties>
-        <java-core-interfaces-version>3.5</java-core-interfaces-version>
-        <java-smart-objects-version>3.9</java-smart-objects-version>
+        <java-core-interfaces-version>3.6</java-core-interfaces-version>
+        <java-smart-objects-version>3.10</java-smart-objects-version>
     </properties>
 
     <dependencies>
@@ -66,25 +66,34 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>${maven-javadoc-plugin-version}</version>
-                <configuration>
-                    <!-- disable java.lang.* and java.util.* links for this project only to highlight
-                         the difference between Java collections and Crater Dog collections. -->
-                    <detectJavaApiLink>false</detectJavaApiLink>
-                    <links>
-                        <link>http://craterdog.github.io/java-core-interfaces/latest</link>
-                        <link>http://craterdog.github.io/java-general-utilities/latest</link>
-                        <link>http://craterdog.github.io/java-smart-objects/latest</link>
-                    </links>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+    <profiles>
+        <!--
+        This profile should be used when doing final verification prior to releasing a maven
+        project.  This profile can be activated by including "-P verify" on the commandline.
+        -->
+        <profile>
+            <id>verify</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>${maven-javadoc-plugin-version}</version>
+                        <configuration>
+                            <!-- disable java.lang.* and java.util.* links for this project only to highlight
+                                 the difference between Java collections and Crater Dog collections. -->
+                            <detectJavaApiLink>false</detectJavaApiLink>
+                            <links>
+                                <link>http://craterdog.github.io/java-core-interfaces/latest</link>
+                                <link>http://craterdog.github.io/java-general-utilities/latest</link>
+                                <link>http://craterdog.github.io/java-smart-objects/latest</link>
+                            </links>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <scm>
         <connection>scm:git:git@github.com:craterdog/java-collection-framework.git</connection>
