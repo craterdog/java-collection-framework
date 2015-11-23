@@ -13,7 +13,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import craterdog.collections.abstractions.OpenCollectionTestUtils;
 import craterdog.primitives.Tag;
 import craterdog.smart.SmartObject;
-import craterdog.smart.SmartObjectMapper;
 import java.io.IOException;
 import java.util.Random;
 import org.junit.AfterClass;
@@ -314,7 +313,6 @@ public class ListTest {
     @Test
     public void testMapper() throws IOException {
         logger.info("Beginning testMapper()...");
-        SmartObjectMapper mapper = new SmartObjectMapper();
         List<Tag> list = new List<>();
         list.addElement(new Tag());
         list.addElement(new Tag());
@@ -323,11 +321,11 @@ public class ListTest {
         list.addElement(new Tag());
 
         logger.info("  Converting a list of tags to JSON...");
-        String jsonRepresentation = mapper.writeValueAsString(list);
+        String jsonRepresentation = SmartObject.toString(list);
         logger.info("JSON string: {}", jsonRepresentation);
 
         logger.info("  Converting the JSON back to the list...");
-        List<Tag> copy = mapper.readValue(jsonRepresentation, new TypeReference<List<Tag>>() { });
+        List<Tag> copy = SmartObject.fromString(new TypeReference<List<Tag>>() { }, jsonRepresentation);
         assertEquals(list, copy);
 
         logger.info("Completed testMapper().\n");
