@@ -9,7 +9,6 @@
  ************************************************************************/
 package craterdog.collections.abstractions;
 
-import craterdog.collections.interfaces.Dynamic;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 
@@ -21,12 +20,28 @@ import org.slf4j.ext.XLoggerFactory;
  * @author Derk Norton
  * @param <E> The type of element managed by the collection.
  */
-public abstract class OpenCollection<E> extends Collection<E> implements Dynamic<E> {
+public abstract class OpenCollection<E> extends Collection<E> {
 
     static private final XLogger logger = XLoggerFactory.getXLogger(OpenCollection.class);
 
 
-    @Override
+    /**
+     * This method adds a new element to the collection.  If the collection
+     * is empty then the new element will be the first element in the collection.
+     *
+     * @param element The new element to be added.
+     * @return Whether or not the element was actually added to the collection.
+     */
+    public abstract boolean addElement(E element);
+
+
+    /**
+     * This method adds an array of new elements to the collection.  The new
+     * elements will be added in the order they appear in the specified array.
+     *
+     * @param elements The array of new elements to be added.
+     * @return The number of elements that were actually added to the collection.
+     */
     public int addElements(E[] elements) {
         logger.entry(elements);
         int count = 0;
@@ -38,7 +53,13 @@ public abstract class OpenCollection<E> extends Collection<E> implements Dynamic
     }
 
 
-    @Override
+    /**
+     * This method adds a list of new elements to the collection.  The new
+     * elements will be added in the order they appear in the specified collection.
+     *
+     * @param elements The list of new elements to be added.
+     * @return The number of elements that were actually added to the collection.
+     */
     public int addElements(Iterable<? extends E> elements) {
         logger.entry(elements);
         int count = 0;
@@ -50,7 +71,23 @@ public abstract class OpenCollection<E> extends Collection<E> implements Dynamic
     }
 
 
-    @Override
+    /**
+     * This method removes the specified element from the collection.  If the element
+     * is not found in the collection, no changes are made.
+     *
+     * @param element The element to be removed.
+     * @return Whether or not the element was found.
+     */
+    public abstract boolean removeElement(E element);
+
+
+    /**
+     * This method removes the elements in the specified array from the collection.
+     * The number of matching elements is returned.
+     *
+     * @param elements The array of elements to be removed from the collection.
+     * @return The number of elements that were actually removed.
+     */
     public int removeElements(E[] elements) {
         logger.entry(elements);
         int count = 0;
@@ -64,7 +101,13 @@ public abstract class OpenCollection<E> extends Collection<E> implements Dynamic
     }
 
 
-    @Override
+    /**
+     * This method removes the specified elements from the collection.  The number of
+     * matching elements is returned.
+     *
+     * @param elements The list of elements to be removed from the collection.
+     * @return The number of elements that were actually removed.
+     */
     public int removeElements(Iterable<? extends E> elements) {
         logger.entry(elements);
         int count = 0;

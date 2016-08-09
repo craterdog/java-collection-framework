@@ -10,9 +10,9 @@
 package craterdog.collections.abstractions;
 
 import craterdog.collections.List;
-import craterdog.collections.interfaces.Sortable;
 import craterdog.collections.primitives.MergeSorter;
 import craterdog.collections.primitives.RandomSorter;
+import craterdog.core.Manipulator;
 import craterdog.utils.NaturalComparator;
 import java.util.Comparator;
 import org.slf4j.ext.XLogger;
@@ -29,12 +29,14 @@ import org.slf4j.ext.XLoggerFactory;
  * @author Derk Norton
  * @param <E> The type of element managed by the collection.
  */
-public abstract class SortableCollection<E> extends OpenCollection<E> implements Sortable<E> {
+public abstract class SortableCollection<E> extends OpenCollection<E> {
 
     static private final XLogger logger = XLoggerFactory.getXLogger(SortableCollection.class);
 
 
-    @Override
+    /**
+     * This method shuffles the elements in the collection using a randomizing algorithm.
+     */
     public void shuffleElements() {
         logger.entry();
         Sorter<E> sorter = new RandomSorter<>();
@@ -43,7 +45,11 @@ public abstract class SortableCollection<E> extends OpenCollection<E> implements
     }
 
 
-    @Override
+    /**
+     * This method sorts the elements in the collection using the default (merge) sorting
+     * algorithm and the elements' <code>compareTo</code> method. It provides an easy way
+     * to sort a collection using its natural ordering.
+     */
     public void sortElements() {
         logger.entry();
         Sorter<E> sorter = new MergeSorter<>();
@@ -53,7 +59,12 @@ public abstract class SortableCollection<E> extends OpenCollection<E> implements
     }
 
 
-    @Override
+    /**
+     * This method sorts the elements in the collection using the default (merge) sorting
+     * algorithm and the specified comparison function.
+     *
+     * @param comparator The desired comparison function.
+     */
     public void sortElements(Comparator<? super E> comparator) {
         logger.entry(comparator);
         Sorter<E> sorter = new MergeSorter<>();
@@ -62,12 +73,26 @@ public abstract class SortableCollection<E> extends OpenCollection<E> implements
     }
 
 
-    @Override
+    /**
+     * This method sorts the elements in the collection using the specified sorting
+     * algorithm and the specified comparison function.
+     *
+     * @param sorter The desired sorting algorithm.
+     * @param comparator The desired comparison function.
+     */
     public void sortElements(Sorter<E> sorter, Comparator<? super E> comparator) {
         logger.entry(sorter, comparator);
         sorter.sortCollection(this, comparator);
         logger.exit();
     }
+
+
+    /**
+     * This method creates a new default manipulator for the collection.
+     *
+     * @return The new manipulator.
+     */
+    public abstract Manipulator<E> createManipulator();
 
 
     /**

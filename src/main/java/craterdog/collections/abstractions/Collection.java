@@ -9,13 +9,6 @@
  ************************************************************************/
 package craterdog.collections.abstractions;
 
-import craterdog.collections.interfaces.Accessible;
-import craterdog.core.Iterator;
-import craterdog.core.Sequential;
-import craterdog.smart.SmartObject;
-import craterdog.utils.NaturalComparator;
-import java.lang.reflect.Array;
-import java.util.Comparator;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 
@@ -26,75 +19,46 @@ import org.slf4j.ext.XLoggerFactory;
  * @author Derk Norton
  * @param <E> The type of element managed by the collection.
  */
-public abstract class Collection<E> extends SmartObject<Collection<E>>
-        implements Comparable<Collection<E>>, Accessible<E>, Sequential<E> {
+public abstract class Collection<E> extends Sequence<E> {
 
     static private final XLogger logger = XLoggerFactory.getXLogger(Collection.class);
 
 
-    @Override
-    public int hashCode() {
-        logger.entry();
-        int hash = 5;
-        for (E element : this) {
-            hash = 11 * hash + element.hashCode();
-        }
-        logger.exit(hash);
-        return hash;
-    }
+    /**
+     * This method return the index of the specified element, or zero if the element
+     * is not found.
+     *
+     * @param element The element to be checked for in the collection.
+     * @return The index of the element of zero if the element was not found.
+     */
+    public abstract int getIndex(E element);
 
 
-    @Override
-    public boolean equals(Object object) {
-        logger.entry(object);
-        boolean result = false;
-        if (object != null && getClass() == object.getClass()) {
-            @SuppressWarnings("unchecked")
-            final Collection<E> that = (Collection<E>) object;
-            if (this.getSize() == that.getSize()) {
-                result = true;  // so far anyway...
-                Iterator<E> thisIterator = this.createIterator();
-                Iterator<E> thatIterator = that.createIterator();
-                while (thisIterator.hasNext()) {
-                    E thisElement = thisIterator.getNext();
-                    E thatElement = thatIterator.getNext();
-                    if (!thisElement.equals(thatElement)) {
-                        result = false;  // oops, found a difference
-                        break;
-                    }
-                }
-            }
-        }
-        logger.exit(result);
-        return result;
-    }
+    /**
+     * This method returns the element at the specified index.
+     *
+     * @param index The index of the element to be returned.
+     * @return The element at the specified index.
+     */
+    public abstract E getElement(int index);
 
 
-    @Override
-    public int compareTo(Collection<E> that) {
-        logger.entry(that);
-        if (that == null) return 1;
-        if (this == that) return 0;  // same object
-        int result = 0;
-        Comparator<Object> comparator = new NaturalComparator<>();
-        Iterator<E> thisIterator = this.createIterator();
-        Iterator<E> thatIterator = that.createIterator();
-        while (thisIterator.hasNext() && thatIterator.hasNext()) {
-            E thisElement = thisIterator.getNext();
-            E thatElement = thatIterator.getNext();
-            result = comparator.compare(thisElement, thatElement);
-            if (result != 0) break;
-        }
-        if (result == 0) {
-            // same so far, check for different lengths
-            result = Integer.compare(this.getSize(), that.getSize());
-        }
-        logger.exit(result);
-        return result;
-    }
+    /**
+     * This method returns a collection of the elements in the specified index range.
+     *
+     * @param firstIndex The index of the first element to be returned.
+     * @param lastIndex the index of the last element to be returned.
+     * @return A collection of elements in the specified range.
+     */
+    public abstract Collection<E> getElements(int firstIndex, int lastIndex);
 
 
-    @Override
+    /**
+     * This method determines if an element is contained in the collection.
+     *
+     * @param element The element to be checked for in the collection.
+     * @return Whether or not the specified element is contained in the collection.
+     */
     public boolean containsElement(E element) {
         logger.entry(element);
         int index = getIndex(element);
@@ -104,11 +68,17 @@ public abstract class Collection<E> extends SmartObject<Collection<E>>
     }
 
 
-    @Override
-    public boolean containsAny(Iterable<? extends E> collection) {
-        logger.entry(collection);
+    /**
+     * This method determines whether any of the specified elements are contained in
+     * the collection.
+     *
+     * @param elements The elements to be checked for in the collection.
+     * @return Whether or not any of the specified elements are contained in the collection.
+     */
+    public boolean containsAny(Iterable<? extends E> elements) {
+        logger.entry(elements);
         boolean result = false;
-        for (E element : collection) {
+        for (E element : elements) {
             result = containsElement(element);
             if (result) break;
         }
@@ -117,11 +87,17 @@ public abstract class Collection<E> extends SmartObject<Collection<E>>
     }
 
 
-    @Override
-    public boolean containsAll(Iterable<? extends E> collection) {
-        logger.entry(collection);
+    /**
+     * This method determines whether all of the specified elements are contained in
+     * the collection.
+     *
+     * @param elements The elements to be checked for in the collection.
+     * @return Whether or not all of the specified elements are contained in the collection.
+     */
+    public boolean containsAll(Iterable<? extends E> elements) {
+        logger.entry(elements);
         boolean result = false;
-        for (E element : collection) {
+        for (E element : elements) {
             result = containsElement(element);
             if (!result) break;
         }
@@ -130,25 +106,10 @@ public abstract class Collection<E> extends SmartObject<Collection<E>>
     }
 
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public E[] toArray() {
-        logger.entry();
-        E[] array = (E[]) new Object[0];  // OK to use type Object array since it is empty
-        int size = this.getSize();
-        if (size > 0) {
-            // Requires a TOTAL HACK since we cannot instantiate a parameterized array explicitly!
-            Iterator<E> iterator = createIterator();
-            E template = iterator.getNext();  // we know there must be at least one element
-            array = (E[]) Array.newInstance(template.getClass(), size);
-            array[0] = template;  // copy in the first element
-            for (int index = 1; index < size; index++) {
-                array[index] = iterator.getNext();  // copy the rest of the elements
-            }
-        }
-        logger.exit(array);
-        return array;
-    }
+    /**
+     * This method removes all elements from the collection.
+     */
+    public abstract void removeAll();
 
 
     /**

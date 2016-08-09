@@ -11,7 +11,6 @@ package craterdog.collections;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 import craterdog.collections.abstractions.ClosedCollection;
-import craterdog.collections.interfaces.FIFO;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 
@@ -25,7 +24,7 @@ import org.slf4j.ext.XLoggerFactory;
  * @author Derk Norton
  * @param <E> The type of element managed by this collection.
  */
-public class Queue<E> extends ClosedCollection<E> implements FIFO<E> {
+public class Queue<E> extends ClosedCollection<E> {
 
     static private final XLogger logger = XLoggerFactory.getXLogger(Queue.class);
 
@@ -69,7 +68,15 @@ public class Queue<E> extends ClosedCollection<E> implements FIFO<E> {
     }
 
 
-    @Override
+    /**
+     * This method adds a new element to the tail of the queue.  If the queue
+     * is currently at capacity this method will block until the capacity
+     * drops.
+     *
+     * @param element The new element to be added.
+     * @throws java.lang.InterruptedException The thread that was waiting to add an element
+     * was interrupted.
+     */
     public final synchronized void addElement(E element) throws InterruptedException {
         logger.entry();
         while (true) {  // do this in a loop in case there are spurious wakeups (see Object.wait() javadoc)
@@ -88,7 +95,14 @@ public class Queue<E> extends ClosedCollection<E> implements FIFO<E> {
     }
 
 
-    @Override
+    /**
+     * This method removes the next element from the head of the queue.  If
+     * the queue is empty, the method blocks until an element is available.
+     *
+     * @return The head element in the queue.
+     * @throws java.lang.InterruptedException The thread that was waiting to remove an element
+     * was interrupted.
+     */
     public final synchronized E removeElement() throws InterruptedException {
         logger.entry();
         E element = null;
@@ -109,7 +123,12 @@ public class Queue<E> extends ClosedCollection<E> implements FIFO<E> {
     }
 
 
-    @Override
+    /**
+     * This method returns a reference to the element at the head of the queue
+     * without removing the element from the queue.
+     *
+     * @return The head element in the queue, or null if the queue is empty.
+     */
     public final synchronized E getHead() {
         logger.entry();
         E element = null;

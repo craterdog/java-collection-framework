@@ -11,7 +11,6 @@ package craterdog.collections;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 import craterdog.collections.abstractions.ClosedCollection;
-import craterdog.collections.interfaces.LIFO;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 
@@ -25,7 +24,7 @@ import org.slf4j.ext.XLoggerFactory;
  * @author Derk Norton
  * @param <E> The type of element managed by this collection.
  */
-public class Stack<E> extends ClosedCollection<E> implements LIFO<E> {
+public class Stack<E> extends ClosedCollection<E> {
 
     static private final XLogger logger = XLoggerFactory.getXLogger(Stack.class);
 
@@ -69,21 +68,29 @@ public class Stack<E> extends ClosedCollection<E> implements LIFO<E> {
     }
 
 
-    @Override
+    /**
+     * This method pushes a new element onto the top of the stack.
+     *
+     * @param element The new element to be added.
+     */
     public final void pushElement(E element) {
         logger.entry(element);
         if (list.getSize() < capacity) {
             list.addElement(element);
         } else {
             IllegalStateException exception = new IllegalStateException("Attempted to push an element onto a full stack.");
-            logger.throwing(exception);
-            throw exception;
+            throw logger.throwing(exception);
         }
         logger.exit();
     }
 
 
-    @Override
+    /**
+     * This method pops the top element off of the stack.  If the stack is empty
+     * an exception is thrown.
+     *
+     * @return The top element from the stack.
+     */
     public final E popElement() {
         logger.entry();
         E element = null;
@@ -93,15 +100,19 @@ public class Stack<E> extends ClosedCollection<E> implements LIFO<E> {
             logger.debug("The top element is: {}", element);
         } else {
             IllegalStateException exception = new IllegalStateException("Attempted to pop the top element of an empty stack.");
-            logger.throwing(exception);
-            throw exception;
+            throw logger.throwing(exception);
         }
         logger.exit();
         return element;
     }
 
 
-    @Override
+    /**
+     * This method returns a reference to the top element on the stack without
+     * removing it from the stack.  If the stack is empty an exception is thrown.
+     *
+     * @return The top element on the stack.
+     */
     public final E getTop() {
         logger.entry();
         E element = null;
@@ -111,8 +122,7 @@ public class Stack<E> extends ClosedCollection<E> implements LIFO<E> {
             logger.debug("The top element is: {}", element);
         } else {
             IllegalStateException exception = new IllegalStateException("Attempted to access the top element of an empty stack.");
-            logger.throwing(exception);
-            throw exception;
+            throw logger.throwing(exception);
         }
         logger.exit();
         return element;

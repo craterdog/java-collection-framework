@@ -13,7 +13,6 @@ import craterdog.collections.abstractions.Collection;
 import craterdog.collections.abstractions.OpenCollectionTestUtils;
 import craterdog.core.Iterator;
 import craterdog.collections.abstractions.OpenCollection;
-import craterdog.collections.interfaces.Accessible;
 import java.lang.reflect.Array;
 import java.util.Random;
 import org.junit.AfterClass;
@@ -164,7 +163,7 @@ public class MapTest {
         assertArrayEquals(values, mapValues);
 
         logger.info("  Checking the associations are correct and in the right order...");
-        Accessible<Association<Integer, Integer>> associations = map.getAssociations();
+        Collection<Association<Integer, Integer>> associations = map.getAssociations();
         Iterator<Association<Integer, Integer>> iterator = associations.createIterator();
         for (int i = 0; i < size && iterator.hasNext(); i++) {
             Association<Integer, Integer> association = iterator.next();

@@ -15,7 +15,6 @@ import craterdog.collections.abstractions.Collection;
 import craterdog.core.Iterator;
 import craterdog.core.Manipulator;
 import craterdog.collections.abstractions.SortableCollection;
-import craterdog.collections.interfaces.Indexed;
 import craterdog.collections.primitives.DynamicArray;
 import java.util.Arrays;
 import org.slf4j.ext.XLogger;
@@ -25,12 +24,19 @@ import org.slf4j.ext.XLoggerFactory;
 /**
  * This collection class implements a sortable list which performs very well for both inserts and
  * indexed lookups of its values.  The implementation dynamically scales up and down the size of
- * the underlying data structures as the number of associations changes over time.
+ * the underlying data structures as the number of associations changes over time. The indexing
+ * is unit based and allows positive indexes starting at the beginning of the collection or
+ * negative indexes starting at the end of the collection as follows:
+ * <pre>
+ *         1             2             3               N
+ *    [element 1] . [element 2] . [element 3] ... [element N]
+ *        -N          -(N-1)        -(N-2)            -1
+ * </pre>
  *
  * @author Derk Norton
  * @param <E> The type of element managed by the collection.
  */
-public class List<E> extends SortableCollection<E> implements Indexed<E> {
+public class List<E> extends SortableCollection<E> {
 
     static private final XLogger logger = XLoggerFactory.getXLogger(List.class);
 
@@ -118,15 +124,6 @@ public class List<E> extends SortableCollection<E> implements Indexed<E> {
 
 
     @Override
-    public Iterator<E> createIterator() {
-        logger.entry();
-        Iterator<E> iterator = new ListManipulator();
-        logger.exit(iterator);
-        return iterator;
-    }
-
-
-    @Override
     public final E getElement(int index) {
         logger.entry(index);
         index = normalizedIndex(index);
@@ -173,10 +170,104 @@ public class List<E> extends SortableCollection<E> implements Indexed<E> {
     }
 
 
+    /**
+     * This method inserts the specified element into the collection before the element
+     * associated with the specified index.
+     *
+     * @param element The new element to be inserted into the collection.
+     * @param index The index of the element before which the new element is to be inserted.
+     */
+    public final void insertElement(E element, int index) {
+        logger.entry(element, index);
+        index = normalizedIndex(index);
+        array.add(index - 1, element);  // convert to zero based indexing
+        logger.exit();
+    }
+
+
+    /**
+     * This method inserts the specified elements into the collection before the element
+     * associated with the specified index.  The new elements are inserted in the same
+     * order as they appear in the specified list.
+     *
+     * @param elements The new elements to be inserted into the collection.
+     * @param index The index of the element before which the new element is to be inserted.
+     */
+    public final void insertElements(Iterable<? extends E> elements, int index) {
+        logger.entry(elements, index);
+        index = normalizedIndex(index);
+        Manipulator<E> manipulator = createManipulator();
+        manipulator.toIndex(index);
+        for (E element : elements) {
+            logger.debug("Inserting element: {}", element);
+            manipulator.insertElement(element);
+        }
+        logger.exit();
+    }
+
+
+    /**
+     * This method replaces an existing element in the collection with a new one.  The new
+     * element replaces the existing element at the specified index.
+     *
+     * @param element The new element that will replace the existing one.
+     * @param index The index of the existing element.
+     *
+     * @return The element that was at the specified index.
+     */
+    public final E replaceElement(E element, int index) {
+        logger.entry(element, index);
+        index = normalizedIndex(index);
+        E result = array.set(index - 1, element);  // convert to zero based indexing
+        logger.exit(result);
+        return result;
+    }
+
+
+    /**
+     * This method removes from the collection the element associated with the specified
+     * index.
+     *
+     * @param index The index of the element to be removed.
+     * @return The element at the specified index.
+     */
+    public final E removeElement(int index) {
+        logger.entry(index);
+        index = normalizedIndex(index);
+        E result = array.remove(index - 1);  // convert to zero based indexing
+        logger.exit(result);
+        return result;
+    }
+
+
     @Override
     public final boolean removeElement(E element) {
         logger.entry(element);
         boolean result = array.remove(element);
+        logger.exit(result);
+        return result;
+    }
+
+
+    /**
+     * This method removes from the collection the elements associated with the specified
+     * index range.
+     *
+     * @param firstIndex The index of the first element to be removed.
+     * @param lastIndex The index of the last element to be removed.
+     * @return The list of the elements that were removed from the collection.
+     */
+    public final List<E> removeElements(int firstIndex, int lastIndex) {
+        logger.entry(firstIndex, lastIndex);
+        firstIndex = normalizedIndex(firstIndex);
+        lastIndex = normalizedIndex(lastIndex);
+        if (lastIndex < firstIndex) {
+            // handle the case where the indexes are backwards
+            int swap = firstIndex;
+            firstIndex = lastIndex;
+            lastIndex = swap;
+        }
+        List<E> result = new List<>(array.remove(firstIndex - 1, lastIndex));  // convert to zero based indexing
         logger.exit(result);
         return result;
     }
@@ -191,62 +282,11 @@ public class List<E> extends SortableCollection<E> implements Indexed<E> {
 
 
     @Override
-    public final void insertElement(E element, int index) {
-        logger.entry(element, index);
-        index = normalizedIndex(index);
-        array.add(index - 1, element);  // convert to zero based indexing
-        logger.exit();
-    }
-
-
-    @Override
-    public final void insertElements(Iterable<? extends E> elements, int index) {
-        logger.entry(elements, index);
-        index = normalizedIndex(index);
-        Manipulator<E> manipulator = createManipulator();
-        manipulator.toIndex(index);
-        for (E element : elements) {
-            logger.debug("Inserting element: {}", element);
-            manipulator.insertElement(element);
-        }
-        logger.exit();
-    }
-
-
-    @Override
-    public final E replaceElement(E element, int index) {
-        logger.entry(element, index);
-        index = normalizedIndex(index);
-        E result = array.set(index - 1, element);  // convert to zero based indexing
-        logger.exit(result);
-        return result;
-    }
-
-
-    @Override
-    public final E removeElement(int index) {
-        logger.entry(index);
-        index = normalizedIndex(index);
-        E result = array.remove(index - 1);  // convert to zero based indexing
-        logger.exit(result);
-        return result;
-    }
-
-
-    @Override
-    public final List<E> removeElements(int firstIndex, int lastIndex) {
-        logger.entry(firstIndex, lastIndex);
-        firstIndex = normalizedIndex(firstIndex);
-        lastIndex = normalizedIndex(lastIndex);
-        if (lastIndex < firstIndex) {
-            // handle the case where the indexes are backwards
-            int swap = firstIndex;
-            firstIndex = lastIndex;
-            lastIndex = swap;
-        }
-        List<E> result = new List<>(array.remove(firstIndex - 1, lastIndex));  // convert to zero based indexing
-        logger.exit(result);
-        return result;
+    public Iterator<E> createIterator() {
+        logger.entry();
+        Iterator<E> iterator = new ListManipulator();
+        logger.exit(iterator);
+        return iterator;
     }
 
 

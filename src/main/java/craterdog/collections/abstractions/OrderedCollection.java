@@ -11,7 +11,6 @@ package craterdog.collections.abstractions;
 
 import craterdog.core.Iterator;
 import craterdog.collections.Bag;
-import craterdog.collections.interfaces.Ordered;
 import craterdog.collections.primitives.RandomizedTree;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -28,7 +27,7 @@ import org.slf4j.ext.XLoggerFactory;
  * @author Derk Norton
  * @param <E> The type of element managed by this collection.
  */
-public abstract class OrderedCollection<E> extends OpenCollection<E> implements Ordered<E> {
+public abstract class OrderedCollection<E> extends OpenCollection<E> {
 
     static private final XLogger logger = XLoggerFactory.getXLogger(OrderedCollection.class);
 
@@ -200,7 +199,11 @@ public abstract class OrderedCollection<E> extends OpenCollection<E> implements 
     }
 
 
-    @Override
+    /**
+     * This method returns the comparator that is used to order the elements in this collection.
+     *
+     * @return The comparator that is used to order the elements in this collection.
+     */
     public Comparator<? super E> getComparator() {
         logger.entry();
         Comparator<? super E> comparator = tree.comparator();

@@ -10,7 +10,7 @@
 package craterdog.collections.primitives;
 
 import craterdog.collections.abstractions.*;
-import craterdog.collections.interfaces.Indexed;
+import craterdog.collections.List;
 import craterdog.utils.RandomUtils;
 import java.util.Comparator;
 
@@ -28,10 +28,10 @@ public class RandomSorter<E> extends Sorter<E> {
     public void sortCollection(SortableCollection<E> collection, Comparator<? super E> comparator) {
         // see if any sorting is really required
         if (collection != null && collection.getSize() > 1) {
-            if (collection instanceof Indexed) {
+            if (collection instanceof List) {
                 // randomize it in place
                 @SuppressWarnings("unchecked")
-                Indexed<E> indexedCollection = (Indexed<E>) collection;
+                List<E> indexedCollection = (List<E>) collection;
                 int size = collection.getSize();
                 randomizeCollection(indexedCollection, size);
             } else {
@@ -48,7 +48,7 @@ public class RandomSorter<E> extends Sorter<E> {
         }
     }
 
-    private void randomizeCollection(Indexed<E> indexedCollection, int size) {
+    private void randomizeCollection(List<E> indexedCollection, int size) {
         for (int index = size; index > 1; index--) {
             int randomIndex = RandomUtils.pickRandomIndex(index) + 1;  // use ordinal based indexing
             E swap = indexedCollection.getElement(index);

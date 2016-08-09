@@ -15,7 +15,6 @@ import craterdog.collections.abstractions.Collection;
 import craterdog.core.Iterator;
 import craterdog.core.Manipulator;
 import craterdog.collections.abstractions.SortableCollection;
-import craterdog.collections.interfaces.Associative;
 import craterdog.collections.primitives.HashTable;
 import craterdog.collections.primitives.Link;
 import org.slf4j.ext.XLogger;
@@ -32,7 +31,7 @@ import org.slf4j.ext.XLoggerFactory;
  * @param <K> The type of the key in the association.
  * @param <V> The type of the value in the association.
  */
-public class Map<K, V> extends SortableCollection<Association<K, V>> implements Associative<K, V> {
+public class Map<K, V> extends SortableCollection<Association<K, V>> {
 
     static private final XLogger logger = XLoggerFactory.getXLogger(Map.class);
 
@@ -272,7 +271,11 @@ public class Map<K, V> extends SortableCollection<Association<K, V>> implements 
     }
 
 
-    @Override
+    /**
+     * This method returns the list of keys for the associations in this collection.
+     *
+     * @return The keys for this collection.
+     */
     public final List<K> getKeys() {
         logger.entry();
         List<K> keys = new List<>();
@@ -288,7 +291,11 @@ public class Map<K, V> extends SortableCollection<Association<K, V>> implements 
     }
 
 
-    @Override
+    /**
+     * This method returns the list of values for the associations in this collection.
+     *
+     * @return The values for this collection.
+     */
     public final List<V> getValues() {
         logger.entry();
         List<V> values = new List<>();
@@ -304,7 +311,11 @@ public class Map<K, V> extends SortableCollection<Association<K, V>> implements 
     }
 
 
-    @Override
+    /**
+     * This method returns the list of associations between keys and values for this collection.
+     *
+     * @return A list of the key/value associations that make up this collection.
+     */
     public final List<Association<K, V>> getAssociations() {
         logger.entry();
         List<Association<K, V>> results = new List<>();
@@ -320,7 +331,12 @@ public class Map<K, V> extends SortableCollection<Association<K, V>> implements 
     }
 
 
-    @Override
+    /**
+     * This method returns the value associated with the specified key.
+     *
+     * @param key The key for the value to be retrieved.
+     * @return The value associated with the key.
+     */
     public final V getValue(K key) {
         logger.entry(key);
         V value = null;
@@ -334,7 +350,13 @@ public class Map<K, V> extends SortableCollection<Association<K, V>> implements 
     }
 
 
-    @Override
+    /**
+     * This method associates in this collection a new value with a key.  If there is already
+     * a value associated with the specified key, the new value replaces the old value.
+     *
+     * @param key The key for the new value.
+     * @param value The new value to be associated with the key.
+     */
     public final void setValue(K key, V value) {
         logger.entry(key, value);
         Link<Association<K, V>> link = indexes.get(key);
@@ -357,7 +379,13 @@ public class Map<K, V> extends SortableCollection<Association<K, V>> implements 
     }
 
 
-    @Override
+    /**
+     * This method removes from this collection the value associated with a key.  If no value
+     * is associated with the specified key then <code>null</code> is returned.
+     *
+     * @param key The key for the value to be removed.
+     * @return The value associated with the key.
+     */
     public final V removeValue(K key) {
         logger.entry(key);
         V value = null;
