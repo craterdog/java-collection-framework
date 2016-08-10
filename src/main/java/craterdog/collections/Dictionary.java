@@ -9,20 +9,22 @@
  ************************************************************************/
 package craterdog.collections;
 
+import craterdog.collections.abstractions.AssociativeCollection;
 import craterdog.collections.abstractions.Collection;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 
 
 /**
- * This collection class is a convenience class that implements a <code>Map</code> whose keys
- * are always of type <code>String</code>.  The implementation dynamically scales up and down
- * the size of the underlying data structures as the number elements changes over time.
+ * This collection class is a convenience class that implements an associative collection
+ * whose keys are always of type <code>String</code>.  The implementation dynamically
+ * scales up and down the size of the underlying data structures as the number elements
+ * changes over time.
  *
  * @author Derk Norton
  * @param <V> The type of the value in the association.
  */
-public final class Dictionary<V> extends Map<String, V> {
+public final class Dictionary<V> extends AssociativeCollection<String, V> {
 
     static private final XLogger logger = XLoggerFactory.getXLogger(Dictionary.class);
 
@@ -64,7 +66,7 @@ public final class Dictionary<V> extends Map<String, V> {
      *
      * @param elements The dictionary containing the key-value pairs to be mapped.
      */
-    public Dictionary(Map<String, V> elements) {
+    public Dictionary(AssociativeCollection<String, V> elements) {
         super(elements);
     }
 
