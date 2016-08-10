@@ -29,7 +29,7 @@
 
     <groupId>com.craterdog</groupId>
     <artifactId>java-collection-framework</artifactId>
-    <version>3.14-SNAPSHOT</version>
+    <version>3.14</version>
     <packaging>jar</packaging>
 
     <licenses>
@@ -99,7 +99,7 @@
         <connection>scm:git:git@github.com:craterdog/java-collection-framework.git</connection>
         <developerConnection>scm:git:git@github.com:craterdog/java-collection-framework.git</developerConnection>
         <url>git@github.com:craterdog/java-collection-framework.git</url>
-        <tag>HEAD</tag>
+        <tag>java-collection-framework-3.14</tag>
     </scm>
 
 </project>
