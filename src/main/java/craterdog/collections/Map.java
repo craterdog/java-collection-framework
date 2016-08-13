@@ -12,6 +12,7 @@ package craterdog.collections;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import craterdog.collections.abstractions.AssociativeCollection;
 import craterdog.collections.abstractions.Collection;
+import craterdog.collections.abstractions.OpenCollection;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 
@@ -84,9 +85,10 @@ public class Map<K, V> extends AssociativeCollection<K, V> {
 
 
     @Override
-    @SuppressWarnings("unchecked")
-    public Map<K, V> copy() {
-        return (Map<K, V>) super.copy();
+    protected <T extends OpenCollection<Association<K, V>>> T emptyCopy() {
+        @SuppressWarnings("unchecked")
+        T copy = (T) new Map<>();
+        return copy;
     }
 
 

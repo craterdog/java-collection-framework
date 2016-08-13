@@ -10,11 +10,14 @@
 package craterdog.collections.abstractions;
 
 import com.fasterxml.jackson.annotation.JsonValue;
-import craterdog.collections.*;
+import craterdog.collections.Association;
+import craterdog.collections.List;
 import craterdog.core.Iterator;
 import craterdog.core.Manipulator;
 import craterdog.collections.primitives.HashTable;
 import craterdog.collections.primitives.Link;
+import java.util.Map;
+import java.util.Objects;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 
@@ -34,7 +37,7 @@ public abstract class AssociativeCollection<K, V> extends SortableCollection<Ass
     static private final XLogger logger = XLoggerFactory.getXLogger(AssociativeCollection.class);
 
     // a hash table mapping each association key to its corresponding link in the linked list
-    private final HashTable<K, Link<Association<K, V>>> indexes = new HashTable<>();
+    private final Map<K, Link<Association<K, V>>> indexes = new HashTable<>();
 
     // a linked list containing the key value associations in their proper order
     private Link<Association<K, V>> associations = null;
@@ -155,18 +158,25 @@ public abstract class AssociativeCollection<K, V> extends SortableCollection<Ass
     @Override
     public final boolean containsElement(Association<K, V> element) {
         logger.entry();
-        boolean result = indexes.containsKey(element.key);
+        Link<Association<K, V>> link = indexes.get(element.key);
+        boolean result = link != null && Objects.equals(link.value.value, element.value);
         logger.exit(result);
         return result;
     }
 
 
     @Override
-    public Iterator<Association<K, V>> createIterator() {
-        logger.entry();
-        Iterator<Association<K, V>> result = new MapManipulator();
-        logger.exit(result);
-        return result;
+    public final int getIndex(Association<K, V> element) {
+        logger.entry(element);
+        int index = 0;
+        Iterator<Association<K, V>> iterator = createIterator();
+        while (iterator.hasNext()) {
+            Association<K, V> association = iterator.getNext();
+            index++;
+            if (Objects.equals(element, association)) break;
+        }
+        logger.exit(index);
+        return index;
     }
 
 
@@ -183,26 +193,12 @@ public abstract class AssociativeCollection<K, V> extends SortableCollection<Ass
 
 
     @Override
-    public final int getIndex(Association<K, V> element) {
-        logger.entry(element);
-        int index = 0;
-        Iterator<Association<K, V>> iterator = createIterator();
-        while (iterator.hasNext()) {
-            Association<K, V> association = iterator.getNext();
-            index++;
-            if (element.equals(association)) break;
-        }
-        logger.exit(index);
-        return index;
-    }
-
-
-    @Override
-    public final List<Association<K, V>> getElements(int firstIndex, int lastIndex) {
+    public final Collection<Association<K, V>> getElements(int firstIndex, int lastIndex) {
         logger.entry(firstIndex, lastIndex);
         firstIndex = normalizedIndex(firstIndex);
         lastIndex = normalizedIndex(lastIndex);
-        List<Association<K, V>> result = new List<>();
+        AssociativeCollection<K, V> result = emptyCopy();
+        result.removeAll();
         Iterator<Association<K, V>> iterator = createIterator();
         iterator.toIndex(firstIndex);
         int numberOfElements = lastIndex - firstIndex + 1;
@@ -251,75 +247,6 @@ public abstract class AssociativeCollection<K, V> extends SortableCollection<Ass
         indexes.clear();
         associations = null;
         logger.exit();
-    }
-
-
-    @Override
-    public Manipulator<Association<K, V>> createManipulator() {
-        logger.entry();
-        Manipulator<Association<K, V>> result = new MapManipulator();
-        logger.exit(result);
-        return result;
-    }
-
-
-    /**
-     * This method returns the list of keys for the associations in this collection.
-     *
-     * @return The keys for this collection.
-     */
-    public final List<K> getKeys() {
-        logger.entry();
-        List<K> keys = new List<>();
-        Link<Association<K, V>> link = associations;
-        for (int i = 0; i < indexes.size(); i++) {
-            K key = link.value.key;
-            logger.debug("Found key: {}", key);
-            keys.addElement(key);
-            link = link.next;
-        }
-        logger.exit(keys);
-        return keys;
-    }
-
-
-    /**
-     * This method returns the list of values for the associations in this collection.
-     *
-     * @return The values for this collection.
-     */
-    public final List<V> getValues() {
-        logger.entry();
-        List<V> values = new List<>();
-        Link<Association<K, V>> link = associations;
-        for (int i = 0; i < indexes.size(); i++) {
-            V value = link.value.value;
-            logger.debug("Found value: {}", value);
-            values.addElement(value);
-            link = link.next;
-        }
-        logger.exit(values);
-        return values;
-    }
-
-
-    /**
-     * This method returns the list of associations between keys and values for this collection.
-     *
-     * @return A list of the key/value associations that make up this collection.
-     */
-    public final List<Association<K, V>> getAssociations() {
-        logger.entry();
-        List<Association<K, V>> results = new List<>();
-        Link<Association<K, V>> link = associations;
-        for (int i = 0; i < indexes.size(); i++) {
-            Association<K, V> association = link.value;
-            logger.debug("Found association: {}", association);
-            results.addElement(association);
-            link = link.next;
-        }
-        logger.exit();
-        return results;
     }
 
 
@@ -396,6 +323,84 @@ public abstract class AssociativeCollection<K, V> extends SortableCollection<Ass
         }
         logger.exit(value);
         return value;
+    }
+
+
+    /**
+     * This method returns the list of keys for the associations in this collection.
+     *
+     * @return The keys for this collection.
+     */
+    public final SortableCollection<K> getKeys() {
+        logger.entry();
+        List<K> keys = new List<>();
+        Link<Association<K, V>> link = associations;
+        for (int i = 0; i < indexes.size(); i++) {
+            K key = link.value.key;
+            logger.debug("Found key: {}", key);
+            keys.addElement(key);
+            link = link.next;
+        }
+        logger.exit(keys);
+        return keys;
+    }
+
+
+    /**
+     * This method returns the list of values for the associations in this collection.
+     *
+     * @return The values for this collection.
+     */
+    public final SortableCollection<V> getValues() {
+        logger.entry();
+        List<V> values = new List<>();
+        Link<Association<K, V>> link = associations;
+        for (int i = 0; i < indexes.size(); i++) {
+            V value = link.value.value;
+            logger.debug("Found value: {}", value);
+            values.addElement(value);
+            link = link.next;
+        }
+        logger.exit(values);
+        return values;
+    }
+
+
+    /**
+     * This method returns the list of associations between keys and values for this collection.
+     *
+     * @return A list of the key/value associations that make up this collection.
+     */
+    public final SortableCollection<Association<K, V>> getAssociations() {
+        logger.entry();
+        List<Association<K, V>> results = new List<>();
+        Link<Association<K, V>> link = associations;
+        for (int i = 0; i < indexes.size(); i++) {
+            Association<K, V> association = link.value;
+            logger.debug("Found association: {}", association);
+            results.addElement(association);
+            link = link.next;
+        }
+        logger.exit();
+        return results;
+    }
+
+
+    @Override
+    public Iterator<Association<K, V>> createIterator() {
+        logger.entry();
+        Iterator<Association<K, V>> result = new MapManipulator();
+        logger.exit(result);
+        return result;
+    }
+
+
+    @Override
+    public Manipulator<Association<K, V>> createManipulator() {
+        logger.entry();
+        Manipulator<Association<K, V>> result = new MapManipulator();
+        logger.exit(result);
+        return result;
     }
 
 

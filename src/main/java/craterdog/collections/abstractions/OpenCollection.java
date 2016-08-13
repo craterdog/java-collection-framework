@@ -9,6 +9,7 @@
  ************************************************************************/
 package craterdog.collections.abstractions;
 
+import craterdog.core.Iterator;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 
@@ -23,6 +24,25 @@ import org.slf4j.ext.XLoggerFactory;
 public abstract class OpenCollection<E> extends Collection<E> {
 
     static private final XLogger logger = XLoggerFactory.getXLogger(OpenCollection.class);
+
+
+    @Override
+    public Collection<E> getElements(int firstIndex, int lastIndex) {
+        logger.entry(firstIndex, lastIndex);
+        firstIndex = normalizedIndex(firstIndex);
+        lastIndex = normalizedIndex(lastIndex);
+        OpenCollection<E> result = emptyCopy();
+        Iterator<E> iterator = createIterator();
+        iterator.toIndex(firstIndex);
+        int numberOfElements = lastIndex - firstIndex + 1;
+        while (numberOfElements-- > 0) {
+            E element = iterator.getNext();
+            logger.debug("Including element: {}", element);
+            result.addElement(element);
+        }
+        logger.exit(result);
+        return result;
+    }
 
 
     /**
@@ -119,5 +139,15 @@ public abstract class OpenCollection<E> extends Collection<E> {
         logger.exit(count);
         return count;
     }
+
+
+    /**
+     * This protected method must be implemented by all concrete open collections
+     * and pass back an empty concrete collection.
+     *
+     * @param <T> The concrete type of open collection.
+     * @return An empty concrete open collection.
+     */
+    protected abstract <T extends OpenCollection<E>> T emptyCopy();
 
 }

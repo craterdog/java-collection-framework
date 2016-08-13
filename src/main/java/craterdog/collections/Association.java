@@ -24,7 +24,7 @@ import org.slf4j.ext.XLoggerFactory;
  * @param <K> The type of the key in the association.
  * @param <V> The type of the value in the association.
  */
-public class Association<K, V> implements Comparable<Association<K, V>>, Composite {
+public class Association<K, V> implements Composite<Association<K, V>> {
 
     static private final XLogger logger = XLoggerFactory.getXLogger(Association.class);
 
@@ -103,7 +103,7 @@ public class Association<K, V> implements Comparable<Association<K, V>>, Composi
         builder.append(key);
         builder.append(": ");
         if (value instanceof Composite) {
-            Composite composite = (Composite) value;
+            Composite<?> composite = (Composite<?>) value;
             builder.append(composite.toString(indentation));
         } else {
             builder.append(value);
@@ -111,6 +111,14 @@ public class Association<K, V> implements Comparable<Association<K, V>>, Composi
         String string = builder.toString();
         logger.exit(string);
         return string;
+    }
+
+
+    @Override
+    public <T extends Composite<Association<K, V>>> T copy() {
+        @SuppressWarnings("unchecked")
+        T copy = (T) new Association<>(key, value);
+        return copy;
     }
 
 }

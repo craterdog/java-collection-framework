@@ -49,8 +49,8 @@
     </developers>
 
     <properties>
-        <java-core-interfaces-version>3.6</java-core-interfaces-version>
-        <java-smart-objects-version>3.13</java-smart-objects-version>
+        <java-core-interfaces-version>3.8-SNAPSHOT</java-core-interfaces-version>
+        <java-smart-objects-version>3.14-SNAPSHOT</java-smart-objects-version>
     </properties>
 
     <dependencies>

@@ -103,9 +103,10 @@ public class Bag<E> extends OrderedCollection<E> {
 
 
     @Override
-    @SuppressWarnings("unchecked")
-    public Bag<E> copy() {
-        return (Bag<E>) super.copy();
+    protected <T extends OpenCollection<E>> T emptyCopy() {
+        @SuppressWarnings("unchecked")
+        T copy = (T) new Bag<>();
+        return copy;
     }
 
 

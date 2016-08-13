@@ -10,7 +10,6 @@
 package craterdog.collections.abstractions;
 
 import craterdog.core.Iterator;
-import craterdog.collections.Bag;
 import craterdog.collections.primitives.RandomizedTree;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -159,7 +158,8 @@ public abstract class OrderedCollection<E> extends OpenCollection<E> {
         logger.entry(firstIndex, lastIndex);
         firstIndex = normalizedIndex(firstIndex);
         lastIndex = normalizedIndex(lastIndex);
-        Bag<E> result = new Bag<>();
+        OrderedCollection<E> result = copy();
+        result.removeAll();
         Iterator<E> iterator = createIterator();
         iterator.toIndex(firstIndex);
         int numberOfElements = lastIndex - firstIndex + 1;

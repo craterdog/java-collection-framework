@@ -9,7 +9,6 @@
  ************************************************************************/
 package craterdog.collections.abstractions;
 
-import craterdog.collections.List;
 import craterdog.collections.primitives.MergeSorter;
 import craterdog.collections.primitives.RandomSorter;
 import craterdog.core.Manipulator;
@@ -93,23 +92,5 @@ public abstract class SortableCollection<E> extends OpenCollection<E> {
      * @return The new manipulator.
      */
     public abstract Manipulator<E> createManipulator();
-
-
-    /**
-     * This method returns a new collection that is the concatenation of this collection with
-     * the specified collection.
-     *
-     * @param <E> The type of element contained in the collections.
-     * @param collection1 The first collection to be concatenated.
-     * @param collection2 The second collection to be concatenated.
-     * @return The resulting collection.
-     */
-    static public <E> SortableCollection<E> concatenate(SortableCollection<E> collection1, SortableCollection<E> collection2) {
-        logger.entry(collection1, collection2);
-        List<E> result = new List<>(collection1);
-        result.addElements(collection2);
-        logger.exit(result);
-        return result;
-    }
 
 }

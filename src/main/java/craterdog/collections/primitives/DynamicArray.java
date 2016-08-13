@@ -174,11 +174,8 @@ public final class DynamicArray<E> extends AbstractCollection<E> implements List
     public DynamicArray<E> remove(int firstIndex, int lastIndex) {
         int numberOfElements = lastIndex - firstIndex;
         DynamicArray<E> results = new DynamicArray<>(numberOfElements);
-        for (int i = firstIndex; i < lastIndex; i++) {
-            @SuppressWarnings("unchecked")
-            E element = (E) array[i];
-            results.add(element);
-        }
+        System.arraycopy(array, firstIndex, results.array, 0, numberOfElements);
+        results.size = numberOfElements;
         System.arraycopy(array, lastIndex, array, firstIndex, size - lastIndex);
         Arrays.fill(array, size - numberOfElements, size, null);
         size -= numberOfElements;

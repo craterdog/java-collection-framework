@@ -25,8 +25,7 @@ import org.slf4j.ext.XLoggerFactory;
  * @author Derk Norton
  * @param <E> The type of elements that are in the sequence.
  */
-public abstract class Sequence<E> extends SmartObject<Sequence<E>>
-        implements Comparable<Sequence<E>>, Sequential<E> {
+public abstract class Sequence<E> extends SmartObject<Sequence<E>> implements Sequential<E> {
 
     static private final XLogger logger = XLoggerFactory.getXLogger(Sequence.class);
 
@@ -111,6 +110,12 @@ public abstract class Sequence<E> extends SmartObject<Sequence<E>>
         }
         logger.exit(array);
         return array;
+    }
+
+
+    @Override
+    public Iterator<E> iterator() {
+        return createIterator();
     }
 
 }

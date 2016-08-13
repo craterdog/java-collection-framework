@@ -103,9 +103,10 @@ public class Set<E> extends OrderedCollection<E> {
 
 
     @Override
-    @SuppressWarnings("unchecked")
-    public Set<E> copy() {
-        return (Set<E>) super.copy();
+    protected <T extends OpenCollection<E>> T emptyCopy() {
+        @SuppressWarnings("unchecked")
+        T copy = (T) new Set<>();
+        return copy;
     }
 
 

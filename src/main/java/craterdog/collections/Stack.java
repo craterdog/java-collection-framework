@@ -61,13 +61,6 @@ public class Stack<E> extends ClosedCollection<E> {
     }
 
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public Stack<E> copy() {
-        return (Stack<E>) super.copy();
-    }
-
-
     /**
      * This method pushes a new element onto the top of the stack.
      *
@@ -75,8 +68,8 @@ public class Stack<E> extends ClosedCollection<E> {
      */
     public final void pushElement(E element) {
         logger.entry(element);
-        if (list.getSize() < capacity) {
-            list.addElement(element);
+        if (list.size() < capacity) {
+            list.add(element);
         } else {
             IllegalStateException exception = new IllegalStateException("Attempted to push an element onto a full stack.");
             throw logger.throwing(exception);
@@ -94,9 +87,9 @@ public class Stack<E> extends ClosedCollection<E> {
     public final E popElement() {
         logger.entry();
         E element = null;
-        int size = list.getSize();
+        int size = list.size();
         if (size > 0) {
-            element = list.removeElement(size);
+            element = list.remove(size - 1);  // change to zero based indexing
             logger.debug("The top element is: {}", element);
         } else {
             IllegalStateException exception = new IllegalStateException("Attempted to pop the top element of an empty stack.");
@@ -116,9 +109,9 @@ public class Stack<E> extends ClosedCollection<E> {
     public final E getTop() {
         logger.entry();
         E element = null;
-        int size = list.getSize();
+        int size = list.size();
         if (size > 0) {
-            element = list.getElement(size);
+            element = list.get(size - 1);  // change to zero based indexing
             logger.debug("The top element is: {}", element);
         } else {
             IllegalStateException exception = new IllegalStateException("Attempted to access the top element of an empty stack.");

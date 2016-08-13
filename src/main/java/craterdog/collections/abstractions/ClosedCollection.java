@@ -9,8 +9,9 @@
  ************************************************************************/
 package craterdog.collections.abstractions;
 
+import craterdog.collections.List;
+import craterdog.collections.primitives.LinkedList;
 import craterdog.core.Iterator;
-import craterdog.collections.*;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 
@@ -26,59 +27,65 @@ public abstract class ClosedCollection<E> extends Collection<E> {
 
     static private final XLogger logger = XLoggerFactory.getXLogger(ClosedCollection.class);
 
-    protected final List<E> list = new List<>();
-
-
-    @Override
-    public Iterator<E> createIterator() {
-        logger.entry();
-        Iterator<E> iterator = list.createIterator();
-        logger.exit(iterator);
-        return iterator;
-    }
+    protected final LinkedList<E> list = new LinkedList<>();
 
 
     @Override
     public int getSize() {
         logger.entry();
-        int count = list.getSize();
+        int count = list.size();
         logger.exit(count);
         return count;
     }
 
 
     @Override
-    public E getElement(int index) {
-        logger.entry(index);
-        E element = list.getElement(index);
-        logger.exit(element);
-        return element;
-    }
-
-
-    @Override
     public int getIndex(E element) {
         logger.entry(element);
-        int index = list.getIndex(element);
+        int index = list.indexOf(element) + 1;  // change to unit based indexing
         logger.exit(index);
         return index;
     }
 
 
     @Override
+    public E getElement(int index) {
+        logger.entry(index);
+        index = normalizedIndex(index) - 1;  // change to zero based indexing
+        E element = list.get(index);
+        logger.exit(element);
+        return element;
+    }
+
+
+    @Override
     public Collection<E> getElements(int firstIndex, int lastIndex) {
         logger.entry(firstIndex, lastIndex);
-        Collection<E> result = list.getElements(firstIndex, lastIndex);
-        logger.exit(result);
-        return result;
+        firstIndex = normalizedIndex(firstIndex) - 1;  // change to zero based indexing
+        lastIndex = normalizedIndex(lastIndex) - 1;  // change to zero based indexing
+        List<E> results = new List<>();
+        for (int i = firstIndex; i < lastIndex; i++) {
+            results.addElement(list.get(i));
+        }
+        logger.exit(results);
+        return results;
     }
 
 
     @Override
     public void removeAll() {
         logger.entry();
-        list.removeAll();
+        list.clear();
         logger.exit();
+    }
+
+
+    @Override
+    public Iterator<E> createIterator() {
+        logger.entry();
+        Iterator<E> iterator = list.iterator();
+        logger.exit(iterator);
+        return iterator;
     }
 
 }

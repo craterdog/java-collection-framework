@@ -11,6 +11,7 @@ package craterdog.collections;
 
 import craterdog.collections.abstractions.AssociativeCollection;
 import craterdog.collections.abstractions.Collection;
+import craterdog.collections.abstractions.OpenCollection;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
 
@@ -82,9 +83,10 @@ public final class Dictionary<V> extends AssociativeCollection<String, V> {
 
 
     @Override
-    @SuppressWarnings("unchecked")
-    public Dictionary<V> copy() {
-        return (Dictionary<V>) super.copy();
+    protected <T extends OpenCollection<Association<String, V>>> T emptyCopy() {
+        @SuppressWarnings("unchecked")
+        T copy = (T) new Dictionary<>();
+        return copy;
     }
 
 

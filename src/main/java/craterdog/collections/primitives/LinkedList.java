@@ -11,6 +11,7 @@ package craterdog.collections.primitives;
 
 import java.util.AbstractCollection;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
@@ -46,7 +47,7 @@ public final class LinkedList<E> extends AbstractCollection<E> implements List<E
      */
     public LinkedList(Collection<? extends E> elements) {
         for (E element : elements) {
-            this.add(element);
+            add(element);
         }
     }
 
@@ -59,7 +60,7 @@ public final class LinkedList<E> extends AbstractCollection<E> implements List<E
 
     @Override
     public int indexOf(Object element) {
-        ListIterator<E> iterator = listIterator();
+        Iterator<E> iterator = iterator();
         for (int index = 0; index < size; index++) {
             E candidate = iterator.next();
             if (candidate == null ? element == null : candidate.equals(element)) return index;
@@ -81,6 +82,7 @@ public final class LinkedList<E> extends AbstractCollection<E> implements List<E
 
     @Override
     public E get(int index) {
+        checkBounds(index);
         Link<E> link = getLinkAtIndex(index);
         E element = link.value;
         return element;
@@ -88,7 +90,23 @@ public final class LinkedList<E> extends AbstractCollection<E> implements List<E
 
 
     @Override
+    public List<E> subList(int fromIndex, int toIndex) {
+        checkBounds(fromIndex);
+        checkBounds(toIndex);
+        int numberOfElements = toIndex - fromIndex;
+        LinkedList<E> results = new LinkedList<>();
+        ListIterator<E> iterator = listIterator(fromIndex);
+        for (int i = 0; i < numberOfElements; i++) {
+            E element = iterator.next();
+            results.add(element);
+        }
+        return results;
+    }
+
+
+    @Override
     public E set(int index, E element) {
+        checkBounds(index);
         Link<E> link = getLinkAtIndex(index);
         E oldElement = link.value;
         link.value = element;
@@ -98,26 +116,26 @@ public final class LinkedList<E> extends AbstractCollection<E> implements List<E
 
     @Override
     public boolean add(E element) {
-        add(size, element);
+        appendElementToList(element);
         return true;
     }
 
 
     @Override
     public void add(int index, E newElement) {
-        if (size == 0) {
-            insertElementIntoEmptyList(newElement);
-        } else if (index == size) {
+        checkBounds(index + 1);
+        if (size == 0 || index == size) {
             appendElementToList(newElement);
         } else {
             Link<E> existingLink = getLinkAtIndex(index);
-            insertElementIntoListBeforeLink(existingLink, newElement);
+            insertElementIntoList(existingLink, newElement);
         }
     }
 
 
     @Override
     public boolean addAll(int index, Collection<? extends E> collection) {
+        checkBounds(index);
         ListIterator<E> iterator = listIterator(index);
         for (E element : collection) {
             iterator.add(element);
@@ -128,6 +146,7 @@ public final class LinkedList<E> extends AbstractCollection<E> implements List<E
 
     @Override
     public E remove(int index) {
+        checkBounds(index);
         Link<E> existingLink = getLinkAtIndex(index);
         E element = existingLink.value;
         removeLinkFromList(existingLink);
@@ -137,16 +156,23 @@ public final class LinkedList<E> extends AbstractCollection<E> implements List<E
 
     /**
      * This method removes the elements in the specified range [firstIndex..lastIndex) and shifts
-     * the existing elements down to fill in the gap.  This method returns a new list of the
-     * elements that were removed.
+     * the existing elements down to fill in the gap. This method returns a list containing
+     * the removed elements.
      *
      * @param firstIndex The index of the first element to be removed.
      * @param lastIndex The index of the last element after the range to be removed.
      * @return The elements that were removed from the list.
      */
     public LinkedList<E> remove(int firstIndex, int lastIndex) {
+        checkBounds(firstIndex);
+        checkBounds(lastIndex);
         int numberRemoved = lastIndex - firstIndex;
         LinkedList<E> results = new LinkedList<>();
+
+        if (numberRemoved < 1) {
+            // nothing removed so return empty list
+            return results;
+        }
 
         if (numberRemoved == size) {
             // remove all links
@@ -159,14 +185,14 @@ public final class LinkedList<E> extends AbstractCollection<E> implements List<E
             Link<E> firstLink = getLinkAtIndex(firstIndex);
             Link<E> lastLink = getLinkAtIndex(lastIndex);  // the link past the range
 
+            // initialize the new linked list
+            results.head = firstLink;
+            results.size = numberRemoved;
+
             // remove the links in the range
             Link.removeLinks(firstLink, lastLink);
             if (firstIndex == 0) head = lastLink;
             size -= numberRemoved;
-
-            // initialize the new linked list
-            results.head = firstLink;
-            results.size = numberRemoved;
         }
 
         return results;
@@ -196,15 +222,18 @@ public final class LinkedList<E> extends AbstractCollection<E> implements List<E
     public void clear() {
         if (head != null) {
             // break the chain to help the garbage collector
-            head.previous.next = null;
-            head.previous = null;
+            if (head.previous != null) {
+                head.previous.next = null;
+                head.previous = null;
+            }
+            head = null;
             size = 0;
         }
     }
 
 
     @Override
-    public ListIterator<E> iterator() {
+    public craterdog.core.Iterator<E> iterator() {
         return new LinkedListIterator();
     }
 
@@ -217,20 +246,8 @@ public final class LinkedList<E> extends AbstractCollection<E> implements List<E
 
     @Override
     public ListIterator<E> listIterator(int index) {
+        checkBounds(index);
         return new LinkedListIterator(index);
-    }
-
-
-    @Override
-    public LinkedList<E> subList(int fromIndex, int toIndex) {
-        int numberOfElements = toIndex - fromIndex;
-        LinkedList<E> results = new LinkedList<>();
-        ListIterator<E> iterator = listIterator(fromIndex);
-        for (int i = 0; i < numberOfElements; i++) {
-            E element = iterator.next();
-            results.add(element);
-        }
-        return results;
     }
 
 
@@ -280,7 +297,56 @@ public final class LinkedList<E> extends AbstractCollection<E> implements List<E
     }
 
 
-    private final class LinkedListIterator implements ListIterator<E> {
+    private void checkBounds(int index) throws IndexOutOfBoundsException {
+        int maximum = size - 1;
+        if (index < 0 || index > maximum) throw new IndexOutOfBoundsException("The index (" + index + ") is outside the allowed range: [0.." + maximum + "].");
+    }
+
+
+    private Link<E> getLinkAtIndex(int index) {
+        Link<E> link = head;
+        if (index < size / 2) {
+            for (int i = 0; i < index; i++) {
+                link = link.next;
+            }
+        } else {  // it is in the second half
+            for (int i = size; i > index; i--) {
+                link = link.previous;
+            }
+        }
+        return link;
+    }
+
+
+    private void appendElementToList(E element) {
+        Link<E> newLink = new Link<>(element);
+        if (head == null) {
+            head = newLink;
+            head.next = head;
+            head.previous = head;
+        } else {
+            Link.insertBeforeLink(newLink, head);
+        }
+        size++;
+    }
+
+
+    private void insertElementIntoList(Link<E> existingLink, E element) {
+        Link<E> newLink = new Link<>(element);
+        Link.insertBeforeLink(newLink, existingLink);
+        if (head == existingLink) head = newLink;
+        size++;
+    }
+
+
+    private void removeLinkFromList(Link<E> existingLink) {
+        if (head == existingLink) head = existingLink.next;
+        Link.removeLink(existingLink);
+        if (--size == 0) head = null;
+    }
+
+
+    private final class LinkedListIterator extends craterdog.core.Iterator<E> implements ListIterator<E> {
 
         int index;
         Link<E> link;
@@ -309,16 +375,6 @@ public final class LinkedList<E> extends AbstractCollection<E> implements List<E
         }
 
         @Override
-        public E next() {
-            if (index == size) throw new NoSuchElementException();
-            E element = link.value;
-            lastLink = link;
-            link = link.next;
-            index++;
-            return element;
-        }
-
-        @Override
         public boolean hasPrevious() {
             return index > 0;
         }
@@ -330,6 +386,52 @@ public final class LinkedList<E> extends AbstractCollection<E> implements List<E
 
         @Override
         public E previous() {
+            return getPrevious();
+        }
+
+        @Override
+        public void set(E element) {
+            if (lastLink == null) throw new IllegalStateException();
+            lastLink.value = element;
+        }
+
+        @Override
+        public void add(E element) {
+            if (size == 0 || index == size) {
+                appendElementToList(element);
+            } else {
+                insertElementIntoList(link, element);
+            }
+            lastLink = null;
+        }
+
+        @Override
+        public void remove() {
+            if (lastLink == null) throw new IllegalStateException();
+            removeLinkFromList(lastLink);
+            if (link == lastLink) link = lastLink.next;
+            lastLink = null;
+        }
+
+        @Override
+        public void toStart() {
+            index = 0;
+            link = head;
+        }
+
+        @Override
+        public void toIndex(int i) {
+            index = i;
+            link = getLinkAtIndex(index);
+        }
+
+        @Override
+        public void toEnd() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public E getPrevious() {
             if (index == 0) throw new NoSuchElementException();
             link = link.previous;
             lastLink = link;
@@ -339,75 +441,15 @@ public final class LinkedList<E> extends AbstractCollection<E> implements List<E
         }
 
         @Override
-        public void add(E element) {
-            if (size == 0) {
-                insertElementIntoEmptyList(element);
-            } else if (index == size) {
-                appendElementToList(element);
-            } else {
-                insertElementIntoListBeforeLink(link, element);
-            }
-            lastLink = null;
+        public E getNext() {
+            if (index == size) throw new NoSuchElementException();
+            E element = link.value;
+            lastLink = link;
+            link = link.next;
+            index++;
+            return element;
         }
 
-        @Override
-        public void remove() {
-            if (lastLink == null) throw new IllegalStateException();
-            removeLinkFromList(lastLink);
-            lastLink = null;
-        }
-
-        @Override
-        public void set(E element) {
-            if (lastLink == null) throw new IllegalStateException();
-            lastLink.value = element;
-        }
-
-    }
-
-
-    private Link<E> getLinkAtIndex(int index) {
-        Link<E> link = head;
-        if (index < size / 2) {
-            for (int i = 0; i < index; i++) {
-                link = link.next;
-            }
-        } else {  // it is in the second half
-            for (int i = size; i > index; i--) {
-                link = link.previous;
-            }
-        }
-        return link;
-    }
-
-
-    private void insertElementIntoEmptyList(E element) {
-        head = new Link<E>(element);
-        head.next = head;
-        head.previous = head;
-        size = 1;
-    }
-
-
-    private void appendElementToList(E element) {
-        Link<E> newLink = new Link<>(element);
-        Link.insertBeforeLink(newLink, head);
-        size++;
-    }
-
-
-    private void insertElementIntoListBeforeLink(Link<E> existingLink, E element) {
-        Link<E> newLink = new Link<>(element);
-        Link.insertBeforeLink(newLink, existingLink);
-        if (head == existingLink) head = newLink;
-        size++;
-    }
-
-
-    private void removeLinkFromList(Link<E> existingLink) {
-        if (head == existingLink) head = existingLink.next;
-        Link.removeLink(existingLink);
-        if (--size == 0) head = null;
     }
 
 }

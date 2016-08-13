@@ -12,6 +12,7 @@ package craterdog.collections;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import craterdog.collections.abstractions.Collection;
+import craterdog.collections.abstractions.OpenCollection;
 import craterdog.core.Iterator;
 import craterdog.core.Manipulator;
 import craterdog.collections.abstractions.SortableCollection;
@@ -108,9 +109,10 @@ public class List<E> extends SortableCollection<E> {
 
 
     @Override
-    @SuppressWarnings("unchecked")
-    public List<E> copy() {
-        return (List<E>) super.copy();
+    protected <T extends OpenCollection<E>> T emptyCopy() {
+        @SuppressWarnings("unchecked")
+        T copy = (T) new List<>();
+        return copy;
     }
 
 

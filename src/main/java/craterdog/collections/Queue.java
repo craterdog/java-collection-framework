@@ -61,13 +61,6 @@ public class Queue<E> extends ClosedCollection<E> {
     }
 
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public Queue<E> copy() {
-        return (Queue<E>) super.copy();
-    }
-
-
     /**
      * This method adds a new element to the tail of the queue.  If the queue
      * is currently at capacity this method will block until the capacity
@@ -80,10 +73,10 @@ public class Queue<E> extends ClosedCollection<E> {
     public final synchronized void addElement(E element) throws InterruptedException {
         logger.entry();
         while (true) {  // do this in a loop in case there are spurious wakeups (see Object.wait() javadoc)
-            int size = list.getSize();
+            int size = list.size();
             if (size < capacity) {
                 logger.debug("Adding the element: " + element);
-                list.addElement(element);
+                list.add(element);
                 notify();  // waiting removeElement() calls
                 break;
             } else {
@@ -107,9 +100,9 @@ public class Queue<E> extends ClosedCollection<E> {
         logger.entry();
         E element = null;
         while (true) {  // do this in a loop in case there are spurious wakeups (see Object.wait() javadoc)
-            int size = list.getSize();
+            int size = list.size();
             if (size > 0) {
-                element = list.removeElement(1);
+                element = list.remove(0);  // zero based indexing
                 logger.debug("Removed the element: " + element);
                 notify();  // waiting addElement() calls
                 break;
@@ -132,9 +125,9 @@ public class Queue<E> extends ClosedCollection<E> {
     public final synchronized E getHead() {
         logger.entry();
         E element = null;
-        int size = list.getSize();
+        int size = list.size();
         if (size > 0) {
-            element = list.getElement(1);
+            element = list.get(0);  // zero based indexing
         }
         logger.exit();
         return element;

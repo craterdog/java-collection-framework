@@ -14,6 +14,7 @@ import java.util.AbstractMap;
 import java.util.AbstractSet;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
@@ -40,7 +41,7 @@ public final class HashTable<K, V> extends AbstractMap<K, V> implements Map<K, V
     private int size;
 
     // the storage for the elements, the size of the table must be a power of 2
-    private DynamicArray<Entry<K, V>>[] table;
+    private List<Entry<K, V>>[] table;
 
     // the number of bits required in the hash: log2(table.length)
     private int hashWidth = 4;  // starts out at: log2(MINIMUM_CAPACITY)
@@ -118,7 +119,7 @@ public final class HashTable<K, V> extends AbstractMap<K, V> implements Map<K, V
     @Override
     public boolean containsKey(Object key) {
         int hash = function.hashValue(key);
-        DynamicArray<Entry<K, V>> bucket = table[hash];
+        List<Entry<K, V>> bucket = table[hash];
         for (Entry<K, V> entry : bucket) {
             K entryKey = entry.getKey();
             if (entryKey != null && entryKey.equals(key)) {
@@ -131,7 +132,7 @@ public final class HashTable<K, V> extends AbstractMap<K, V> implements Map<K, V
 
     @Override
     public boolean containsValue(Object value) {
-        for (DynamicArray<Entry<K, V>> bucket : table) {
+        for (List<Entry<K, V>> bucket : table) {
             for (Entry<K, V> entry : bucket) {
                 V entryValue = entry.getValue();
                 if (entryValue != null && entryValue.equals(value)) {
@@ -146,7 +147,7 @@ public final class HashTable<K, V> extends AbstractMap<K, V> implements Map<K, V
     @Override
     public V get(Object key) {
         int hash = function.hashValue(key);
-        DynamicArray<Entry<K, V>> bucket = table[hash];
+        List<Entry<K, V>> bucket = table[hash];
         for (Entry<K, V> entry : bucket) {
             K entryKey = entry.getKey();
             if (entryKey != null && entryKey.equals(key)) {
@@ -161,7 +162,7 @@ public final class HashTable<K, V> extends AbstractMap<K, V> implements Map<K, V
     public V put(K key, V value) {
         if (size == table.length) doubleCapacity();
         int hash = function.hashValue(key);
-        DynamicArray<Entry<K, V>> bucket = table[hash];
+        List<Entry<K, V>> bucket = table[hash];
         for (Entry<K, V> entry : bucket) {
             K entryKey = entry.getKey();
             if (entryKey != null && entryKey.equals(key)) {
@@ -178,7 +179,7 @@ public final class HashTable<K, V> extends AbstractMap<K, V> implements Map<K, V
     @Override
     public V remove(Object key) {
         int hash = function.hashValue(key);
-        DynamicArray<Entry<K, V>> bucket = table[hash];
+        List<Entry<K, V>> bucket = table[hash];
         for (int i = 0; i < bucket.size(); i++) {
             Entry<K, V> entry = bucket.get(i);
             K entryKey = entry.getKey();
@@ -206,7 +207,8 @@ public final class HashTable<K, V> extends AbstractMap<K, V> implements Map<K, V
             int length = table.length;
             copy.table = Arrays.copyOf(table, length);
             for (int i = 0; i < length; i++) {
-                copy.table[i] = (DynamicArray<Entry<K, V>>) table[i].clone();
+                LinkedList<Entry<K, V>> entry = (LinkedList<Entry<K, V>>) table[i];
+                copy.table[i] = (LinkedList<Entry<K, V>>) entry.clone();
             }
             return copy;
         } catch (CloneNotSupportedException e) {
@@ -216,18 +218,18 @@ public final class HashTable<K, V> extends AbstractMap<K, V> implements Map<K, V
     }
 
 
-    private DynamicArray<Entry<K, V>>[] createTable(int numberOfBuckets) {
+    private List<Entry<K, V>>[] createTable(int numberOfBuckets) {
         @SuppressWarnings({"rawtypes", "unchecked"})
-        DynamicArray<Entry<K, V>>[] newTable = (DynamicArray<Entry<K, V>>[]) new DynamicArray[numberOfBuckets];
+        List<Entry<K, V>>[] newTable = (List<Entry<K, V>>[]) new List[numberOfBuckets];
         for (int i = 0; i < numberOfBuckets; i++) {
-            newTable[i] = new DynamicArray<>();
+            newTable[i] = new LinkedList<>();
         }
         return newTable;
     }
 
 
     private void doubleCapacity() {
-        DynamicArray<Entry<K, V>>[] newTable = createTable(table.length << 1);  // multiply current length by 2
+        List<Entry<K, V>>[] newTable = createTable(table.length << 1);  // multiply current length by 2
         function = new UniversalHashFunction(++hashWidth);
         rehashTo(newTable);
     }
@@ -235,14 +237,14 @@ public final class HashTable<K, V> extends AbstractMap<K, V> implements Map<K, V
 
     private void halveCapacity() {
         if (table.length == MINIMUM_CAPACITY) return;  // make sure we don't shrink too much
-        DynamicArray<Entry<K, V>>[] newTable = createTable(table.length >>> 1);  // divide current length by 2
+        List<Entry<K, V>>[] newTable = createTable(table.length >>> 1);  // divide current length by 2
         function = new UniversalHashFunction(--hashWidth);
         rehashTo(newTable);
     }
 
 
-    private void rehashTo(DynamicArray<Entry<K, V>>[] newTable) {
-        for (DynamicArray<Entry<K, V>> array : table) {
+    private void rehashTo(List<Entry<K, V>>[] newTable) {
+        for (List<Entry<K, V>> array : table) {
             for (Entry<K, V> entry : array) {
                 int hash = function.hashValue(entry.getKey());
                 newTable[hash].add(entry);
@@ -309,7 +311,7 @@ public final class HashTable<K, V> extends AbstractMap<K, V> implements Map<K, V
         @Override
         public boolean hasNext() {
             while (tableIndex < table.length) {
-                DynamicArray<Entry<K, V>> bucket = table[tableIndex];
+                List<Entry<K, V>> bucket = table[tableIndex];
                 if (bucketIndex < bucket.size()) {
                     return true;
                 }
@@ -324,7 +326,7 @@ public final class HashTable<K, V> extends AbstractMap<K, V> implements Map<K, V
             if (!hasNext()) throw new NoSuchElementException();
             lastTableIndex = tableIndex;
             lastBucketIndex = bucketIndex;
-            DynamicArray<Entry<K, V>> bucket = table[tableIndex];
+            List<Entry<K, V>> bucket = table[tableIndex];
             Entry<K, V> entry = bucket.get(bucketIndex++);
             return entry;
         }
@@ -332,7 +334,7 @@ public final class HashTable<K, V> extends AbstractMap<K, V> implements Map<K, V
         @Override
         public void remove() {
             if (lastBucketIndex < 0) throw new IllegalStateException();
-            DynamicArray<Entry<K, V>> bucket = table[lastTableIndex];
+            List<Entry<K, V>> bucket = table[lastTableIndex];
             bucket.remove(lastBucketIndex);
             // NOTE: do not rehash the table here!
             tableIndex = lastTableIndex;
