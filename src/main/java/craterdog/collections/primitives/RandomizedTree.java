@@ -233,6 +233,18 @@ public final class RandomizedTree<E> extends AbstractCollection<E> implements Cl
 
 
     @Override
+    public boolean removeAll(Collection<?> collection) {
+        @SuppressWarnings("unchecked")
+        Collection<E> elements = (Collection<E>) collection;
+        boolean result = false;
+        for (E element : elements) {
+            result = remove(element);
+        }
+        return result;
+    }
+
+
+    @Override
     public boolean retainAll(Collection<?> collection) {
         boolean modified = false;
         for (E element : this) {
@@ -423,46 +435,6 @@ public final class RandomizedTree<E> extends AbstractCollection<E> implements Cl
         // return the new root (there is a small chance it may be the new node)
         return tree;
     }
-
-
-    /*
-     * Split the specified tree into two separate trees.  The first contains all
-     * elements from the tree that are comparatively less than the specified
-     * value, and the second contains all elements that are comparatively greater
-     * than the specified value.  If the specified value is in the tree and
-     * duplicates are not allowed, it will be removed.
-    private TreeNode[] splitTree(TreeNode tree, E value) {
-        @SuppressWarnings("unchecked")
-        TreeNode[] subtrees = (TreeNode[]) Array.newInstance(root.getClass(), 2);
-
-        // handle when currentTree is null
-        if (tree == null) return subtrees;
-
-        int comparison = compareElements(value, tree.element);
-        if (comparison == 0 && !duplicatesAllowed) {
-            // when duplicates are not allowed we need to remove the matching
-            // node and split its children.
-            subtrees[LEFT] = tree.left;
-            subtrees[RIGHT] = tree.right;
-        } else if (comparison < 0) {
-            // the value is less than the tree value
-            // recursively split between the tree and its left subtree
-            subtrees[RIGHT] = tree;
-            TreeNode[] leftSubtrees = splitTree(tree.left, value);
-            subtrees[LEFT] = leftSubtrees[LEFT];
-            tree.setLeftSubtree(leftSubtrees[RIGHT]);
-        } else {
-            // the value is greater than OR EQUAL TO the tree value
-            // recursively split between the tree and its right subtree
-            subtrees[LEFT] = tree;
-            TreeNode[] rightSubtrees = splitTree(tree.right, value);
-            subtrees[RIGHT] = rightSubtrees[RIGHT];
-            tree.setRightSubtree(rightSubtrees[LEFT]);
-        }
-
-        return subtrees;
-    }
-     */
 
 
     /*
