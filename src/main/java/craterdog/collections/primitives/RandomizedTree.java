@@ -37,10 +37,6 @@ public final class RandomizedTree<E> extends AbstractCollection<E> implements Cl
     private Comparator<? super E> comparator;
     private TreeNode root;
 
-    // index values used with subtree arrays containing the left and right subtrees
-    static private final int LEFT = 0;
-    static private final int RIGHT = 1;
-
 
     /**
      * This default constructor creates an instance of a tree that does not allow duplicate
@@ -237,22 +233,6 @@ public final class RandomizedTree<E> extends AbstractCollection<E> implements Cl
 
 
     @Override
-    public void clear() {
-        root = null;
-    }
-
-
-    @Override
-    public boolean removeAll(Collection<?> collection) {
-        boolean modified = false;
-        for (Object object : collection) {
-            modified = remove(object);
-        }
-        return modified;
-    }
-
-
-    @Override
     public boolean retainAll(Collection<?> collection) {
         boolean modified = false;
         for (E element : this) {
@@ -260,6 +240,12 @@ public final class RandomizedTree<E> extends AbstractCollection<E> implements Cl
             modified = remove(element);
         }
         return modified;
+    }
+
+
+    @Override
+    public void clear() {
+        root = null;
     }
 
 

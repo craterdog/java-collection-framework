@@ -127,7 +127,7 @@ public class ListTest {
                     DynamicArray<Integer> copy = (DynamicArray<Integer>) array.clone();
                     copy.retainAll(array);
                     assertEquals(array, copy);
-                    DynamicArray<Integer> actual = array.remove(20, 22);
+                    java.util.List<Integer> actual = array.remove(20, 22);
                     assertEquals(expected, actual);
                 } else if (list instanceof java.util.ArrayList) {
                     java.util.ArrayList<Integer> arrayList = (java.util.ArrayList<Integer>) list;
@@ -143,7 +143,7 @@ public class ListTest {
                     LinkedList<Integer> copy = (LinkedList<Integer>) linked.clone();
                     copy.retainAll(linked);
                     assertEquals(linked, copy);
-                    LinkedList<Integer> actual = linked.remove(20, 22);
+                    java.util.List<Integer> actual = linked.remove(20, 22);
                     assertEquals(expected, actual);
                 } else if (list instanceof java.util.LinkedList) {
                     java.util.LinkedList<Integer> linkedList = (java.util.LinkedList<Integer>) list;

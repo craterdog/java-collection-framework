@@ -12,11 +12,10 @@ package craterdog.collections.abstractions;
 import com.fasterxml.jackson.annotation.JsonValue;
 import craterdog.collections.Association;
 import craterdog.collections.List;
+import craterdog.collections.primitives.DynamicArray;
+import craterdog.collections.primitives.HashTable;
 import craterdog.core.Iterator;
 import craterdog.core.Manipulator;
-import craterdog.collections.primitives.HashTable;
-import craterdog.collections.primitives.Link;
-import java.util.Map;
 import java.util.Objects;
 import org.slf4j.ext.XLogger;
 import org.slf4j.ext.XLoggerFactory;
@@ -36,11 +35,11 @@ public abstract class AssociativeCollection<K, V> extends SortableCollection<Ass
 
     static private final XLogger logger = XLoggerFactory.getXLogger(AssociativeCollection.class);
 
-    // a hash table mapping each association key to its corresponding link in the linked list
-    private final Map<K, Link<Association<K, V>>> indexes = new HashTable<>();
+    // a map of all keys to their associated values
+    private final java.util.Map<K, Association<K, V>> map = new HashTable<>();
 
-    // a linked list containing the key value associations in their proper order
-    private Link<Association<K, V>> associations = null;
+    // a list containing the key value associations in their proper order
+    private final java.util.List<Association<K, V>> list = new DynamicArray<>();
 
 
     /**
@@ -136,20 +135,20 @@ public abstract class AssociativeCollection<K, V> extends SortableCollection<Ass
 
     @JsonValue
     public final java.util.LinkedHashMap<K, V> toMap() {
-        java.util.LinkedHashMap<K, V> map = new java.util.LinkedHashMap<>();
-        for (Association<K, V> association : this) {
+        java.util.LinkedHashMap<K, V> result = new java.util.LinkedHashMap<>();
+        for (Association<K, V> association : list) {
             K key = association.key;
             V value = association.value;
-            map.put(key, value);
+            result.put(key, value);
         }
-        return map;
+        return result;
     }
 
 
     @Override
     public final int getSize() {
         logger.entry();
-        int result = indexes.size();
+        int result = map.size();
         logger.exit(result);
         return result;
     }
@@ -158,8 +157,8 @@ public abstract class AssociativeCollection<K, V> extends SortableCollection<Ass
     @Override
     public final boolean containsElement(Association<K, V> element) {
         logger.entry();
-        Link<Association<K, V>> link = indexes.get(element.key);
-        boolean result = link != null && Objects.equals(link.value.value, element.value);
+        Association<K, V> association = map.get(element.key);
+        boolean result = association != null && Objects.equals(association.value, element.value);
         logger.exit(result);
         return result;
     }
@@ -183,10 +182,8 @@ public abstract class AssociativeCollection<K, V> extends SortableCollection<Ass
     @Override
     public final Association<K, V> getElement(int index) {
         logger.entry(index);
-        index = normalizedIndex(index);
-        Iterator<Association<K, V>> iterator = new MapManipulator();
-        iterator.toIndex(index);
-        Association<K, V> element = iterator.getNext();
+        index = normalizedIndex(index) - 1;  // change to zero based indexing
+        Association<K, V> element = list.get(index);
         logger.exit(element);
         return element;
     }
@@ -195,20 +192,16 @@ public abstract class AssociativeCollection<K, V> extends SortableCollection<Ass
     @Override
     public final Collection<Association<K, V>> getElements(int firstIndex, int lastIndex) {
         logger.entry(firstIndex, lastIndex);
-        firstIndex = normalizedIndex(firstIndex);
-        lastIndex = normalizedIndex(lastIndex);
-        AssociativeCollection<K, V> result = emptyCopy();
-        result.removeAll();
-        Iterator<Association<K, V>> iterator = createIterator();
-        iterator.toIndex(firstIndex);
-        int numberOfElements = lastIndex - firstIndex + 1;
-        while (numberOfElements-- > 0) {
-            Association<K, V> element = iterator.getNext();
-            logger.debug("Including element: {}", element);
-            result.addElement(element);
+        firstIndex = normalizedIndex(firstIndex) - 1;  // change to zero based indexing
+        lastIndex = normalizedIndex(lastIndex) - 1;  // change to zero based indexing
+        AssociativeCollection<K, V> elements = emptyCopy();
+        java.util.List<Association<K, V>> associations = list.subList(firstIndex, lastIndex);
+        for (Association<K, V> association : associations) {
+            logger.debug("Including element: {}", association);
+            elements.addElement(association);
         }
-        logger.exit(result);
-        return result;
+        logger.exit(elements);
+        return elements;
     }
 
 
@@ -223,8 +216,8 @@ public abstract class AssociativeCollection<K, V> extends SortableCollection<Ass
         boolean result = false;
         K key = element.key;
         V value = element.value;
-        if (!indexes.containsKey(element.key)) {
-        setValue(key, value);
+        if (!map.containsKey(element.key)) {
+            setValue(key, value);
             result = true;
         }
         logger.exit(result);
@@ -244,8 +237,8 @@ public abstract class AssociativeCollection<K, V> extends SortableCollection<Ass
     @Override
     public final void removeAll() {
         logger.entry();
-        indexes.clear();
-        associations = null;
+        map.clear();
+        list.clear();
         logger.exit();
     }
 
@@ -259,9 +252,9 @@ public abstract class AssociativeCollection<K, V> extends SortableCollection<Ass
     public final V getValue(K key) {
         logger.entry(key);
         V value = null;
-        Link<Association<K, V>> link = indexes.get(key);
-        if (link != null) {
-            value = link.value.value;
+        Association<K, V> association = map.get(key);
+        if (association != null) {
+            value = association.value;
             logger.debug("Found value: {} at key: {}", value, key);
         }
         logger.exit(value);
@@ -278,21 +271,13 @@ public abstract class AssociativeCollection<K, V> extends SortableCollection<Ass
      */
     public final void setValue(K key, V value) {
         logger.entry(key, value);
-        Link<Association<K, V>> link = indexes.get(key);
-        if (link != null) {
-            link.value.value = value;
+        Association<K, V> association = map.get(key);
+        if (association != null) {
+            association.value = value;
         } else {
-            Association<K, V> association = new Association<>(key, value);
-            Link<Association<K, V>> newLink = new Link<>(association);
-            if (associations == null) {
-                // the associative collection is currently empty
-                newLink.previous = newLink;
-                newLink.next = newLink;
-                associations = newLink;
-            } else {
-                Link.insertBeforeLink(newLink, associations);
-            }
-            indexes.put(key, newLink);
+            association = new Association<>(key, value);
+            list.add(association);
+            map.put(key, association);
         }
         logger.exit();
     }
@@ -308,18 +293,10 @@ public abstract class AssociativeCollection<K, V> extends SortableCollection<Ass
     public final V removeValue(K key) {
         logger.entry(key);
         V value = null;
-        Link<Association<K, V>> link = indexes.remove(key);
-        if (link != null) {
-            if (link == associations) {
-                // the head link is about to be removed
-                associations = link.next;
-            }
-            Link.removeLink(link);
-            if (indexes.isEmpty()) {
-                // the linked list is now empty
-                associations = null;
-            }
-            value = link.value.value;
+        Association<K, V> association = map.remove(key);
+        if (association != null) {
+            list.remove(association);
+            value = association.value;
         }
         logger.exit(value);
         return value;
@@ -333,13 +310,11 @@ public abstract class AssociativeCollection<K, V> extends SortableCollection<Ass
      */
     public final SortableCollection<K> getKeys() {
         logger.entry();
-        List<K> keys = new List<>();
-        Link<Association<K, V>> link = associations;
-        for (int i = 0; i < indexes.size(); i++) {
-            K key = link.value.key;
+        SortableCollection<K> keys = new List<>();
+        for (Association<K, V> association : list) {
+            K key = association.key;
             logger.debug("Found key: {}", key);
             keys.addElement(key);
-            link = link.next;
         }
         logger.exit(keys);
         return keys;
@@ -353,13 +328,11 @@ public abstract class AssociativeCollection<K, V> extends SortableCollection<Ass
      */
     public final SortableCollection<V> getValues() {
         logger.entry();
-        List<V> values = new List<>();
-        Link<Association<K, V>> link = associations;
-        for (int i = 0; i < indexes.size(); i++) {
-            V value = link.value.value;
+        SortableCollection<V> values = new List<>();
+        for (Association<K, V> association : list) {
+            V value = association.value;
             logger.debug("Found value: {}", value);
             values.addElement(value);
-            link = link.next;
         }
         logger.exit(values);
         return values;
@@ -373,16 +346,13 @@ public abstract class AssociativeCollection<K, V> extends SortableCollection<Ass
      */
     public final SortableCollection<Association<K, V>> getAssociations() {
         logger.entry();
-        List<Association<K, V>> results = new List<>();
-        Link<Association<K, V>> link = associations;
-        for (int i = 0; i < indexes.size(); i++) {
-            Association<K, V> association = link.value;
+        SortableCollection<Association<K, V>> associations = new List<>();
+        for (Association<K, V> association : list) {
             logger.debug("Found association: {}", association);
-            results.addElement(association);
-            link = link.next;
+            associations.addElement(association);
         }
         logger.exit();
-        return results;
+        return associations;
     }
 
 
@@ -406,43 +376,33 @@ public abstract class AssociativeCollection<K, V> extends SortableCollection<Ass
 
     private class MapManipulator extends Manipulator<Association<K, V>> {
 
-        private Link<Association<K, V>> currentLink = associations;
-        private int currentIndex = 0;
+        private int currentIndex = 0;  // zero based indexing for underlying list
 
         @Override
         public void toStart() {
             logger.entry();
-            currentLink = associations;
+            currentIndex = 0;
             logger.exit();
         }
 
         @Override
         public void toIndex(int index) {
             logger.entry(index);
-            index = normalizedIndex(index);
-            if (currentIndex == index) return;
-            if (currentIndex < index) {
-                while (currentIndex++ < index) currentLink = currentLink.next;
-            } else {
-                while (currentIndex-- > index) currentLink = currentLink.previous;
-            }
+            currentIndex = normalizedIndex(index) - 1;  // change to zero based indexing
             logger.exit();
         }
 
         @Override
         public void toEnd() {
             logger.entry();
-            if (associations != null) {
-                currentLink = associations.previous;
-                currentIndex = indexes.size();
-            }
+            currentIndex = list.size();
             logger.exit();
         }
 
         @Override
         public boolean hasPrevious() {
             logger.entry();
-            boolean result = currentIndex != 0;
+            boolean result = currentIndex > 0;
             logger.exit(result);
             return result;
         }
@@ -450,7 +410,7 @@ public abstract class AssociativeCollection<K, V> extends SortableCollection<Ass
         @Override
         public boolean hasNext() {
             logger.entry();
-            boolean result = currentIndex < indexes.size();
+            boolean result = currentIndex < map.size();
             logger.exit(result);
             return result;
         }
@@ -458,52 +418,38 @@ public abstract class AssociativeCollection<K, V> extends SortableCollection<Ass
         @Override
         public Association<K, V> getNext() {
             logger.entry();
-            if (!hasNext()) {
-                IllegalStateException exception = new IllegalStateException("The iterator is at the end of the collection.");
-                throw logger.throwing(exception);
+            if (hasNext()) {
+                Association<K, V> result = list.get(currentIndex++);
+                logger.exit(result);
+                return result;
             }
-            Association<K, V> result = currentLink.value;
-            currentLink = currentLink.next;
-            currentIndex++;
-            logger.exit(result);
-            return result;
+            IllegalStateException exception = new IllegalStateException("The iterator is at the end of the collection.");
+            throw logger.throwing(exception);
         }
 
         @Override
         public Association<K, V> getPrevious() {
             logger.entry();
-            if (!hasPrevious()) {
-                IllegalStateException exception = new IllegalStateException("The iterator is at the beginning of the collection.");
-                throw logger.throwing(exception);
+            if (hasPrevious()) {
+                Association<K, V> result = list.get(--currentIndex);
+                logger.exit(result);
+                return result;
             }
-            currentIndex--;
-            currentLink = currentLink.previous;
-            Association<K, V> result = currentLink.value;
-            logger.exit(result);
-            return result;
+            IllegalStateException exception = new IllegalStateException("The iterator is at the beginning of the collection.");
+            throw logger.throwing(exception);
         }
 
         @Override
         public void insertElement(Association<K, V> element) {
             logger.entry(element);
             K key = element.key;
-            if (!indexes.containsKey(key)) {
-                Link<Association<K, V>> newLink = new Link<>(element);
-                if (associations == null) {
-                    // the associative collection is currently empty
-                    newLink.previous = newLink;
-                    newLink.next = newLink;
-                    associations = newLink;
-                } else {
-                    Link.insertBeforeLink(newLink, currentLink);
-                    if (associations == currentLink) associations = newLink;
-                }
-                currentLink = newLink;
-                indexes.put(key, newLink);
-            } else {
+            if (map.containsKey(key)) {
                 String message = "Attempted to add a duplicate key with an iterator.";
                 RuntimeException exception = new RuntimeException(message);
                 throw logger.throwing(exception);
+            } else {
+                map.put(key, element);
+                list.add(currentIndex++, element);
             }
             logger.exit();
         }
@@ -511,33 +457,25 @@ public abstract class AssociativeCollection<K, V> extends SortableCollection<Ass
         @Override
         public Association<K, V> removeNext() {
             logger.entry();
-            if (!hasNext()) {
-                IllegalStateException exception = new IllegalStateException("The iterator is at the end of the collection.");
-                throw logger.throwing(exception);
+            if (hasNext()) {
+                Association<K, V> element = list.get(currentIndex);
+                logger.exit(element);
+                return element;
             }
-            if (associations == currentLink) associations = currentLink.next;
-            Link<Association<K, V>> oldLink = currentLink;
-            currentLink = currentLink.next;
-            Link.removeLink(oldLink);
-            Association<K, V> result = oldLink.value;
-            logger.exit(result);
-            return result;
+            IllegalStateException exception = new IllegalStateException("The iterator is at the end of the collection.");
+            throw logger.throwing(exception);
         }
 
         @Override
         public Association<K, V> removePrevious() {
             logger.entry();
-            if (!hasPrevious()) {
-                IllegalStateException exception = new IllegalStateException("The iterator is at the beginning of the collection.");
-                throw logger.throwing(exception);
+            if (hasPrevious()) {
+                Association<K, V> element = list.get(--currentIndex);
+                logger.exit(element);
+                return element;
             }
-            Link<Association<K, V>> oldLink = currentLink.previous;
-            if (associations == oldLink) associations = currentLink;
-            Link.removeLink(oldLink);
-            Association<K, V> result = oldLink.value;
-            currentIndex--;
-            logger.exit(result);
-            return result;
+            IllegalStateException exception = new IllegalStateException("The iterator is at the beginning of the collection.");
+            throw logger.throwing(exception);
         }
 
     }

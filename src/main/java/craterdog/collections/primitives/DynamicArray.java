@@ -171,7 +171,7 @@ public final class DynamicArray<E> extends AbstractCollection<E> implements List
      * @param lastIndex The index of the last element after the range to be removed.
      * @return The elements that were removed from the array.
      */
-    public DynamicArray<E> remove(int firstIndex, int lastIndex) {
+    public List<E> remove(int firstIndex, int lastIndex) {
         int numberOfElements = lastIndex - firstIndex;
         DynamicArray<E> results = new DynamicArray<>(numberOfElements);
         System.arraycopy(array, firstIndex, results.array, 0, numberOfElements);
@@ -192,6 +192,18 @@ public final class DynamicArray<E> extends AbstractCollection<E> implements List
         if (index < 0) return false;
         remove(index);
         return true;
+    }
+
+
+    @Override
+    public boolean removeAll(Collection<?> collection) {
+        boolean result = false;
+        @SuppressWarnings("unchecked")
+        Collection<E> elements = (Collection<E>) collection;
+        for (E element : elements) {
+            result = remove(element);
+        }
+        return result;
     }
 
 
@@ -221,7 +233,7 @@ public final class DynamicArray<E> extends AbstractCollection<E> implements List
 
 
     @Override
-    public DynamicArray<E> subList(int fromIndex, int toIndex) {
+    public List<E> subList(int fromIndex, int toIndex) {
         int numberOfElements = toIndex - fromIndex;
         DynamicArray<E> results = new DynamicArray<>(numberOfElements);
         System.arraycopy(array, fromIndex, results.array, 0, numberOfElements);

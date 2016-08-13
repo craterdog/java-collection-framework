@@ -163,7 +163,7 @@ public final class LinkedList<E> extends AbstractCollection<E> implements List<E
      * @param lastIndex The index of the last element after the range to be removed.
      * @return The elements that were removed from the list.
      */
-    public LinkedList<E> remove(int firstIndex, int lastIndex) {
+    public List<E> remove(int firstIndex, int lastIndex) {
         checkBounds(firstIndex);
         checkBounds(lastIndex);
         int numberRemoved = lastIndex - firstIndex;
@@ -346,7 +346,7 @@ public final class LinkedList<E> extends AbstractCollection<E> implements List<E
     }
 
 
-    private final class LinkedListIterator extends craterdog.core.Iterator<E> implements ListIterator<E> {
+    private class LinkedListIterator extends craterdog.core.Iterator<E> implements ListIterator<E> {
 
         int index;
         Link<E> link;
@@ -448,6 +448,110 @@ public final class LinkedList<E> extends AbstractCollection<E> implements List<E
             link = link.next;
             index++;
             return element;
+        }
+
+    }
+
+
+    static private class Link<T> implements Cloneable {
+
+        /**
+         * This attribute contains the value encapsulated by this link.
+         */
+        public T value;
+
+        /**
+         * This attribute points to the previous link in the list.
+         */
+        public Link<T> previous;
+
+        /**
+         * This attribute points to the next link in the list.
+         */
+        public Link<T> next;
+
+
+        /**
+         * This constructor takes a value and creates a <code>Link</code> that encapsulates it.
+         *
+         * @param value The value to be encapsulated in a link.
+         */
+        private Link(T value) {
+            this.value = value;
+            this.previous = null;
+            this.next = null;
+        }
+
+
+        @Override
+        public boolean equals(Object object) {
+            if (!(object instanceof Link)) return false;
+            Link<?> that = (Link<?>) object;
+            return this.value.equals(that.value);
+        }
+
+
+        @Override
+        public int hashCode() {
+            return value.hashCode();
+        }
+
+
+        @Override
+        public Object clone() throws CloneNotSupportedException {
+            @SuppressWarnings("unchecked")
+            Link<T> copy = (Link<T>) super.clone();
+            copy.previous = previous;
+            copy.next = next;
+            copy.value = value;
+            return copy;
+        }
+
+
+        /**
+         * This utility method inserts a new link in a linked list before the specified existing link.
+         *
+         * @param <T> The type of element encapsulated by the link.
+         * @param newLink The new link to be inserted.
+         * @param existingLink The existing link before which the new link will be inserted.
+         */
+        static public <T> void insertBeforeLink(Link<T> newLink, Link<T> existingLink) {
+            newLink.next = existingLink;
+            newLink.previous = existingLink.previous;
+            existingLink.previous.next = newLink;
+            existingLink.previous = newLink;
+        }
+
+
+        /**
+         * This utility method removes the specified link from a linked list.
+         *
+         * @param <T> The type of element encapsulated by the link.
+         * @param link The link to be removed.
+         */
+        static public <T> void removeLink(Link<T>  link) {
+            link.previous.next = link.next;
+            link.next.previous = link.previous;
+            link.previous = null;
+            link.next = null;
+        }
+
+
+        /**
+         * This utility method removes a set of links from a linked list, starting with the first
+         * link and including the link before the lastLink. Note, that this means the last link
+         * is not removed from the list.
+         *
+         * @param <T> The type of element encapsulated by the link.
+         * @param firstLink The first link in the sub chain to be removed.
+         * @param lastLink The link after the last link in the sub chain to be removed.
+         */
+        static public <T> void removeLinks(Link<T>  firstLink, Link<T>  lastLink) {
+            Link<T>  temp = lastLink.previous;
+            firstLink.previous.next = lastLink;
+            lastLink.previous.next = firstLink;
+            lastLink.previous = firstLink.previous;
+            firstLink.previous = temp;
         }
 
     }
