@@ -84,9 +84,9 @@
                                  the difference between Java collections and Crater Dog collections. -->
                             <detectJavaApiLink>false</detectJavaApiLink>
                             <links>
-                                <link>https://craterdog.github.io/java-core-interfaces/latest</link>
-                                <link>https://craterdog.github.io/java-general-utilities/latest</link>
-                                <link>https://craterdog.github.io/java-smart-objects/latest</link>
+                                <link>https://craterdog.github.io/java-core-interfaces/latest/</link>
+                                <link>https://craterdog.github.io/java-general-utilities/latest/</link>
+                                <link>https://craterdog.github.io/java-smart-objects/latest/</link>
                             </links>
                         </configuration>
                     </plugin>
