@@ -6,7 +6,7 @@
  *                                                                      *
  * This code is free software; you can redistribute it and/or modify it *
  * under the terms of The MIT License (MIT), as published by the Open   *
- * Source Initiative. (See http://opensource.org/licenses/MIT)          *
+ * Source Initiative. (See https://opensource.org/licenses/MIT)          *
  ************************************************************************
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -20,7 +20,7 @@
 
     <organization>
         <name>Crater Dog Technologies(TM)</name>
-        <url>http://craterdog.com</url>
+        <url>https://craterdog.com</url>
     </organization>
 
     <name>Crater Dog Java Collection Framework</name>
@@ -35,7 +35,7 @@
     <licenses>
         <license>
             <name>The MIT License</name>
-            <url>http://opensource.org/licenses/MIT</url>
+            <url>https://opensource.org/licenses/MIT</url>
         </license>
     </licenses>
 
@@ -44,7 +44,7 @@
             <name>Derk Norton</name>
             <email>derk.norton@gmail.com</email>
             <organization>Crater Dog Technologies(TM)</organization>
-            <organizationUrl>http://craterdog.com</organizationUrl>
+            <organizationUrl>https://craterdog.com</organizationUrl>
         </developer>
     </developers>
 
@@ -84,9 +84,9 @@
                                  the difference between Java collections and Crater Dog collections. -->
                             <detectJavaApiLink>false</detectJavaApiLink>
                             <links>
-                                <link>http://craterdog.github.io/java-core-interfaces/latest</link>
-                                <link>http://craterdog.github.io/java-general-utilities/latest</link>
-                                <link>http://craterdog.github.io/java-smart-objects/latest</link>
+                                <link>https://craterdog.github.io/java-core-interfaces/latest</link>
+                                <link>https://craterdog.github.io/java-general-utilities/latest</link>
+                                <link>https://craterdog.github.io/java-smart-objects/latest</link>
                             </links>
                         </configuration>
                     </plugin>
