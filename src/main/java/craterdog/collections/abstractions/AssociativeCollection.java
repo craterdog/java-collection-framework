@@ -133,6 +133,11 @@ public abstract class AssociativeCollection<K, V> extends SortableCollection<Ass
     }
 
 
+    /**
+     * This method returns this collection as a Java map.
+     *
+     * @return A map containing the values for this collection.
+     */
     @JsonValue
     public final java.util.LinkedHashMap<K, V> toMap() {
         java.util.LinkedHashMap<K, V> result = new java.util.LinkedHashMap<>();

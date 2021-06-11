@@ -53,9 +53,12 @@ public class ListTest {
      *
      * @throws InstantiationException
      * @throws IllegalAccessException
+     * @throws NoSuchMethodException
+     * @throws java.lang.reflect.InvocationTargetException
      */
     @Test
-    public void testMethods() throws InstantiationException, IllegalAccessException {
+    public void testMethods() throws InstantiationException, IllegalAccessException,
+            NoSuchMethodException, java.lang.reflect.InvocationTargetException {
         logger.info("Beginning testMethods()...");
 
         Class<?>[] classes = {java.util.ArrayList.class, java.util.LinkedList.class, DynamicArray.class, LinkedList.class};
@@ -68,7 +71,7 @@ public class ListTest {
             int count = 1000;
             while (count-- > 0) {
                 @SuppressWarnings("unchecked")
-                List<Integer> list = (List<Integer>) clazz.newInstance();
+                List<Integer> list = (List<Integer>) clazz.getDeclaredConstructor().newInstance();
 
                 // confirm that the list starts out empty
                 assertTrue(list.isEmpty());
@@ -114,7 +117,7 @@ public class ListTest {
                     assertNotNull(element);
                 }
                 // remove the first one that was inserted (note it must be as the Object, not the index)
-                list.remove(new Integer(50));
+                list.remove(Integer.valueOf(50));
 
                 // make sure the next one moved down one
                 assertEquals(20, list.indexOf(51));

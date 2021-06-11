@@ -175,11 +175,11 @@ public class MapTest {
 
         logger.info("  Retrieving the value for a key...");
         Integer value = map.getValue(5);
-        assertEquals(new Integer(3), value);
+        assertEquals(Integer.valueOf(3), value);
 
         logger.info("  Removing the value for a key...");
         value = map.removeValue(2);
-        assertEquals(new Integer(8), value);
+        assertEquals(Integer.valueOf(8), value);
 
         logger.info("  Attempting to retrieve the value of a nonexistent key...");
         value = map.getValue(12);

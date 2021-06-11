@@ -161,7 +161,7 @@ public class ListTest {
 
         logger.info("  Replacing a value...");
         list.replaceElement(9, 9);
-        assertEquals(new Integer(9), list.getElement(9));
+        assertEquals(Integer.valueOf(9), list.getElement(9));
 
         logger.info("  Removing elements in a range...");
         list.removeElements(8, 14);

@@ -65,9 +65,12 @@ public class MapTest {
      *
      * @throws InstantiationException
      * @throws IllegalAccessException
+     * @throws NoSuchMethodException
+     * @throws java.lang.reflect.InvocationTargetException
      */
     @Test
-    public void testMethods() throws InstantiationException, IllegalAccessException {
+    public void testMethods() throws InstantiationException, IllegalAccessException,
+            NoSuchMethodException, java.lang.reflect.InvocationTargetException {
         logger.info("Beginning testMethods()...");
 
         Class<?>[] classes = {
@@ -84,7 +87,7 @@ public class MapTest {
             int count = 1000;
             while (count-- > 0) {
                 @SuppressWarnings("unchecked")
-                Map<Integer, Integer> map = (Map<Integer, Integer>) clazz.newInstance();
+                Map<Integer, Integer> map = (Map<Integer, Integer>) clazz.getDeclaredConstructor().newInstance();
 
                 // confirm that the map starts out empty
                 assertTrue(map.isEmpty());

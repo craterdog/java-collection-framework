@@ -27,8 +27,11 @@ public abstract class ClosedCollection<E> extends Collection<E> {
 
     static private final XLogger logger = XLoggerFactory.getXLogger(ClosedCollection.class);
 
-    // can't be of type java.util.List because we need to access the LinkedList iterator below...
+    /**
+     * This protected attribute is used as a backing store for this collection.
+     */
     protected final LinkedList<E> list = new LinkedList<>();
+    // can't be of type java.util.List because we need to access the LinkedList iterator below...
 
 
     @Override
