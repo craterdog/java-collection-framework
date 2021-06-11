@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"craterdog.collections"},{"l":"craterdog.collections.abstractions"},{"l":"craterdog.collections.primitives"}];updateSearchResults();
