@@ -1,5 +1,7 @@
 ![Java Collection Framework](https://github.com/craterdog/java-collection-framework/blob/master/docs/images/MarbleBag.jpg)
 
+# THIS REPOSITORY HAS BEEN ARCHIVED AND IS NO LONGER SUPPORTED
+
 ### A Better Java Collection Framework
 The Java language development team that created the original `java.util` collection classes was fairly new
 to object oriented design and collection frameworks and therefore made some common mistakes:
